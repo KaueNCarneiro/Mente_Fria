@@ -1,0 +1,30 @@
+# Roteiro do Protótipo Navegável — Mente Fria
+
+**Link do protótipo:** [Mente Fria — Protótipo Navegável no Figma](https://www.figma.com/design/olZOzsaBz3qJlDlQ0ilANV?node-id=3-2)
+
+Para navegar, clique em **Apresentar ▶**. Na tela de Login, os botões de acesso rápido permitem explorar os perfis Gerente e Funcionário.
+
+| Tela | Perfil | História relacionada (E2) | O que a tela mostra/permite |
+|---|---|---|---|
+| 01 — Login | Administrador e Funcionário | US01 — Cadastro e acesso do administrador; US03 — Login conforme o perfil | Apresenta os campos de e-mail e senha, acesso ao cadastro de administrador e entradas demonstrativas para cada perfil. |
+| 02 — Cadastro de Conta | Administrador | US01 — Criar conta de administrador; US07 — Validação de dados | Apresenta nome, e-mail, senha e confirmação de senha, com orientação sobre o tamanho mínimo da senha e confirmação do cadastro. |
+| 03 — Dashboard Gerencial | Administrador/Gerente | US17 — Visão consolidada do negócio; US19 — Exportação em CSV | Mostra faturamento mensal, produtos mais vendidos, ingredientes mais utilizados e ranking de vendas por usuário. Inclui filtros e botão de exportação em CSV. |
+| 04 — Funcionários: Lista | Administrador/Gerente | US02 — Cadastro de funcionários com acesso limitado | Lista funcionários e permite acessar as opções de cadastro e edição. |
+| 05 — Funcionários: Novo/Editar | Administrador/Gerente | US02 — Cadastro de funcionários; US07 — Validação de dados | Apresenta os dados de identificação e acesso do funcionário, com ações de salvar e cancelar. |
+| 06 — Ingredientes: Lista | Administrador/Gerente | US04 — Cadastro de ingredientes | Lista os ingredientes cadastrados e permite acessar seus formulários de cadastro e edição. |
+| 07 — Ingredientes: Novo/Editar | Administrador/Gerente | US04 — Cadastro de ingredientes; US07 — Validação de dados | Apresenta nome, unidade de medida, custo e quantidade mínima obrigatória, com confirmação ao salvar. |
+| 08 — Produtos: Lista | Administrador/Gerente | US05 — Produtos e composição; US06 — Preço de venda | Lista produtos, preços e situação cadastral. Permite expandir a composição para consultar os ingredientes e acessar cadastro ou edição. |
+| 09 — Produtos: Novo/Editar | Administrador/Gerente | US05 — Produtos e composição; US06 — Preço de venda; US07 — Validação de dados | Apresenta dados do produto, preço, tamanho do copo e composição por quantidade de porções. Permite selecionar ingredientes, ajustar quantidades com botões de mais e menos e remover itens. |
+| 10 — Estoque: Gerente | Administrador/Gerente | US09 — Movimentação de estoque; US15 — Alertas de reposição; apoio à US16 — Controle de vencimento | Mostra quantidades disponíveis, níveis mínimos e a validade mais próxima de cada ingrediente. Permite consultar outras datas e acessar o registro de entradas e saídas, com validade nas entradas. |
+| 11 — Pedidos: Gerente | Administrador/Gerente | US12 — Registro de pedidos; US13 — Cadastro básico de clientes; US07 — Validação de dados | Permite montar pedidos com produtos ativos, ajustar quantidades, remover itens e consultar o total. Inclui busca de clientes por nome ou telefone, acesso ao cadastro de cliente e confirmação do pedido. |
+| 12 — Produção: Recomendação | Administrador/Gerente | US10 — Cálculo da produção recomendada; US11 — Visualização da recomendação | Apresenta quantidades recomendadas por produto e receita estimada, com consulta dos ingredientes de cada produto e ação para gerar a recomendação. |
+| 13 — Reposição: Recomendação | Administrador/Gerente | US14 — Recomendações para reposição | Apresenta sugestões de reposição de ingredientes, considerando consumo, estoque e custos, com ação para gerar as recomendações. |
+| 14 — Marketing: Sugestões | Administrador/Gerente | US18 — Sugestões de campanhas | Exibe uma lista unificada de sugestões de campanhas para os produtos priorizados, em linguagem simples. |
+| 15 — Início: Funcionário | Funcionário | US03 — Acesso conforme o perfil | Apresenta a página inicial do funcionário e a navegação restrita às funções de Início, Estoque e Pedidos. |
+| 16 — Estoque: Funcionário | Funcionário | US03 — Acesso restrito; US09 — Movimentação de estoque; US15 — Alertas de reposição; apoio à US16 — Controle de vencimento | Permite consultar ingredientes, quantidades e validades e acessar o registro de movimentações, mantendo o menu restrito do funcionário. |
+| 17 — Pedidos: Funcionário | Funcionário | US03 — Acesso restrito; US12 — Registro de pedidos; US13 — Cadastro básico de clientes | Permite selecionar clientes e produtos, ajustar quantidades, remover itens e confirmar pedidos, mantendo o menu restrito. |
+| 18 — Cadastrar Cliente | Administrador/Gerente | US13 — Cadastro básico de clientes; US07 — Validação de dados | Apresenta os campos obrigatórios de nome, contato e endereço, a lista de clientes registrados ao lado do formulário e a confirmação ao salvar. |
+| 18B — Cadastrar Cliente: Funcionário | Funcionário | US13 — Cadastro básico de clientes; US03 — Acesso restrito; US07 — Validação de dados | Apresenta o cadastro e a lista de clientes, com retorno para Pedidos e manutenção do menu restrito. |
+| 19 — Porção Padrão | Administrador/Gerente | Complemento à US04 — Ingredientes e à US05 — Composição dos produtos | Permite definir uma quantidade padrão de porção para cada unidade de medida: kg, mg, L, ml e un. A definição é compartilhada pelos ingredientes cadastrados na mesma unidade. |
+
+**Observações:** Os dados e as operações são demonstrativos. O protótipo representa os fluxos de interface; consultas ao banco, cálculos reais e geração de arquivos pertencem à implementação do sistema. As histórias **US08** (repositório Git e README) e **US20** (publicação do sistema), embora sejam Must, são entregas técnicas e não possuem telas próprias.

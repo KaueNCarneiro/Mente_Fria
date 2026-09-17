@@ -4,63 +4,82 @@
 --         Lucas Gabriel Valadares Bassi (RA 2840482423008), Kauê Nogueira Carneiro (RA 2840482423039)
 -- Trilha: B (Origem do problema: Cliente Real)
 --
--- Gera o schema completo em um banco MySQL 8 vazio.
+-- Gera o schema completo em um banco PostgreSQL vazio (testado para PostgreSQL 16+;
+-- confirme a versão exata oferecida pelo Render no momento da criação do banco — 17 e 18
+-- disponíveis em 2026 — e mantenha a mesma versão localmente e no Testcontainers).
+--
+-- Migrado de MySQL para PostgreSQL em 16/09/2026 (motivo: Render não oferece MySQL como
+-- banco gerenciado gratuito — ver nota de decisão técnica completa em docs/der.md).
+--
 -- Reflete exatamente o dicionário de dados de docs/der.md (mesmos nomes de tabela e campo).
 -- Ordem de criação respeita as dependências de chave estrangeira (tabelas-pai antes das tabelas-filhas).
- 
+
 -- =========================================================
 -- 1. usuario
 -- =========================================================
 CREATE TABLE usuario (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
+    id          INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     nome        VARCHAR(150) NOT NULL,
     email       VARCHAR(150) NOT NULL,
     senha_hash  VARCHAR(255) NOT NULL,
-    perfil      ENUM('ADMINISTRADOR', 'FUNCIONARIO') NOT NULL,
+    perfil      VARCHAR(20) NOT NULL,
     ativo       BOOLEAN NOT NULL DEFAULT TRUE,
-    CONSTRAINT uq_usuario_email UNIQUE (email)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
- 
+    CONSTRAINT uq_usuario_email UNIQUE (email),
+    CONSTRAINT chk_usuario_perfil CHECK (perfil IN ('ADMINISTRADOR', 'FUNCIONARIO'))
+);
+
 -- =========================================================
 -- 2. cliente
 -- =========================================================
 CREATE TABLE cliente (
-    id        INT AUTO_INCREMENT PRIMARY KEY,
+    id        INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     nome      VARCHAR(150) NOT NULL,
     contato   VARCHAR(50) NOT NULL,
     endereco  VARCHAR(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
- 
+);
+
 -- =========================================================
--- 3. ingrediente
+-- 3. unidade_medida_porcao_padrao (US26/UC20)
+-- Precisa existir antes de "ingrediente", que passa a referenciá-la por FK.
+-- =========================================================
+CREATE TABLE unidade_medida_porcao_padrao (
+    unidade_medida  VARCHAR(20) PRIMARY KEY,
+    porcao_padrao   DECIMAL(10,3) NOT NULL,
+    CONSTRAINT chk_unidade_porcao_padrao CHECK (porcao_padrao > 0)
+);
+
+-- =========================================================
+-- 4. ingrediente
 -- =========================================================
 CREATE TABLE ingrediente (
-    id                   INT AUTO_INCREMENT PRIMARY KEY,
+    id                   INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     nome                 VARCHAR(100) NOT NULL,
     unidade_medida       VARCHAR(20) NOT NULL,
     custo_unitario       DECIMAL(10,2) NOT NULL,
     porcao_padrao        DECIMAL(10,3) NOT NULL,
     quantidade_estoque   DECIMAL(10,3) NOT NULL DEFAULT 0,
     quantidade_minima    DECIMAL(10,3) NOT NULL DEFAULT 0,
+    CONSTRAINT fk_ingrediente_unidade_medida
+        FOREIGN KEY (unidade_medida) REFERENCES unidade_medida_porcao_padrao(unidade_medida),
     CONSTRAINT chk_ingrediente_custo_unitario CHECK (custo_unitario >= 0),
     CONSTRAINT chk_ingrediente_porcao_padrao CHECK (porcao_padrao > 0),
     CONSTRAINT chk_ingrediente_quantidade_estoque CHECK (quantidade_estoque >= 0),
     CONSTRAINT chk_ingrediente_quantidade_minima CHECK (quantidade_minima >= 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
- 
+);
+
 -- =========================================================
--- 4. produto
+-- 5. produto
 -- =========================================================
 CREATE TABLE produto (
-    id           INT AUTO_INCREMENT PRIMARY KEY,
+    id           INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     nome         VARCHAR(100) NOT NULL,
     preco_venda  DECIMAL(10,2) NOT NULL,
     ativo        BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT chk_produto_preco_venda CHECK (preco_venda > 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
- 
+);
+
 -- =========================================================
--- 5. produto_ingrediente (N:N entre produto e ingrediente)
+-- 6. produto_ingrediente (N:N entre produto e ingrediente)
 -- =========================================================
 CREATE TABLE produto_ingrediente (
     produto_id             INT NOT NULL,
@@ -72,26 +91,26 @@ CREATE TABLE produto_ingrediente (
     CONSTRAINT fk_produto_ingrediente_ingrediente
         FOREIGN KEY (ingrediente_id) REFERENCES ingrediente(id),
     CONSTRAINT chk_produto_ingrediente_quantidade CHECK (quantidade_utilizada > 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
- 
+);
+
 -- =========================================================
--- 6. pedido
+-- 7. pedido
 -- =========================================================
 CREATE TABLE pedido (
-    id           INT AUTO_INCREMENT PRIMARY KEY,
+    id           INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     cliente_id   INT NULL,
     usuario_id   INT NOT NULL,
-    data_pedido  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_pedido  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     valor_total  DECIMAL(10,2) NOT NULL DEFAULT 0,
     CONSTRAINT fk_pedido_cliente
         FOREIGN KEY (cliente_id) REFERENCES cliente(id),
     CONSTRAINT fk_pedido_usuario
         FOREIGN KEY (usuario_id) REFERENCES usuario(id),
     CONSTRAINT chk_pedido_valor_total CHECK (valor_total >= 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
- 
+);
+
 -- =========================================================
--- 7. pedido_produto (N:N entre pedido e produto)
+-- 8. pedido_produto (N:N entre pedido e produto)
 -- =========================================================
 CREATE TABLE pedido_produto (
     pedido_id                   INT NOT NULL,
@@ -105,35 +124,36 @@ CREATE TABLE pedido_produto (
         FOREIGN KEY (produto_id) REFERENCES produto(id),
     CONSTRAINT chk_pedido_produto_quantidade CHECK (quantidade > 0),
     CONSTRAINT chk_pedido_produto_preco CHECK (preco_unitario_registrado > 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
- 
+);
+
 -- =========================================================
--- 8. movimentacao_estoque
+-- 9. movimentacao_estoque
 -- =========================================================
 CREATE TABLE movimentacao_estoque (
-    id                  INT AUTO_INCREMENT PRIMARY KEY,
+    id                  INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     ingrediente_id      INT NOT NULL,
     usuario_id          INT NOT NULL,
-    tipo                ENUM('ENTRADA', 'SAIDA') NOT NULL,
+    tipo                VARCHAR(10) NOT NULL,
     quantidade          DECIMAL(10,3) NOT NULL,
-    data_movimentacao   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_movimentacao   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     observacao          VARCHAR(255) NULL,
     data_validade       DATE,
     CONSTRAINT fk_movimentacao_ingrediente
         FOREIGN KEY (ingrediente_id) REFERENCES ingrediente(id),
     CONSTRAINT fk_movimentacao_usuario
         FOREIGN KEY (usuario_id) REFERENCES usuario(id),
+    CONSTRAINT chk_movimentacao_tipo CHECK (tipo IN ('ENTRADA', 'SAIDA')),
     CONSTRAINT chk_movimentacao_quantidade CHECK (quantidade > 0),
     CONSTRAINT chk_movimentacao_data_validade CHECK (tipo = 'ENTRADA' OR data_validade IS NULL)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
 
 -- Inserts
 -- Dados de exemplo (seed) para o schema Mente Fria
--- Pré-requisito: rodar Script_DDL.sql antes (cria as tabelas em um banco MySQL).
+-- Pré-requisito: rodar Script_DDL.sql antes (cria as tabelas em um banco PostgreSQL).
 -- Ordem de inserção respeita as dependências de FK (tabelas-pai antes das tabelas-filhas).
--- IDs não são informados explicitamente: o AUTO_INCREMENT define 1, 2, 3... na ordem de inserção,
--- o que é usado como referência nos comentários abaixo.
+-- IDs não são informados explicitamente: GENERATED ALWAYS AS IDENTITY define 1, 2, 3... na
+-- ordem de inserção, o que é usado como referência nos comentários abaixo.
 
 -- =========================================================
 -- 1. usuario (id 1 = Administrador, id 2 = Funcionário)
@@ -151,7 +171,17 @@ INSERT INTO cliente (nome, contato, endereco) VALUES
   ('Juliana Costa',   '(11) 99988-7766', 'Rua Augusta, 500 - São Paulo/SP');
 
 -- =========================================================
--- 3. ingrediente (id 1 a 7)
+-- 3. unidade_medida_porcao_padrao (US26/UC20)
+-- Precisa ser inserida antes de "ingrediente" por causa da FK ingrediente.unidade_medida.
+-- Cobre as unidades já usadas nos dados de exemplo (kg, l, un).
+-- =========================================================
+INSERT INTO unidade_medida_porcao_padrao (unidade_medida, porcao_padrao) VALUES
+  ('kg', 0.040),
+  ('l',  0.030),
+  ('un', 1.000);
+
+-- =========================================================
+-- 4. ingrediente (id 1 a 7)
 -- =========================================================
 INSERT INTO ingrediente (nome, unidade_medida, custo_unitario, porcao_padrao, quantidade_estoque, quantidade_minima) VALUES
   ('Açaí (polpa)',           'kg', 18.50, 0.150,  40.000, 10.000), -- id 1
@@ -163,7 +193,7 @@ INSERT INTO ingrediente (nome, unidade_medida, custo_unitario, porcao_padrao, qu
   ('Copo descartável 500ml', 'un',  0.35, 1.000, 300.000, 50.000); -- id 7
 
 -- =========================================================
--- 4. produto (id 1, 2, 3)
+-- 5. produto (id 1, 2, 3)
 -- =========================================================
 INSERT INTO produto (nome, preco_venda, ativo) VALUES
   ('Açaí Tradicional 300ml', 12.90, TRUE), -- id 1
@@ -171,7 +201,7 @@ INSERT INTO produto (nome, preco_venda, ativo) VALUES
   ('Açaí Premium 700ml',     24.90, TRUE); -- id 3 (morango + leite condensado + granola + leite em pó)
 
 -- =========================================================
--- 5. produto_ingrediente (composição N:N produto x ingrediente)
+-- 6. produto_ingrediente (composição N:N produto x ingrediente)
 -- =========================================================
 INSERT INTO produto_ingrediente (produto_id, ingrediente_id, quantidade_utilizada) VALUES
   -- Açaí Tradicional 300ml
@@ -192,7 +222,7 @@ INSERT INTO produto_ingrediente (produto_id, ingrediente_id, quantidade_utilizad
   (3, 7, 1.000); -- copo
 
 -- =========================================================
--- 6. pedido (id 1, 2, 3)
+-- 7. pedido (id 1, 2, 3)
 -- =========================================================
 INSERT INTO pedido (cliente_id, usuario_id, data_pedido, valor_total) VALUES
   (1,    2, '2026-09-01 10:15:00', 44.70), -- id 1: Fernanda, atendida pela Mariana (funcionária)
@@ -200,7 +230,7 @@ INSERT INTO pedido (cliente_id, usuario_id, data_pedido, valor_total) VALUES
   (2,    1, '2026-09-03 09:00:00', 56.70); -- id 3: Rafael, atendido pelo Carlos (administrador)
 
 -- =========================================================
--- 7. pedido_produto (itens de cada pedido)
+-- 8. pedido_produto (itens de cada pedido)
 -- =========================================================
 INSERT INTO pedido_produto (pedido_id, produto_id, quantidade, preco_unitario_registrado) VALUES
   -- Pedido 1: 2x Tradicional (25.80) + 1x Especial (18.90) = 44.70
@@ -213,7 +243,7 @@ INSERT INTO pedido_produto (pedido_id, produto_id, quantidade, preco_unitario_re
   (3, 2, 3, 18.90);
 
 -- =========================================================
--- 8. movimentacao_estoque
+-- 9. movimentacao_estoque
 -- =========================================================
 INSERT INTO movimentacao_estoque (ingrediente_id, usuario_id, tipo, quantidade, data_movimentacao, observacao, data_validade) VALUES
   (1, 1, 'ENTRADA', 50.000, '2026-08-25 08:00:00', 'Compra inicial de açaí - fornecedor Polpa Norte', '2026-10-15'),

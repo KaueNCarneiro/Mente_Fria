@@ -9,7 +9,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 - Frontend: JavaScript, HTML, CSS — deploy: GitHub Pages
 - Backend: Java + Spring Boot ([versão do JDK] / [versão do Spring Boot])
 - Otimização: Python + Gurobi ([versão do Python] / [versão do Gurobi]) — módulo de Programação Linear (recomendação de produção)
-- Banco de dados: MySQL 8.0 — deploy: Render
+- Banco de dados: PostgreSQL 16+ — deploy: Render
 
 *(O item "Otimização" foi adicionado ao modelo de 3 linhas porque o Termo de Aceite trata Python/Gurobi como uma camada própria da stack, separada do backend Java.)*
 
@@ -18,10 +18,10 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 - Git
 - JDK `[versão mínima — depende da versão do Spring Boot usada]`
 - `[Maven ou Gradle]` `[versão mínima]`
-- MySQL Server 8.0+
+- PostgreSQL 16+
 - Python `[versão mínima]` + pip
 - Licença Gurobi acadêmica — `[tipo a definir: node-locked ou Web License Service (WLS)]`
-- Docker (necessário para os testes de integração, que sobem um MySQL 8 real via Testcontainers)
+- Docker (necessário para os testes de integração, que sobem um PostgreSQL 16 real via Testcontainers)
 
 ### Passo a passo
 1. Clone o repositório: `git clone [url]`
@@ -33,14 +33,14 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 
    | Variável | Descrição |
    |---|---|
-   | `DB_HOST` | Host do MySQL |
-   | `DB_PORT` | Porta do MySQL (padrão `3306`) |
+   | `DB_HOST` | Host do PostgreSQL |
+   | `DB_PORT` | Porta do PostgreSQL (padrão `5432`) |
    | `DB_NAME` | Nome do banco (ex.: `mente_fria`) |
-   | `DB_USER` | Usuário do MySQL |
-   | `DB_PASSWORD` | Senha do MySQL |
+   | `DB_USER` | Usuário do PostgreSQL |
+   | `DB_PASSWORD` | Senha do PostgreSQL |
    | `[GRB_LICENSE_FILE ou GRB_WLSACCESSID / GRB_WLSSECRET]` | Credenciais da licença Gurobi (depende do tipo escolhido) |
 
-4. Crie o banco e rode o schema: `mysql -u [usuario] -p [nome_do_banco] < [caminho do arquivo].sql`
+4. Crie o banco e rode o schema: `psql -U [usuario] -d [nome_do_banco] -f [caminho do arquivo].sql` (pede a senha interativamente, ou defina `PGPASSWORD` no ambiente para rodar sem prompt)
 5. Rode as migrations/seed (se houver): `[não identificamos script de seed nos documentos atuais]`
 6. Suba o projeto:
    - Backend: `[ex.: mvn spring-boot:run]`
@@ -65,7 +65,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 
 ## Testes
 - **Unitário** — regras de negócio isoladas, sem banco/rede. JUnit 5 + Mockito (backend Java); pytest (módulo Python/Gurobi, com resultado esperado calculado fora do próprio otimizador).
-- **Integração** — fluxo Controller → Service → Repository → MySQL, autenticação por perfil e constraints do banco. JUnit 5 + Spring Boot Test (`@SpringBootTest`, `MockMvc`) + Testcontainers (MySQL 8 real via Docker).
+- **Integração** — fluxo Controller → Service → Repository → PostgreSQL, autenticação por perfil e constraints do banco. JUnit 5 + Spring Boot Test (`@SpringBootTest`, `MockMvc`) + Testcontainers (PostgreSQL 16 real via Docker).
 - **Manual/aceitação** — roteiro por história (Termo de Aceite), executado por um integrante diferente de quem implementou; obrigatório antes de cada entrega (E5–E8).
 
 Como rodar:

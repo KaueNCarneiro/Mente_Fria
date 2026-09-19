@@ -53,7 +53,7 @@ Proprietário))
 
 > **Observação:** US8 (repositório Git com README) e US20 (deploy público por URL) são requisitos não-funcionais/de entrega do projeto (cobertos no Documento de Visão, seção 6, e no Termo de Aceite, seção 2), não funcionalidades acionadas por um ator dentro do sistema — por isso não aparecem como casos de uso. As histórias US21 a US25 estão marcadas como **Won't** no Backlog Priorizado (fora do escopo do semestre) e, portanto, também não têm caso de uso correspondente.
 >
-> **Observação (adicionada nesta revisão):** UC20 corresponde a **US26 — Definir porção padrão por unidade de medida**, história derivada da Tela 19 do protótipo navegável e ainda **não incluída no `Backlog_Priorizado` atual** (documento em PDF, fora do escopo de edição direta deste chat) — a equipe precisa adicioná-la manualmente lá para manter a rastreabilidade Backlog ↔ Caso de Uso completa. Assim como as demais histórias de cadastro, UC20 inclui (`<<include>>`) UC7 porque a validação `porcao_padrao > 0` é uma regra transversal.
+> **Observação (atualizada em 18/09/2026):** UC20 corresponde a **US26 — Definir porção padrão por unidade de medida**, história derivada da Tela 19 do protótipo navegável e já incluída em `Backlog_Priorizado_Mente_Fria.docx`, com prioridade **Could**, estimativa **P** e alvo **Sprint 3**. Assim como as demais histórias de cadastro, UC20 inclui (`<<include>>`) UC7 porque a validação `porcao_padrao > 0` é uma regra transversal.
 
 ---
 
@@ -200,4 +200,4 @@ O atributo `dataValidade`, antes em `Ingrediente`, passou para `MovimentacaoEsto
 | UC17 — Visualizar dashboard gerencial | US17 |
 | UC18 — Gerar sugestões de marketing | US18 |
 | UC19 — Exportar dashboard em CSV | US19 |
-| UC20 — Definir porção padrão por unidade de medida | US26 *(nova — ainda pendente de inclusão no `Backlog_Priorizado`, ver observação da seção 1)* |
+| UC20 — Definir porção padrão por unidade de medida | US26 |

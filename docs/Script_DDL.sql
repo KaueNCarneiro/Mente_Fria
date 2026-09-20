@@ -147,41 +147,38 @@ CREATE TABLE movimentacao_estoque (
     CONSTRAINT chk_movimentacao_data_validade CHECK (tipo = 'ENTRADA' OR data_validade IS NULL)
 );
 
-
--- Inserts
--- Dados de exemplo (seed) para o schema Mente Fria
--- Pré-requisito: rodar Script_DDL.sql antes (cria as tabelas em um banco PostgreSQL).
--- Ordem de inserção respeita as dependências de FK (tabelas-pai antes das tabelas-filhas).
--- IDs não são informados explicitamente: GENERATED ALWAYS AS IDENTITY define 1, 2, 3... na
--- ordem de inserção, o que é usado como referência nos comentários abaixo.
-
 -- =========================================================
--- 1. usuario (id 1 = Administrador, id 2 = Funcionário)
+-- SEED DA SPRINT 1 — dados de exemplo
 -- =========================================================
-INSERT INTO usuario (nome, email, senha_hash, perfil, ativo) VALUES
-  ('Carlos Eduardo Souza', 'carlos.souza@mentefria.com', '$2b$10$exemploHashAdmin01', 'ADMINISTRADOR', TRUE),
-  ('Mariana Alves Pereira', 'mariana.alves@mentefria.com', '$2b$10$exemploHashFunc01',  'FUNCIONARIO',   TRUE);
-
--- =========================================================
--- 2. cliente (id 1, 2, 3)
--- =========================================================
-INSERT INTO cliente (nome, contato, endereco) VALUES
-  ('Fernanda Lima',   '(11) 98765-4321', 'Rua das Flores, 123 - São Paulo/SP'),
-  ('Rafael Santos',   '(11) 91234-5678', 'Av. Paulista, 900 - São Paulo/SP'),
-  ('Juliana Costa',   '(11) 99988-7766', 'Rua Augusta, 500 - São Paulo/SP');
+-- Revisão 19/09/2026: o seed contém apenas o que a Sprint 1 (US1–US8) utiliza.
+--   * Sem usuários: a conta do Administrador nasce pela US1 e os funcionários pela US2.
+--   * Sem clientes, pedidos e movimentações de estoque: pertencem à Sprint 2 (US9, US12, US13)
+--     e dependem de um usuário já existente (usuario_id é NOT NULL). O conteúdo anterior tinha
+--     saldos que não batiam com as movimentações e permanece no histórico do Git.
+--   * As cinco unidades da Tela 19 (kg, mg, l, ml, un) são cadastradas aqui, porque a tela de
+--     gestão de unidades (US26) só chega na Sprint 3. Em minúsculo: a FK diferencia maiúsculas.
+-- Pré-requisito: o schema acima, rodado em um banco PostgreSQL vazio.
+-- IDs não são informados: GENERATED ALWAYS AS IDENTITY gera 1, 2, 3... na ordem de inserção,
+-- o que é usado como referência nos comentários abaixo.
 
 -- =========================================================
--- 3. unidade_medida_porcao_padrao (US26/UC20)
+-- 1. unidade_medida_porcao_padrao (US26/UC20)
 -- Precisa ser inserida antes de "ingrediente" por causa da FK ingrediente.unidade_medida.
--- Cobre as unidades já usadas nos dados de exemplo (kg, l, un).
+-- Valores de mg e ml derivados de kg e l (0,040 kg = 40.000 mg; 0,030 l = 30 ml).
+-- São apenas sugestões de pré-preenchimento e podem ser ajustadas.
 -- =========================================================
 INSERT INTO unidade_medida_porcao_padrao (unidade_medida, porcao_padrao) VALUES
   ('kg', 0.040),
+  ('mg', 40000.000),
   ('l',  0.030),
+  ('ml', 30.000),
   ('un', 1.000);
 
 -- =========================================================
--- 4. ingrediente (id 1 a 7)
+-- 2. ingrediente (id 1 a 7)
+-- quantidade_estoque = saldo de abertura. Na Sprint 2 esses saldos serão registrados como
+-- movimentações ENTRADA (com data_validade), mantendo a regra do DER:
+-- quantidade_estoque = soma das ENTRADAS - soma das SAÍDAS.
 -- =========================================================
 INSERT INTO ingrediente (nome, unidade_medida, custo_unitario, porcao_padrao, quantidade_estoque, quantidade_minima) VALUES
   ('Açaí (polpa)',           'kg', 18.50, 0.150,  40.000, 10.000), -- id 1
@@ -193,7 +190,7 @@ INSERT INTO ingrediente (nome, unidade_medida, custo_unitario, porcao_padrao, qu
   ('Copo descartável 500ml', 'un',  0.35, 1.000, 300.000, 50.000); -- id 7
 
 -- =========================================================
--- 5. produto (id 1, 2, 3)
+-- 3. produto (id 1, 2, 3)
 -- =========================================================
 INSERT INTO produto (nome, preco_venda, ativo) VALUES
   ('Açaí Tradicional 300ml', 12.90, TRUE), -- id 1
@@ -201,7 +198,8 @@ INSERT INTO produto (nome, preco_venda, ativo) VALUES
   ('Açaí Premium 700ml',     24.90, TRUE); -- id 3 (morango + leite condensado + granola + leite em pó)
 
 -- =========================================================
--- 6. produto_ingrediente (composição N:N produto x ingrediente)
+-- 4. produto_ingrediente (composição N:N produto x ingrediente)
+-- Todo produto inclui o açaí (ingrediente 1), como exige a US5.
 -- =========================================================
 INSERT INTO produto_ingrediente (produto_id, ingrediente_id, quantidade_utilizada) VALUES
   -- Açaí Tradicional 300ml
@@ -220,38 +218,3 @@ INSERT INTO produto_ingrediente (produto_id, ingrediente_id, quantidade_utilizad
   (3, 3, 0.040), -- granola
   (3, 6, 0.020), -- leite em pó
   (3, 7, 1.000); -- copo
-
--- =========================================================
--- 7. pedido (id 1, 2, 3)
--- =========================================================
-INSERT INTO pedido (cliente_id, usuario_id, data_pedido, valor_total) VALUES
-  (1,    2, '2026-09-01 10:15:00', 44.70), -- id 1: Fernanda, atendida pela Mariana (funcionária)
-  (NULL, 2, '2026-09-02 14:30:00', 37.80), -- id 2: venda de balcão, sem cliente cadastrado
-  (2,    1, '2026-09-03 09:00:00', 56.70); -- id 3: Rafael, atendido pelo Carlos (administrador)
-
--- =========================================================
--- 8. pedido_produto (itens de cada pedido)
--- =========================================================
-INSERT INTO pedido_produto (pedido_id, produto_id, quantidade, preco_unitario_registrado) VALUES
-  -- Pedido 1: 2x Tradicional (25.80) + 1x Especial (18.90) = 44.70
-  (1, 1, 2, 12.90),
-  (1, 2, 1, 18.90),
-  -- Pedido 2: 1x Premium (24.90) + 1x Tradicional (12.90) = 37.80
-  (2, 3, 1, 24.90),
-  (2, 1, 1, 12.90),
-  -- Pedido 3: 3x Especial (56.70)
-  (3, 2, 3, 18.90);
-
--- =========================================================
--- 9. movimentacao_estoque
--- =========================================================
-INSERT INTO movimentacao_estoque (ingrediente_id, usuario_id, tipo, quantidade, data_movimentacao, observacao, data_validade) VALUES
-  (1, 1, 'ENTRADA', 50.000, '2026-08-25 08:00:00', 'Compra inicial de açaí - fornecedor Polpa Norte', '2026-10-15'),
-  (4, 1, 'ENTRADA', 15.000, '2026-08-25 08:10:00', 'Compra inicial de banana', '2027-03-01'),
-  (5, 1, 'ENTRADA',  8.000, '2026-08-26 08:00:00', 'Compra inicial de morango', '2026-12-20'),
-  (1, 2, 'SAIDA',    1.050, '2026-09-01 10:16:00', 'Baixa de estoque referente ao Pedido #1', NULL),
-  (4, 2, 'SAIDA',    0.050, '2026-09-01 10:16:00', 'Baixa de estoque referente ao Pedido #1', NULL),
-  (1, 2, 'SAIDA',    1.050, '2026-09-02 14:31:00', 'Baixa de estoque referente ao Pedido #2', NULL),
-  (5, 2, 'SAIDA',    0.060, '2026-09-02 14:31:00', 'Baixa de estoque referente ao Pedido #2', NULL),
-  (1, 1, 'SAIDA',    1.350, '2026-09-03 09:01:00', 'Baixa de estoque referente ao Pedido #3', NULL),
-  (4, 1, 'SAIDA',    0.150, '2026-09-03 09:01:00', 'Baixa de estoque referente ao Pedido #3', NULL);

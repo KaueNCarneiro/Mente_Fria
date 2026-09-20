@@ -74,7 +74,7 @@ Incluímos uma coluna extra, **Caso de uso (E3)**, além do modelo, para fechar 
 | CT06 | US3 | UC3 | Login válido por perfil | Credenciais corretas de Administrador e de Funcionário (2 execuções) | Redirecionamento para a área correspondente a cada perfil | Alta |
 | CT07 | US3 | UC3 | Login com senha incorreta | E-mail válido + senha errada | Mensagem de erro clara; login não efetivado | Alta |
 | CT08 | US3 | UC3 | Funcionário tenta acessar rota administrativa direto pela URL | Usuário autenticado com perfil `FUNCIONARIO` | Bloqueio/redirecionamento; ação não é executada | Alta |
-| CT09 | US4 | UC4 | Cadastro de ingrediente com dados válidos | Nome, unidade, custo ≥ 0, porção > 0, validade futura | Ingrediente persistido com os valores informados | Alta |
+| CT09 | US4 | UC4 | Cadastro de ingrediente com dados válidos | Nome, unidade, custo ≥ 0, porção > 0 | Ingrediente persistido com os valores informados | Alta |
 | CT10 | US4 | UC4 | Custo unitário negativo | `custo_unitario = -1` | Rejeitado na interface e pela constraint `chk_ingrediente_custo_unitario` | Alta |
 | CT11 | US4 | UC4 | Porção padrão igual a zero | `porcao_padrao = 0` | Rejeitado pela constraint `chk_ingrediente_porcao_padrao` (diferente do custo: porção não aceita nem zero) | Média |
 | CT12 | US5 | UC5 | Cadastro de produto com composição válida, incluindo Açaí | Produto + ingrediente "Açaí" + 1 outro ingrediente, ambos com `quantidade_utilizada > 0` | Produto e vínculos persistidos em `produto_ingrediente` | Alta |
@@ -87,7 +87,7 @@ Incluímos uma coluna extra, **Caso de uso (E3)**, além do modelo, para fechar 
 | CT19 | US7 | UC7 | Formulário de cadastro com campo obrigatório vazio | Campo em branco | Interface exibe erro específico antes de enviar | Média |
 | CT20 | US8 | — | Setup do zero a partir do README | `git clone` + passos do README, ambiente limpo | Projeto sobe localmente sem etapa não documentada | Média |
 
-> **Nota de implementação (CT15):** a equipe confirmou que a regra exige o ingrediente "Açaí" especificamente, não apenas "composição não vazia". O modelo de dados atual não tem nenhum campo para identificar esse ingrediente de forma estável — a opção mais simples seria casar pelo texto do campo `nome`, mas isso é frágil a renomeação, acentuação ou maiúsculas/minúsculas. Antes de implementar a US5, vale decidir *como* o sistema vai localizar esse ingrediente (nome exato normalizado, ID fixo conhecido, ou um campo novo tipo `eh_ingrediente_base` no DER). Isso não muda o CT15 em si, mas muda o que o teste passa a considerar "ser o ingrediente Açaí".
+> **Decisão de implementação (CT15) — 19/09/2026:** a regra exige o ingrediente "Açaí" especificamente, não apenas "composição não vazia". Decidido: um ingrediente conta como açaí quando o seu **nome, sem acentos e sem diferenciar maiúsculas de minúsculas, contém `acai`** (ex.: "Açaí (polpa)", "AÇAÍ ZERO", "Polpa de açaí"). A verificação é feita na aplicação (Java), isolada em um único método, sem alteração no DER nem no DDL. Consequências: (1) se o dono renomear o ingrediente para um nome sem "açaí", o sistema recusa novos produtos até a correção do nome (falha segura); (2) mais de um ingrediente de açaí é permitido; (3) alternativas descartadas: ID fixo (o ID é gerado pelo banco) e coluna `eh_ingrediente_base` (mais robusta, mas exigiria alterar DER, UML, DDL e Tela 07 — pode ser adotada depois trocando apenas esse método). O teste unitário do método deve cobrir: aceitos — "Açaí (polpa)", "AÇAÍ ZERO", "polpa de acai"; recusados — "Granola", "Leite condensado", texto vazio e `null`.
 
 ### Sprint 2 (prévia) — estoque, pedidos e otimização
 
@@ -110,7 +110,7 @@ Incluímos uma coluna extra, **Caso de uso (E3)**, além do modelo, para fechar 
 
 ### 4.1 Já validadas com a equipe
 - **Testes de integração:** Testcontainers com PostgreSQL 16 real (atualizado de MySQL em 16/09/2026, ver DER.md) — Docker confirmado disponível para todo mundo.
-- **US5 (composição do produto):** a regra exige o ingrediente "Açaí" especificamente, não apenas "composição não vazia" (detalhe de *como* localizar esse ingrediente ainda pendente — ver nota na seção 3, junto ao CT15).
+- **US5 (composição do produto):** a regra exige o ingrediente "Açaí" especificamente, não apenas "composição não vazia" (como localizar esse ingrediente: decidido em 19/09/2026 — o nome, sem acentos e sem diferenciar maiúsculas, contém "acai"; ver a decisão registrada na seção 3, junto ao CT15).
 - **Backlog — atores de US9, US12, US13, US15 e US16:** confirmado que os dois perfis (Administrador e Funcionário) têm acesso a essas 5 funcionalidades, conforme o `.docx` — que também é o que bate com `Diagramas_UML.md`. O `.pdf` do backlog está desatualizado nesses 5 pontos (mostra só 1 ator em cada um); vale atualizar essa exportação para não confundir quem abrir só o `.pdf`. CT27 e CT28 (seção 3) já cobrem essa confirmação para US9 e US12; US13, US15 e US16 recebem o mesmo tratamento quando forem detalhadas.
 
 ### 4.2 Em aberto (não bloqueiam este plano)

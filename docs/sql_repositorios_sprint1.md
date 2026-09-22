@@ -8,7 +8,7 @@
 
 > **Status:** todos os SQLs abaixo foram executados no PostgreSQL 16, sobre o `Script_DDL.sql` entregue, com parâmetros reais (37 verificações, incluindo os erros esperados conferidos por SQLSTATE e nome de constraint). A regra do açaí foi testada em Java 21 (15 casos). **Os trechos de código Spring (seção "Padrões de código") ainda não foram executados** — a equipe valida ao implementar. Itens marcados como **proposta** dependem de confirmação.
 
-Este documento é o contrato entre quem cuida dos dados e quem escreve os `Repository` em Java: cada método abaixo é um SQL pronto, com o que devolve e com o que pode falhar. Convenção de nomes: a mesma do `Roteiro_Sprint1_Detalhado_PostgreSQL_v2.md`.
+Este documento é o contrato entre quem cuida dos dados e quem escreve os `Repository` em Java: cada método abaixo é um SQL pronto, com o que devolve e com o que pode falhar. Convenção de nomes: a mesma do `Roteiro_Sprint1_Detalhado_PostgreSQL_v3.md`.
 
 ---
 
@@ -51,6 +51,36 @@ int afetadas = jdbc.update(SQL_ATUALIZAR_PRECO, Map.of("id", id, "preco_venda", 
 ---
 
 ## 3. Repositórios
+
+### Rastreabilidade com o Contrato de Comunicação (§2.2)
+
+Cada rota da **Sprint 1** e os métodos abaixo que a atendem. Rotas de sprints posteriores ficam de fora.
+
+| Rota do contrato | Perfil | História | Métodos do repositório |
+|---|---|---|---|
+| `POST /api/auth/registro` | Público (1º Administrador) | US1 | `UsuarioRepository.existeAdministrador` → `inserir` (perfil `ADMINISTRADOR`) |
+| `POST /api/auth/login` | Público | US3 | `UsuarioRepository.buscarPorEmail` |
+| `POST /api/usuarios` | Administrador | US2 | `UsuarioRepository.inserir` (perfil `FUNCIONARIO`) |
+| `GET /api/usuarios` | Administrador | US2 | `UsuarioRepository.listarFuncionarios` |
+| `GET /api/ingredientes` | Administrador/Funcionário | US4 | `IngredienteRepository.listar` |
+| `POST /api/ingredientes` | Administrador | US4 | `IngredienteRepository.inserir` |
+| `PUT /api/ingredientes/{id}` | Administrador | US4 | `IngredienteRepository.atualizar` |
+| `GET /api/unidades-medida` | Administrador | US4 | `UnidadeMedidaRepository.listar` |
+| `GET /api/produtos` | Administrador/Funcionário | US5, US6 | `ProdutoRepository.listarComComposicao` |
+| `POST /api/produtos` | Administrador | US5, US6 | `IngredienteRepository.buscarNomesPorIds` (regra do açaí) → `ProdutoRepository.inserir` + `inserirComposicao` (mesma transação) |
+| `PUT /api/produtos/{id}/preco` | Administrador | US6 | `ProdutoRepository.atualizarPreco` |
+
+**Fora da Sprint 1:** `POST /api/unidades-medida` (US26/UC20, Sprint 3) e as rotas de estoque, clientes, pedidos, produção, reposição, marketing e dashboard (Sprints 2 e 3).
+
+**Métodos com SQL pronto, mas sem rota no contrato** (as telas "Editar" do protótipo, que não são exigidas pelas US1–US7; a equipe decide se entram):
+
+| Método | Tela | Rota que faltaria |
+|---|---|---|
+| `IngredienteRepository.buscarPorId` | 07 — Ingredientes: Editar | `GET /api/ingredientes/{id}` |
+| `ProdutoRepository.buscarComComposicao` | 09 — Produtos: Editar | `GET /api/produtos/{id}` |
+| `ProdutoRepository.atualizarDados` + `removerComposicao` + `inserirComposicao` | 09 — Produtos: Editar | `PUT /api/produtos/{id}` |
+| `UsuarioRepository.atualizarFuncionario` | 05 — Funcionários: Editar | `PUT /api/usuarios/{id}` |
+
 
 ### UsuarioRepository
 
@@ -353,6 +383,8 @@ Consequências aceitas: (1) se o dono renomear o ingrediente para um nome sem "a
 3. Conta do dono criada fora do sistema (seed ou variável de ambiente) — descartada, pois a Q4 definiu que o seed não tem usuários.
 
 **Recomendação:** opção 2. O custo é baixo: a consulta já está pronta e o `Service` ganha uma condição (se já existe Administrador, o cadastro responde `409`, e o frontend esconde o link "Criar conta" da tela de login). O CT01 continua válido e falta um caso de teste novo: *cadastro de Administrador quando já existe um → recusado*. Duas requisições simultâneas no primeiro acesso poderiam criar dois administradores; para o MVP o risco é desprezível.
+
+**Situação:** o *Contrato de Comunicação* (§2.1, §2.2 e §2.4; revisão aprovada pelo Kauê em 20/09/2026) adota a **opção 2**: `POST /api/auth/registro` é público só enquanto não existir Administrador, e depois responde `409`. Falta o **Lucas confirmar** (item B5 do contrato).
 
 **Decisão necessária:** equipe (Lucas, como Product Owner/Backend).
 

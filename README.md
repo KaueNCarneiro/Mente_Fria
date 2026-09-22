@@ -60,7 +60,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 
 ## Banco de dados
 
-PostgreSQL 16 (versão final a alinhar com a oferecida pelo Render). O schema completo e os dados de exemplo estão em `docs/Script_DDL.sql`; a documentação do modelo está em `docs/der.md`.
+PostgreSQL 16 (versão final a alinhar com a oferecida pelo Render). O schema completo e os dados de exemplo estão em `docs/Script_DDL.sql`; a documentação do modelo está em `docs/DER.md`.
 
 ### Criar o banco
 
@@ -100,7 +100,7 @@ Ao final aparece a contagem de aprovados/reprovados; se algum falhar, o comando 
 
 ### Mudou o schema?
 
-Sem ferramenta de migrations por enquanto: edite o `docs/Script_DDL.sql`, atualize o `docs/der.md` no mesmo Pull Request e escreva no PR **"recriar o banco"**, para que todos rodem o "Recomeçar do zero". Não enfraqueça nem remova constraints sem combinar com a equipe (critério de bloqueio nº 4 do `Plano_de_Testes_Mente_Fria.md`).
+Sem ferramenta de migrations por enquanto: edite o `docs/Script_DDL.sql`, atualize o `docs/DER.md` no mesmo Pull Request e escreva no PR **"recriar o banco"**, para que todos rodem o "Recomeçar do zero". Não enfraqueça nem remova constraints sem combinar com a equipe (critério de bloqueio nº 4 do `Plano_de_Testes_Mente_Fria.md`).
 
 ## Estrutura do repositório
 ```

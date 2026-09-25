@@ -67,6 +67,7 @@ Incluímos uma coluna extra, **Caso de uso (E3)**, além do modelo, para fechar 
 | ID | História (E2) | Caso de uso (E3) | Cenário | Entrada | Resultado esperado | Prioridade |
 |---|---|---|---|---|---|---|
 | CT01 | US1 | UC1 | Cadastro de Administrador com dados válidos | Nome, e-mail novo, senha com 8+ caracteres | Conta criada; perfil `ADMINISTRADOR` atribuído automaticamente | Alta |
+| CT01B | US1 | UC1 | Cadastro de Administrador quando já existe um | Requisição de registro com um Administrador já cadastrado no sistema | Rejeitado com `409`; mensagem "O cadastro do Administrador já foi realizado." | Alta |
 | CT02 | US1 | UC1 | Senha abaixo do mínimo | Senha com 7 caracteres | Cadastro rejeitado; erro específico no campo senha (validação de aplicação — não dá para checar isso depois de já estar em hash) | Alta |
 | CT03 | US1 | UC1 | E-mail já cadastrado | E-mail idêntico a um usuário existente | Rejeitado pela aplicação e, se essa checagem for contornada, pela constraint `uq_usuario_email` | Alta |
 | CT04 | US2 | UC2 | Cadastro de funcionário válido pelo Administrador | Nome, e-mail, senha válidos | Conta criada com perfil `FUNCIONARIO` | Alta |
@@ -86,6 +87,8 @@ Incluímos uma coluna extra, **Caso de uso (E3)**, além do modelo, para fechar 
 | CT18 | US7 | UC7 | Requisição direta à API, contornando a interface, sem campo obrigatório | Requisição HTTP sem `nome` | Backend rejeita (400/422) mesmo sem passar pela validação de tela | Alta |
 | CT19 | US7 | UC7 | Formulário de cadastro com campo obrigatório vazio | Campo em branco | Interface exibe erro específico antes de enviar | Média |
 | CT20 | US8 | — | Setup do zero a partir do README | `git clone` + passos do README, ambiente limpo | Projeto sobe localmente sem etapa não documentada | Média |
+
+> **Decisão de implementação (CT01B) — 20/09/2026:** decidido junto com a dúvida D-A (`sql_repositorios_sprint1.md`, seção 5) — o cadastro de Administrador (US1) fica aberto **só enquanto não existir nenhum Administrador** no banco (opção 2), usando `UsuarioRepository.existeAdministrador`. Depois do primeiro cadastro, uma nova tentativa é rejeitada com `409`. Confirmado pelo Lucas e já assumido pelo *Contrato de Comunicação* (item B5).
 
 > **Decisão de implementação (CT15) — 19/09/2026:** a regra exige o ingrediente "Açaí" especificamente, não apenas "composição não vazia". Decidido: um ingrediente conta como açaí quando o seu **nome, sem acentos e sem diferenciar maiúsculas de minúsculas, contém `acai`** (ex.: "Açaí (polpa)", "AÇAÍ ZERO", "Polpa de açaí"). A verificação é feita na aplicação (Java), isolada em um único método, sem alteração no DER nem no DDL. Consequências: (1) se o dono renomear o ingrediente para um nome sem "açaí", o sistema recusa novos produtos até a correção do nome (falha segura); (2) mais de um ingrediente de açaí é permitido; (3) alternativas descartadas: ID fixo (o ID é gerado pelo banco) e coluna `eh_ingrediente_base` (mais robusta, mas exigiria alterar DER, UML, DDL e Tela 07 — pode ser adotada depois trocando apenas esse método). O teste unitário do método deve cobrir: aceitos — "Açaí (polpa)", "AÇAÍ ZERO", "polpa de acai"; recusados — "Granola", "Leite condensado", texto vazio e `null`.
 
@@ -109,6 +112,7 @@ Incluímos uma coluna extra, **Caso de uso (E3)**, além do modelo, para fechar 
 ## 4. Decisões e notas
 
 ### 4.1 Já validadas com a equipe
+- **D-A (cadastro de Administrador) e D-B (Tela 07 sem o campo porção):** confirmadas em 20/09/2026. Lucas aprovou a opção 2 do D-A (cadastro aberto só até existir o primeiro Administrador; depois, `409` — CT01B); Leonardo aprovou incluir o campo *porção* na Tela 07, pré-preenchido pela unidade escolhida (ver `sql_repositorios_sprint1.md`, seção 5).
 - **Testes de integração:** Testcontainers com PostgreSQL 16 real (atualizado de MySQL em 16/09/2026, ver DER.md) — Docker confirmado disponível para todo mundo.
 - **US5 (composição do produto):** a regra exige o ingrediente "Açaí" especificamente, não apenas "composição não vazia" (como localizar esse ingrediente: decidido em 19/09/2026 — o nome, sem acentos e sem diferenciar maiúsculas, contém "acai"; ver a decisão registrada na seção 3, junto ao CT15).
 - **Backlog — atores de US9, US12, US13, US15 e US16:** confirmado que os dois perfis (Administrador e Funcionário) têm acesso a essas 5 funcionalidades, conforme o `.docx` — que também é o que bate com `Diagramas_UML.md`. O `.pdf` do backlog está desatualizado nesses 5 pontos (mostra só 1 ator em cada um); vale atualizar essa exportação para não confundir quem abrir só o `.pdf`. CT27 e CT28 (seção 3) já cobrem essa confirmação para US9 e US12; US13, US15 e US16 recebem o mesmo tratamento quando forem detalhadas.

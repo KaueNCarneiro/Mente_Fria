@@ -373,6 +373,8 @@ Consequências aceitas: (1) se o dono renomear o ingrediente para um nome sem "a
 
 ## 5. Dúvidas e pontos a alinhar
 
+> **Atualização (20/09/2026):** D-A e D-B foram confirmadas pela equipe — Lucas (D-A) e Leonardo (D-B). Os detalhes de cada decisão continuam abaixo, para referência.
+
 ### D-A — O cadastro de Administrador (US1) fica aberto para qualquer pessoa?
 
 **Impacto:** o sistema atende um único comércio. Se o cadastro de Administrador ficar sempre aberto, qualquer pessoa que descubra a URL cria uma conta de Administrador e passa a ver e alterar preços, estoque e usuários — o que anula a separação de perfis (US2/US3).
@@ -384,13 +386,13 @@ Consequências aceitas: (1) se o dono renomear o ingrediente para um nome sem "a
 
 **Recomendação:** opção 2. O custo é baixo: a consulta já está pronta e o `Service` ganha uma condição (se já existe Administrador, o cadastro responde `409`, e o frontend esconde o link "Criar conta" da tela de login). O CT01 continua válido e falta um caso de teste novo: *cadastro de Administrador quando já existe um → recusado*. Duas requisições simultâneas no primeiro acesso poderiam criar dois administradores; para o MVP o risco é desprezível.
 
-**Situação:** o *Contrato de Comunicação* (§2.1, §2.2 e §2.4; revisão aprovada pelo Kauê em 20/09/2026) adota a **opção 2**: `POST /api/auth/registro` é público só enquanto não existir Administrador, e depois responde `409`. Falta o **Lucas confirmar** (item B5 do contrato).
-
-**Decisão necessária:** equipe (Lucas, como Product Owner/Backend).
+**Decisão confirmada (20/09/2026):** o Lucas aprovou a **opção 2**, alinhada ao *Contrato de Comunicação* (§2.1, §2.2 e §2.4 — item B5, agora fechado): `POST /api/auth/registro` é público **só enquanto não existir Administrador**; depois, `409 { "mensagem": "O cadastro do Administrador já foi realizado." }`. O caso de teste ficou registrado como **CT01B** no `Plano_de_Testes_Mente_Fria.md`.
 
 ### D-B — A Tela 07 (protótipo) não tem o campo "porção", mas o banco exige
 
 `ingrediente.porcao_padrao` é `NOT NULL` sem valor padrão, e a US4 lista "porção" entre os campos obrigatórios. Mas a Tela 07 do `Roteiro do Protótipo` mostra nome, unidade de medida, custo e quantidade mínima — sem porção. E a Tela 09 monta a composição "por quantidade de porções", que depende da porção de cada ingrediente. **Recomendação:** a Tela 07 ganha o campo *porção*, pré-preenchido com a porção sugerida da unidade escolhida (`UnidadeMedidaRepository.listar` já devolve esse valor). Não muda o banco; é um ajuste de tela (Leonardo).
+
+**Decisão confirmada (20/09/2026):** o Leonardo aprovou a recomendação. Falta atualizar o campo *porção* no Figma (Tela 07) e, quando isso acontecer, a linha correspondente do `Roteiro do Protótipo Navegável`.
 
 ### Proposta (sem decisão pendente) — usuário inativo
 

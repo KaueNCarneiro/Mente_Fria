@@ -30,7 +30,6 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
    - Otimização: `pip install -r [caminho]/requirements.txt`
    - Frontend: sem dependências de build identificadas até o momento (HTML/CSS/JS servidos como estáticos)
 3. Configure as variáveis de ambiente (copie `.env.example` para `.env` e preencha — **nunca comite o `.env` real**):
-
    | Variável | Descrição |
    |---|---|
    | `DB_HOST` | Host do PostgreSQL |
@@ -38,7 +37,14 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
    | `DB_NAME` | Nome do banco (ex.: `mente_fria`) |
    | `DB_USER` | Usuário do PostgreSQL |
    | `DB_PASSWORD` | Senha do PostgreSQL |
-   | `[GRB_LICENSE_FILE ou GRB_WLSACCESSID / GRB_WLSSECRET]` | Credenciais da licença Gurobi (depende do tipo escolhido) |
+   | `JWT_SECRET` | Chave que assina os tokens de login (JWT). Qualquer texto longo e aleatório; nunca reaproveitar entre ambientes |
+   | `CORS_ALLOWED_ORIGIN` | Endereço do frontend liberado a chamar a API (em desenvolvimento: `http://127.0.0.1:5500,http://localhost:5500`) |
+   | `PYTHON_CMD` | Comando para chamar o Python nesta máquina (`python`, `python3` ou `py`, conforme o sistema operacional) |
+   | `OTIMIZADOR_SCRIPT` | Caminho do script `otimizador.py`, relativo à pasta de onde o backend é iniciado |
+   | `GRB_WLSACCESSID` | ID de acesso da licença Gurobi WLS (Web License Service) |
+   | `GRB_WLSSECRET` | Chave secreta da licença Gurobi WLS |
+   | `GRB_LICENSEID` | Número da licença Gurobi WLS |
+   As três últimas vêm do arquivo `.lic` baixado no Web License Manager do Gurobi (gurobi.com), depois de gerar uma licença WLS. **Nunca commitar esse arquivo nem os valores reais** — eles são segredo tanto quanto `DB_PASSWORD`.
 
 4. Crie o banco e carregue o schema com os dados de exemplo (detalhes na seção **Banco de dados**, abaixo):
    ```bash

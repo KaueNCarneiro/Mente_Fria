@@ -1,0 +1,17 @@
+# Backend Java (já tem gitignore próprio em backend/, isso aqui é reforço)
+backend/target/
+backend/.env
+
+# Python
+optimization/venv/
+optimization/__pycache__/
+optimization/.pytest_cache/
+
+# IntelliJ
+.idea/
+backend/.idea/
+*.iml
+
+# Sistema
+.DS_Store
+Thumbs.db

@@ -6,6 +6,9 @@ backend/.env
 optimization/venv/
 optimization/__pycache__/
 optimization/.pytest_cache/
+optimization/*.pyc
+optimization/gurobi.lic
+optimization/.env
 
 # IntelliJ
 .idea/

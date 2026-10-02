@@ -1,0 +1,7 @@
+{
+  "name": "mente-fria-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {"test": "node tests/browser.cjs"},
+  "devDependencies": {"playwright": "1.62.1"}
+}

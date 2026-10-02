@@ -18,3 +18,6 @@ backend/.idea/
 # Sistema
 .DS_Store
 Thumbs.db
+
+# Dependências frontend
+/frontend/node_modules/

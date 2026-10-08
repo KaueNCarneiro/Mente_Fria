@@ -31,6 +31,7 @@ Um contrato existe para alinhar duas partes que não compartilham código nem en
 - **Codificação UTF-8** nas duas pontas. No Python: `sys.stdin.reconfigure(encoding="utf-8")` e o mesmo para a `stdout`. Sem isso, no Windows, "Açaí" chega quebrado.
 - **Código de saída `0`** = há um JSON válido na `stdout`, **inclusive quando `status` é `"erro"`**. Qualquer outro código = falha técnica (exceção não tratada, processo morto); o `stderr` vai para o log do backend.
 - **Timeout: 10 segundos** (valor provisório, até medir com o Gurobi). Se estourar, o Java encerra o processo e devolve um erro tratado, **sem *stack trace* para o usuário**.
+- **Compute Server (adicionado em 28/09/2026; hospedagem de desenvolvimento decidida em 02/10/2026):** dentro do `otimizador.py`, a resolução do modelo deixou de ser local no sentido de ficar no mesmo processo — o script se conecta a um Gurobi Compute Server. Isso **não muda o contrato JSON em si** (continua `stdin`/`stdout` entre Java e o processo Python). Para o desenvolvimento, Kauê e Lucas decidiram que **cada um roda o próprio Compute Server localmente** (`localhost`), com a própria licença acadêmica WLS — então, por enquanto, não há dependência de rede entre máquinas diferentes, e o limite de **1 job por vez, sem fila** da licença acadêmica não vira conflito entre os dois, já que usam servidores separados. Isso ainda muda o **timeout**: mesmo local, a chamada ao Compute Server é uma etapa a mais que não existia antes, então o timeout de 10 s continua "a confirmar" até medir de verdade. **Em produção**, só uma das duas licenças será usada, e esse Compute Server de produção precisa estar acessível a partir do Render — essa parte (onde ele vai rodar em produção) segue em aberto (ver `ARQUITETURA.md`, seção 8).
 
 ### 1.1 Requisição (Java → Python, `stdin`)
 
@@ -72,7 +73,7 @@ Nomes de campo iguais aos do DER (snake_case), para não exigir tradução nas d
 Regras:
 
 - Só entram **produtos com `ativo = true`**. Esse filtro é feito pelo Java antes de montar o JSON (o Python não consulta o banco).
-- `ingredientes` traz **todos os ingredientes usados por algum produto enviado, inclusive os com estoque 0**. **O Java não remove ingrediente sem estoque.** Motivo: um produto que usa um ingrediente em falta precisa ser limitado a 0, e se o ingrediente sumisse da lista o Python não saberia o limite dele. No exemplo acima, a granola (`id` 3) está com estoque 0 e o leite condensado (`id` 2) está escasso: se a granola fosse retirada da lista, o Python recomendaria 46 copos do produto 2 sem granola em estoque; com ela na lista, o resultado correto é 66 do produto 1 e 0 do produto 2.
+- `ingredientes` traz **todos os ingredientes usados por algum produto enviado, inclusive os com estoque 0**, **exceto o saldo de lotes vencidos** (decisão do grupo, 25/09/2026 — o Java desconta esse saldo antes de montar o JSON). **O Java não remove ingrediente por falta de estoque não vencido.** Motivo: um produto que usa um ingrediente em falta precisa ser limitado a 0, e se o ingrediente sumisse da lista o Python não saberia o limite dele. No exemplo acima, a granola (`id` 3) está com estoque 0 e o leite condensado (`id` 2) está escasso: se a granola fosse retirada da lista, o Python recomendaria 46 copos do produto 2 sem granola em estoque; com ela na lista, o resultado correto é 66 do produto 1 e 0 do produto 2.
 - O Python responde `status: "erro"` se uma composição citar um `ingrediente_id` que **não está** em `ingredientes`, se um produto vier **sem composição** ou se a lista de `produtos` vier **vazia**.
 - `composicao` já vem achatada a partir de `produto_ingrediente`.
 - **Unidades:** `quantidade_estoque` e `quantidade_utilizada` estão na **mesma unidade do ingrediente** (kg, l, un), como no banco. O Python não converte nada.
@@ -230,7 +231,7 @@ Erro (unidade não cadastrada — FK `fk_ingrediente_unidade_medida`): `400 { "m
 // response 201
 { "id": 4, "nome": "Açaí Tradicional 300ml", "preco_venda": 12.90, "ativo": true }
 ```
-`quantidade_utilizada` está **na unidade do ingrediente** (kg, l, un). Produto e composição são gravados em **uma única transação**. *(quem converte porções em quantidade — item B1, confirmar com Leonardo e Lucas)*
+`quantidade_utilizada` está **na unidade do ingrediente** (kg, l, un). Produto e composição são gravados em **uma única transação**. *(quem converte porções em quantidade — item B1, confirmado em 25/09/2026: o frontend)*
 
 Erros (todos `400`, no formato `{ "mensagem": "Dados inválidos", "campos": { ... } }`):
 
@@ -322,7 +323,6 @@ Paginação em `GET /api/pedidos` e `GET /api/ingredientes` fica **fora do MVP**
 
 | Item | O que foi adotado | Confirmar com |
 |---|---|---|
-| B1 | `POST /api/produtos` recebe `quantidade_utilizada` (mesmo campo do banco); o **frontend converte** porções em quantidade, usando a `porcao_padrao` de cada ingrediente (que já vem em `GET /api/ingredientes`) | Leonardo e Lucas |
 | B3 | Rotas das telas "Editar" fora da Sprint 1 | Equipe |
 | B5 | Cadastro de Administrador só no primeiro acesso; depois, `409` (é a opção 2 do D-A) | **Confirmado por Lucas em 20/09/2026** |
 | B6 | JSON em snake_case; o Lucas configura a serialização no Spring (por exemplo, `@JsonProperty` ou configuração global do Jackson, que varia com a versão do Spring Boot) | Lucas e Leonardo |
@@ -332,7 +332,7 @@ Paginação em `GET /api/pedidos` e `GET /api/ingredientes` fica **fora do MVP**
 
 ## 3. Histórico de revisões
 
-| Data | O que mudou | Itens da revisão |
-|---|---|---|
+| 28/09/2026 | §1: nota sobre o Gurobi Compute Server (dependência de rede, timeout ainda mais provisório, limite de 1 job por vez). Proposta minha para o Kauê revisar e, se concordar, aplicar no arquivo oficial. | §1 |
+| 25/09/2026 | Item **B1** (§2.4) confirmado pelo grupo: o frontend converte porções em quantidade (B1). **§1.1:** ingredientes com lote vencido deixam de contar como estoque disponível enviado ao Python (decisão do grupo). | B1 |
 | 20/09/2026 | Item **B5** (§2.4) confirmado pelo Lucas: cadastro de Administrador só até existir o primeiro (D-A). Caso de teste correspondente registrado como CT01B no Plano de Testes. | B5 |
 | 20/09/2026 | Revisão de consistência aprovada pelo Kauê. **§0:** donos e documentos do contrato Banco↔Java. **§1:** ingredientes com estoque 0 passam a ser enviados (removido o filtro "estoque > 0"); regras de erro e de "sem estoque" (`sucesso` com quantidades 0); UTF-8, timeout de 10 s e recálculo da receita em `BigDecimal`; exemplo de Hello World com o banco real. **§2:** Base URL sem `/api`; CORS; convenções do JSON (snake_case); formato de erro com `campos`; tabela de códigos HTTP; exemplos sem dados do seed antigo; novos exemplos (`unidades-medida`, `produtos`, preço, registro, `saude`); coluna Sprint; rotas "Editar" separadas; `POST` em produção; regras de `itens` únicos e de `data_validade`. | A1–A9, B1–B6, C1–C2, D1–D4 |

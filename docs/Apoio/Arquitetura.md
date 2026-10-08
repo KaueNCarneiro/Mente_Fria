@@ -4,7 +4,7 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-**Última atualização:** 25/09/2026
+**Última atualização:** 02/10/2026
 
 > **Status:** decisões D1 a D5 validadas pela equipe em 18/09/2026 (D4 registrada com base na experiência declarada da equipe — ver seção 2). Itens marcados como **proposta** ainda não foram validados e devem ser confirmados na implementação. As pendências estão na seção 8.
 >
@@ -52,20 +52,20 @@ Confirmado pela equipe em 18/09/2026: o plano Free do Render aceita Docker (nece
 
 | Item | Decisão | Observação |
 |---|---|---|
-| JDK | **21 (LTS)** | |
-| Spring Boot | **3.3.4** | **Atenção:** a linha 3.3.x está fora do período normal de suporte desde novembro de 2024 (quase 2 anos), sem receber mais correções de segurança. Ver nota no fim desta seção. |
+| JDK | **25 (LTS)** | Atualizado em 27/09/2026 (era 21). Combinação recomendada pela própria documentação do Spring Boot 4.x. |
+| Spring Boot | **4.0.8** | Atualizado em 27/09/2026 (era 3.3.4). Resolve a pendência de suporte — o 4.0.x é a linha atual e mantida. **Usa Jackson 3** (pacote `tools.jackson`), diferente do Jackson 2 da linha 3.x — ver a nota do Roteiro v3, seção 4. |
 | Build | **Maven** | Mantém os comandos já usados no README e no Roteiro (`mvn spring-boot:run`, `mvn test`) |
-| Python | **3.14.7** | **Atenção:** ver nota no fim desta seção sobre compatibilidade com o Gurobi. |
-| Gurobi | A confirmar | O time vai instalar a versão mais recente disponível via `pip install gurobipy` e conferir a compatibilidade com o Python 3.14 antes de seguir (ver nota abaixo) |
-| Licença Gurobi | **WLS (Web License Service)** | Decidida antecipadamente (a recomendação original era decidir só perto do deploy); as credenciais entram como variáveis de ambiente (seção 5) |
+| Python | **3.14.7** | Compatibilidade com o Gurobi 13.0.1 confirmada (ver linha abaixo) — a pendência anterior está resolvida. |
+| Gurobi | **13.0** (confirmar se é a 13.0.1) | **Atenção:** só a versão **13.0.1** do Gurobi suporta Python 3.14 — a 13.0.0 vai só até o Python 3.13. Confirmar com o Kauê qual versão exata foi instalada (`import gurobipy; print(gurobipy.gurobi.version())`). |
+| Licença/implantação do Gurobi | **WLS Compute Server** — confirmado em 28/09/2026 (é mesmo o serviço à parte, não só a licença). **Hospedagem para desenvolvimento decidida em 02/10/2026:** cada desenvolvedor roda o próprio Compute Server localmente, com licença própria (Kauê e Lucas, por enquanto) | Muda a arquitetura da seção 3.3. **Em aberto:** só a hospedagem do Compute Server de **produção** (seção 8). |
 | Autenticação | **Spring Security + biblioteca de JWT** (ex.: `jjwt`) | |
 | Conversão de porções (item B1 do Contrato) | **O frontend converte**, usando a `porcao_padrao` de cada ingrediente | Fecha também o item B1 da seção 2.4 do Contrato de Comunicação |
 | Ingredientes vencidos na otimização | **Não contam** como estoque disponível | O Java filtra antes de montar o JSON para o Python |
 | Responsável pelo módulo Python | **Kauê** | |
 
-> **Duas decisões pedem atenção antes de avançar:**
-> - **Spring Boot 3.3.4** está fora do período normal de suporte (OSS) desde novembro de 2024, com vulnerabilidades de segurança já conhecidas e sem correção nessa linha. Para um projeto que começa agora, o caminho comum seria uma versão ainda mantida (3.5.x, com suporte até meados de 2026, ou 4.0.x, a atual). Vale a equipe confirmar se a escolha por 3.3.4 foi intencional (por exemplo, para seguir algum material de estudo específico) antes de gerar o projeto em start.spring.io.
-> - **Python 3.14** é muito recente (lançado em outubro de 2025). Até a data da última pesquisa (24/09/2026), a página oficial do Gurobi confirmava suporte até o Python 3.13; o suporte ao 3.13 só veio com uma versão específica do Gurobi (12.0.1), e o suporte ao 3.14 pode ainda depender de uma versão do Gurobi que os canais de suporte oficiais indicavam como prevista, sem confirmação de que já foi lançada. **Antes de codar o `otimizador.py` de verdade**, o Kauê deve rodar `pip install gurobipy` num ambiente com Python 3.14 e testar um exemplo simples; se der erro de instalação ou de compatibilidade, o caminho mais seguro é recuar para Python 3.12, como a pendência original já sugeria.
+> **Atualização de versões (27/09/2026):** o grupo trocou o JDK 21 → **25** e o Spring Boot 3.3.4 → **4.0.8**. Isso **resolve** a pendência de suporte que havia antes (o Spring Boot 3.3.x estava sem correções de segurança desde novembro de 2024; o 4.0.x é a linha atual). A troca também resolve a pendência do Python 3.14: o Gurobi confirma suporte a partir da versão **13.0.1** — coerente com a troca do Gurobi para a linha 13.0 (ver linha da tabela acima, com a ressalva do patch exato).
+>
+> **Confirmado em 28/09/2026: é mesmo um Gurobi Compute Server**, não só a licença WLS usada localmente. Isso muda de verdade a arquitetura da ponte com o Python — ver a seção 3.3 (atualizada) e a pendência de onde o servidor vai rodar, na seção 8.
 
 
 O **Contrato de Comunicação** (mantido pelo Kauê; revisado e aprovado em 20/09/2026) detalha as rotas REST, os erros e o formato JSON trocado com o Python.
@@ -95,16 +95,27 @@ O **Contrato de Comunicação** (mantido pelo Kauê; revisado e aprovado em 20/0
 - **Transações:** o registro de pedido (US12) grava `pedido`, `pedido_produto`, baixa de `ingrediente.quantidade_estoque` e insere movimentações `SAIDA` em **uma única transação** (CT25). A escolha FEFO das entradas é aplicada nessa mesma transação.
 - As consultas agregadas do dashboard (US17) são escritas em SQL explícito.
 
-### 3.3 Backend ↔ Python/Gurobi — subprocesso com contrato JSON
+### 3.3 Backend ↔ Python/Gurobi — subprocesso com contrato JSON + Compute Server
 
 **Como funciona**
 
 1. O backend lê o estoque, os produtos ativos e as composições no banco e monta o JSON de entrada.
-2. Executa `python optimization/otimizador.py` (`ProcessBuilder`) e envia o JSON pela entrada padrão.
-3. Lê o JSON de saída na saída padrão, com **timeout de 10 s** (provisório, conforme o contrato).
-4. Devolve o resultado ao frontend em linguagem de negócio (sem termos de otimização — US11).
+2. Executa `python optimization/otimizador.py` (`ProcessBuilder`) e envia o JSON pela entrada padrão. **Isso não muda** com o Compute Server: o Java continua só conversando com o processo Python local, do mesmo jeito.
+3. **Dentro do `otimizador.py`** (isso sim muda): em vez de resolver o modelo localmente, o script se conecta a um **Gurobi Compute Server** pela rede e manda o problema para ser resolvido lá. Isso acontece via parâmetros do ambiente do Gurobi (`ComputeServer` com o endereço `host:porta`, e `ServerPassword`) — **diferente** dos parâmetros da licença WLS "cliente" (`WLSACCESSID`/`WLSSECRET`/`LICENSEID`), que eram o que a seção 5 tinha até aqui.
+4. O Java lê o JSON de saída na saída padrão, com **timeout** (ver nota abaixo — 10 s deixou de ser realista).
+5. Devolve o resultado ao frontend em linguagem de negócio (sem termos de otimização — US11).
 
 No Java, a chamada fica atrás de uma interface (ex.: `OtimizadorProducao`), o que permite trocar a implementação e testar o restante com um dublê.
+
+> **Onde o Compute Server roda — decidido pela equipe em 02/10/2026 (Kauê e Lucas):** em vez de um único servidor compartilhado, **cada desenvolvedor que precisa testar roda o seu próprio Compute Server localmente**, com a própria licença acadêmica WLS. O Kauê já tinha a dele; o Lucas obteve uma segunda, para testar a comunicação Java↔Python na própria máquina sem depender do computador do Kauê estar ligado. **Em produção (Render), as duas licenças deixam de ser necessárias — só uma delas é configurada no container.**
+>
+> **O que isso resolve:**
+> - **Não depende mais de uma máquina específica estar ligada.** Durante o desenvolvimento, `GRB_COMPUTESERVER` aponta para `localhost:porta` — o Compute Server e o `otimizador.py` rodam na mesma máquina, então deixa de existir a dependência de rede entre computadores diferentes enquanto o time testa.
+> - **O limite de "1 job por vez, sem fila"** da licença acadêmica deixa de ser um problema entre o Kauê e o Lucas testando ao mesmo tempo, porque cada um usa seu próprio servidor/licença — só voltaria a importar se duas pessoas usassem o **mesmo** Compute Server ao mesmo tempo.
+>
+> **O que continua valendo:**
+> - **Timeout de 10 s ainda é só uma estimativa.** Mesmo local, a chamada passa a ter uma etapa de rede a mais (cliente → Compute Server → cliente) que não existia na solução local "pura". Vale medir antes de considerar definitivo.
+> - **Em produção**, só uma licença é usada (a decidir qual), e o Compute Server escolhido para produção precisa estar acessível a partir do Render — isso ainda depende de decidir **onde esse Compute Server de produção vai rodar** (a própria máquina de alguém exposta pela rede continua frágil para produção; um container à parte em nuvem é a opção mais robusta). Essa parte da pendência original segue em aberto, mas já não bloqueia o desenvolvimento.
 
 **Contrato**
 
@@ -146,7 +157,9 @@ A requisição, a resposta e as regras estão no **Contrato de Comunicação** (
 | `CORS_ALLOWED_ORIGIN` | Backend | Origem do frontend liberada no CORS | A incluir no README |
 | `PYTHON_CMD` | Backend | Comando para chamar o Python (`python`, `python3` ou `py`, conforme a máquina) | A incluir no README |
 | `OTIMIZADOR_SCRIPT` | Backend | Caminho do script `otimizador.py`, relativo à pasta de onde o backend inicia | A incluir no README |
-| `GRB_WLSACCESSID`, `GRB_WLSSECRET`, `GRB_LICENSEID` | Python | Credenciais da licença Gurobi WLS (decidida em 25/09/2026) | A incluir no README |
+| `GRB_COMPUTESERVER` | Python | Endereço do Gurobi Compute Server. **Em desenvolvimento, cada um usa `localhost:porta`** (o servidor roda na própria máquina, com a própria licença); em produção, aponta para o Compute Server escolhido (a decidir) | **Proposta** — nome e formato a confirmar com o Kauê e o Lucas, conforme como cada um configurar o próprio servidor |
+| `GRB_SERVERPASSWORD` | Python | Senha do cliente para o Compute Server (definida na configuração do próprio servidor, não é a licença WLS em si) — cada desenvolvedor tem a sua, local | **Proposta** — idem |
+| `GRB_WLSACCESSID`, `GRB_WLSSECRET`, `GRB_LICENSEID` | O **Compute Server em si** (não o cliente Python) | Credenciais da licença WLS acadêmica, usadas na hora de **configurar o servidor** — em desenvolvimento, ficam na máquina de cada desenvolvedor (Kauê ou Lucas); em produção, só uma das duas vai para o container, não no `.env` do backend | Desenvolvimento: resolvido (local). Produção: depende de onde o servidor for hospedado (seção 8) |
 
 O `.env` real nunca é versionado; o `.env.example` lista as variáveis sem valores.
 
@@ -185,7 +198,19 @@ Recomendação: **fazer o deploy do "esqueleto"** (passos 2 e 3 da seção 7) j�
 - Autenticação (Spring Security + JWT).
 - Conversão de porções (item B1 do contrato) e ingredientes vencidos na otimização.
 - Responsável pelo módulo Python.
-- README atualizado com as 6 variáveis novas da seção 5.
+- README atualizado com as 6 variáveis novas da seção 5 (`JWT_SECRET`, `CORS_ALLOWED_ORIGIN`, `PYTHON_CMD`, `OTIMIZADOR_SCRIPT`, `GRB_WLSACCESSID`, `GRB_WLSSECRET`, `GRB_LICENSEID`).
+
+**Atualizadas em 27–28/09/2026:**
+- JDK 21 → 25; Spring Boot 3.3.4 → 4.0.8 (resolve a pendência de suporte que havia antes).
+- Confirmado: Gurobi **Compute Server** com licença WLS acadêmica (não é só a licença usada localmente) — ver seção 3.3.
+
+**Resolvido em 02/10/2026 — onde o Compute Server roda durante o desenvolvimento:** cada desenvolvedor que precisa testar (por enquanto, Kauê e Lucas) roda o próprio Compute Server localmente, com a própria licença acadêmica WLS. Isso elimina a dependência de uma máquina específica estar ligada e o risco de conflito do limite "1 job por vez" entre pessoas diferentes testando ao mesmo tempo (ver seção 3.3).
+
+**Segue em aberto:**
+- **Onde o Compute Server de produção vai rodar.** A decisão acima resolve o desenvolvimento, mas em produção (Render) só uma das duas licenças será usada, e esse Compute Server escolhido precisa estar ligado e acessível pela rede o tempo todo — a própria máquina de alguém exposta pela rede continua frágil para esse caso. Opções a avaliar mais perto do deploy: (a) um container à parte em algum serviço de nuvem (o Render também hospeda containers Docker); (b) alguma oferta de laboratório/infraestrutura da faculdade, se existir.
+- **Qual das duas licenças (Kauê ou Lucas) será a usada em produção.**
+- **Nomes exatos de `GRB_COMPUTESERVER` e `GRB_SERVERPASSWORD`** (seção 5): propostas minhas, a confirmar contra a configuração real que o Kauê e o Lucas fizerem.
+- **Medir o timeout de verdade** com uma chamada real ao Compute Server local antes de considerar os 10 s definitivos.
 
 **Ainda em aberto:**
 

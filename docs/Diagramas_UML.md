@@ -53,7 +53,7 @@ Proprietário))
 
 > **Observação:** US8 (repositório Git com README) e US20 (deploy público por URL) são requisitos não-funcionais/de entrega do projeto (cobertos no Documento de Visão, seção 6, e no Termo de Aceite, seção 2), não funcionalidades acionadas por um ator dentro do sistema — por isso não aparecem como casos de uso. As histórias US21 a US25 estão marcadas como **Won't** no Backlog Priorizado (fora do escopo do semestre) e, portanto, também não têm caso de uso correspondente.
 >
-> **Observação (adicionada nesta revisão):** UC20 corresponde a **US26 — Definir porção padrão por unidade de medida**, história derivada da Tela 19 do protótipo navegável e ainda **não incluída no `Backlog_Priorizado` atual** (documento em PDF, fora do escopo de edição direta deste chat) — a equipe precisa adicioná-la manualmente lá para manter a rastreabilidade Backlog ↔ Caso de Uso completa. Assim como as demais histórias de cadastro, UC20 inclui (`<<include>>`) UC7 porque a validação `porcao_padrao > 0` é uma regra transversal.
+> **Observação (adicionada nesta revisão):** UC20 corresponde a **US26 — Definir porção padrão por unidade de medida**, história derivada da Tela 19 do protótipo navegável, **já incluída no `Backlog_Priorizado`** (item 26, prioridade Could, Sprint 3), o que completa a rastreabilidade Backlog ↔ Caso de Uso. Assim como as demais histórias de cadastro, UC20 inclui (`<<include>>`) UC7 porque a validação `porcao_padrao > 0` é uma regra transversal.
 
 ---
 
@@ -143,8 +143,10 @@ Proprietário))
     %% Os cálculos de recomendação de produção, reposição e sugestão de marketing (UC10, UC11, UC14, UC18)
     %% passaram a ser feitos sob demanda pelos métodos de Ingrediente e Produto acima — sem persistir
     %% histórico de cálculo, por isso não existem mais como classes/tabelas próprias.
-    %% calcularQuantidadeOtimaProducao() resolve um problema de otimização via Programação Linear
-    %% (Python, biblioteca Gurobi); o resultado fica em memória (RAM) do processo, sem histórico salvo.
+    %% calcularQuantidadeOtimaProducao() resolve um problema de otimização via Programação Linear Inteira pura
+    %% (Python, biblioteca Gurobi): as variáveis de decisão — quantidade de copos de cada produto — são todas
+    %% inteiras, com função objetivo e restrições lineares. O resultado fica em memória (RAM) do processo,
+    %% sem histórico salvo.
 
     %% Herança dos usuários
 
@@ -168,11 +170,11 @@ Proprietário))
 
 ```
 
-`ComposicaoProduto` e `ItemPedido` representam, no nível conceitual, as classes associativas que resolvem os relacionamentos N:N entre Produto/Ingrediente e Pedido/Produto citados no Documento de Visão (seção 6). No DER (nível físico, `docs/der.md`) esses relacionamentos são implementados como tabelas associativas (`produto_ingrediente` e `pedido_produto`).
+`ComposicaoProduto` e `ItemPedido` representam, no nível conceitual, as classes associativas que resolvem os relacionamentos N:N entre Produto/Ingrediente e Pedido/Produto citados no Documento de Visão (seção 6). No DER (nível físico, `docs/DER.md`) esses relacionamentos são implementados como tabelas associativas (`produto_ingrediente` e `pedido_produto`).
 
-As funcionalidades de recomendação de produção (UC10, UC11), recomendação de reposição (UC14) e sugestão de marketing (UC18) continuam no sistema, mas passaram a ser calculadas sob demanda — via `Produto.calcularQuantidadeOtimaProducao()`, `Produto.gerarSugestaoMarketing()` e `Ingrediente.calcularQuantidadeRecomendadaCompra(periodoDias)` — sem persistir o histórico de cálculo. Por isso `RecomendacaoProducao`, `ItemRecomendacaoProducao`, `RecomendacaoReposicao`, `ItemRecomendacaoReposicao` e `SugestaoMarketing` saíram do diagrama e não têm mais tabela correspondente no DER (`docs/der.md`).
+As funcionalidades de recomendação de produção (UC10, UC11), recomendação de reposição (UC14) e sugestão de marketing (UC18) continuam no sistema, mas passaram a ser calculadas sob demanda — via `Produto.calcularQuantidadeOtimaProducao()`, `Produto.gerarSugestaoMarketing()` e `Ingrediente.calcularQuantidadeRecomendadaCompra(periodoDias)` — sem persistir o histórico de cálculo. Por isso `RecomendacaoProducao`, `ItemRecomendacaoProducao`, `RecomendacaoReposicao`, `ItemRecomendacaoReposicao` e `SugestaoMarketing` saíram do diagrama e não têm mais tabela correspondente no DER (`docs/DER.md`).
 
-O atributo `dataValidade`, antes em `Ingrediente`, passou para `MovimentacaoEstoque`, pois cada `ENTRADA` de estoque pode corresponder a um lote com validade diferente das entradas anteriores do mesmo ingrediente. Por isso `dataValidade` só é preenchida quando `tipo = ENTRADA`; em uma `SAIDA` ela permanece nula, já que a saída apenas consome estoque já existente. Essa regra é garantida no nível físico pela constraint `chk_movimentacao_data_validade` do DER (`docs/der.md`). Consequentemente, `estaProximoDoVencimento` e os UC16/US16 (alerta de vencimento) devem consultar apenas movimentações do tipo `ENTRADA` com `dataValidade` preenchida.
+O atributo `dataValidade`, antes em `Ingrediente`, passou para `MovimentacaoEstoque`, pois cada `ENTRADA` de estoque pode corresponder a um lote com validade diferente das entradas anteriores do mesmo ingrediente. Por isso `dataValidade` só é preenchida quando `tipo = ENTRADA`; em uma `SAIDA` ela permanece nula, já que a saída apenas consome estoque já existente. Essa regra é garantida no nível físico pela constraint `chk_movimentacao_data_validade` do DER (`docs/DER.md`). Consequentemente, `estaProximoDoVencimento` e os UC16/US16 (alerta de vencimento) devem consultar apenas movimentações do tipo `ENTRADA` com `dataValidade` preenchida.
 
 `UnidadeMedidaPorcaoPadrao` (nova nesta revisão, US26/UC20) mantém um valor de `porcaoPadrao` por `unidadeMedida`, usado somente como **sugestão de pré-preenchimento** ao cadastrar um novo `Ingrediente` daquela unidade. O valor efetivo, usado em todos os cálculos de negócio (`calcularQuantidadeRecomendadaCompra`, composição de produto etc.), é sempre `Ingrediente.porcaoPadrao` — que pode divergir do padrão da unidade (ex.: Açaí com porção diferente dos demais ingredientes em `kg`). No DER, essa relação é implementada como uma FK obrigatória de `ingrediente.unidade_medida` para `unidade_medida_porcao_padrao.unidade_medida`.
 
@@ -200,4 +202,4 @@ O atributo `dataValidade`, antes em `Ingrediente`, passou para `MovimentacaoEsto
 | UC17 — Visualizar dashboard gerencial | US17 |
 | UC18 — Gerar sugestões de marketing | US18 |
 | UC19 — Exportar dashboard em CSV | US19 |
-| UC20 — Definir porção padrão por unidade de medida | US26 *(nova — ainda pendente de inclusão no `Backlog_Priorizado`, ver observação da seção 1)* |
+| UC20 — Definir porção padrão por unidade de medida | US26 *(item 26 do `Backlog_Priorizado` — Could, Sprint 3)* |

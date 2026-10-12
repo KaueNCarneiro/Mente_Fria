@@ -4,9 +4,9 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-**Revisão:** 20/09/2026 — revisão de consistência com `ARQUITETURA.md`, `Script_DDL.sql`, `mapa_constraints.md` e `sql_repositorios_sprint1.md`, **aprovada pelo Kauê** (histórico na seção 3).
+**Revisão:** 20/09/2026 — revisão de consistência com `ARQUITETURA.md`, `Script_DDL.sql`, `mapa_constraints.md` e `sql_repositorios_sprint1.md`, **aprovada pelo Kauê** (histórico na seção 3). **Atualização de 08/10/2026:** itens B3, B5, B6 e D3 confirmados pela equipe (seção 2.4) e nota do Compute Server atualizada (§1).
 
-> **Fonte de verdade.** Este documento prevalece sobre a `ARQUITETURA.md` e sobre os roteiros nos **nomes de campo, nos valores de `status` e no formato de erro**. Os itens marcados **(confirmar com …)** foram adotados conforme a recomendação da revisão e aguardam a confirmação da pessoa indicada (lista na seção 2.4).
+> **Fonte de verdade.** Este documento prevalece sobre a `ARQUITETURA.md` e sobre os roteiros nos **nomes de campo, nos valores de `status` e no formato de erro**. Todos os itens da seção 2.4 que estavam marcados como pendentes de confirmação foram **confirmados pela equipe** (registro em 08/10/2026).
 
 ---
 
@@ -31,7 +31,7 @@ Um contrato existe para alinhar duas partes que não compartilham código nem en
 - **Codificação UTF-8** nas duas pontas. No Python: `sys.stdin.reconfigure(encoding="utf-8")` e o mesmo para a `stdout`. Sem isso, no Windows, "Açaí" chega quebrado.
 - **Código de saída `0`** = há um JSON válido na `stdout`, **inclusive quando `status` é `"erro"`**. Qualquer outro código = falha técnica (exceção não tratada, processo morto); o `stderr` vai para o log do backend.
 - **Timeout: 10 segundos** (valor provisório, até medir com o Gurobi). Se estourar, o Java encerra o processo e devolve um erro tratado, **sem *stack trace* para o usuário**.
-- **Compute Server (adicionado em 28/09/2026; hospedagem de desenvolvimento decidida em 02/10/2026):** dentro do `otimizador.py`, a resolução do modelo deixou de ser local no sentido de ficar no mesmo processo — o script se conecta a um Gurobi Compute Server. Isso **não muda o contrato JSON em si** (continua `stdin`/`stdout` entre Java e o processo Python). Para o desenvolvimento, Kauê e Lucas decidiram que **cada um roda o próprio Compute Server localmente** (`localhost`), com a própria licença acadêmica WLS — então, por enquanto, não há dependência de rede entre máquinas diferentes, e o limite de **1 job por vez, sem fila** da licença acadêmica não vira conflito entre os dois, já que usam servidores separados. Isso ainda muda o **timeout**: mesmo local, a chamada ao Compute Server é uma etapa a mais que não existia antes, então o timeout de 10 s continua "a confirmar" até medir de verdade. **Em produção**, só uma das duas licenças será usada, e esse Compute Server de produção precisa estar acessível a partir do Render — essa parte (onde ele vai rodar em produção) segue em aberto (ver `ARQUITETURA.md`, seção 8).
+- **Gurobi Compute Server (adicionado em 28/09/2026; atualizado em 02/10/2026 e 08/10/2026):** dentro do `otimizador.py`, a resolução do modelo pode ser feita por um Gurobi Compute Server. Isso **não muda o contrato JSON em si** (continua `stdin`/`stdout` entre Java e o processo Python). Para o **desenvolvimento**, Kauê e Lucas decidiram que **cada um roda o próprio Compute Server localmente** (`localhost`), com a própria licença acadêmica WLS — não há dependência de rede entre máquinas e o limite de **1 job por vez, sem fila** da licença acadêmica não vira conflito entre os dois. O timeout de 10 s continua "a confirmar" até medir de verdade. Para **produção**, a licença usada será a do Lucas; o grupo **decidiu pela Alternativa C**: o `otimizador.py` usa a licença WLS diretamente no container do backend, **sem Compute Server** (a "Opção A", container à parte em nuvem, foi descartada — ver `ARQUITETURA.md`, seção 3.3). **Em qualquer das alternativas, o contrato JSON deste documento não muda.**
 
 ### 1.1 Requisição (Java → Python, `stdin`)
 
@@ -139,7 +139,7 @@ Esse endpoint é **removido** depois que o Hello World for validado (ele não te
 
 **Convenções do JSON:**
 
-- Nomes de campo em **snake_case**, iguais ao DER (`unidade_medida`, `custo_unitario`). *(confirmar com Lucas e Leonardo — item B6)*
+- Nomes de campo em **snake_case**, iguais ao DER (`unidade_medida`, `custo_unitario`). *(item B6 — confirmado pela equipe)*
 - Valores monetários com 2 casas decimais e quantidades com até 3; datas em ISO-8601 (`2026-09-20T14:30:00`); codificação UTF-8.
 
 **Formato de erro padrão:**
@@ -189,7 +189,7 @@ Erro (US3): `401 { "mensagem": "E-mail ou senha inválidos." }`. Um usuário ina
 // response 201
 { "id": 1, "nome": "Dono da Açaiteria", "email": "dono@acai.com", "perfil": "ADMINISTRADOR" }
 ```
-Erros: senha curta (CT02) → `400 { "mensagem": "Dados inválidos", "campos": { "senha": "A senha deve ter no mínimo 8 caracteres." } }`; e-mail duplicado (CT03) → `409 { "mensagem": "Dados inválidos", "campos": { "email": "Este e-mail já está cadastrado." } }`; **Administrador já existe** → `409 { "mensagem": "O cadastro do Administrador já foi realizado." }`. *(confirmar com Lucas — item B5)*
+Erros: senha curta (CT02) → `400 { "mensagem": "Dados inválidos", "campos": { "senha": "A senha deve ter no mínimo 8 caracteres." } }`; e-mail duplicado (CT03) → `409 { "mensagem": "Dados inválidos", "campos": { "email": "Este e-mail já está cadastrado." } }`; **Administrador já existe** → `409 { "mensagem": "O cadastro do Administrador já foi realizado." }`. *(item B5 — confirmado por Lucas em 20/09/2026)*
 
 **`GET /api/unidades-medida`** — Admin (alimenta a lista de seleção do formulário de ingredientes; a `porcao_padrao` serve para pré-preencher a porção)
 
@@ -304,7 +304,7 @@ Regras: `itens` **não pode repetir `produto_id`** (a chave primária de `pedido
 | Dashboard | GET | `/api/dashboard` | Admin | UC17 | 3 |
 | Dashboard | GET | `/api/dashboard/export-csv` | Admin | UC19 | 3 |
 
-**Rotas opcionais — telas "Editar" do protótipo** (o SQL já existe em `docs/sql_repositorios_sprint1.md`, mas as histórias US1–US7 não as exigem). **Fora da Sprint 1 até a equipe decidir:**
+**Rotas opcionais — telas "Editar" do protótipo** (o SQL já existe em `docs/sql_repositorios_sprint1.md`, mas as histórias US1–US7 não as exigem). **Fora da Sprint 1** — decisão confirmada pela equipe (item B3, registro em 08/10/2026); só entram em uma sprint posterior se a equipe decidir:
 
 | Método | Rota | Tela |
 |---|---|---|
@@ -319,19 +319,23 @@ Regras: `itens` **não pode repetir `produto_id`** (a chave primária de `pedido
 
 Paginação em `GET /api/pedidos` e `GET /api/ingredientes` fica **fora do MVP** (o volume da açaiteria não a exige).
 
-### 2.4 Itens adotados que aguardam confirmação
+### 2.4 Itens adotados — situação
 
-| Item | O que foi adotado | Confirmar com |
+| Item | O que foi adotado | Situação |
 |---|---|---|
-| B3 | Rotas das telas "Editar" fora da Sprint 1 | Equipe |
-| B5 | Cadastro de Administrador só no primeiro acesso; depois, `409` (é a opção 2 do D-A) | **Confirmado por Lucas em 20/09/2026** |
-| B6 | JSON em snake_case; o Lucas configura a serialização no Spring (por exemplo, `@JsonProperty` ou configuração global do Jackson, que varia com a versão do Spring Boot) | Lucas e Leonardo |
-| D3 | `POST` (e não `GET`) em `/api/producao/recomendacao`: é uma ação disparada pelo proprietário e inicia um processo pesado | Lucas |
+| B1 | O frontend converte porções em quantidade | **Confirmado** pelo grupo em 25/09/2026 |
+| B3 | Rotas das telas "Editar" fora da Sprint 1 | **Confirmado pela equipe** (registro em 08/10/2026) |
+| B5 | Cadastro de Administrador só no primeiro acesso; depois, `409` (é a opção 2 do D-A) | **Confirmado por Lucas** em 20/09/2026 |
+| B6 | JSON em snake_case; o Lucas configura a serialização no Spring (`@JsonProperty`, já implementado no `IngredienteResumo`) | **Confirmado por Lucas e Leonardo** (registro em 08/10/2026) |
+| D3 | `POST` (e não `GET`) em `/api/producao/recomendacao`: é uma ação disparada pelo proprietário e inicia um processo pesado | **Confirmado por Lucas** (registro em 08/10/2026) |
 
 ---
 
 ## 3. Histórico de revisões
 
+| Data | Alteração | Itens |
+|---|---|---|
+| 08/10/2026 | **Itens B3, B6 e D3 confirmados pela equipe** (B5 e B1 já estavam confirmados); removidas as marcações "(confirmar com …)". **§1:** nota do Compute Server atualizada — licença de produção será a do Lucas; produção decidida pelo grupo: **Alternativa C** (licença WLS direta no container do backend, sem Compute Server; Opção A descartada); o contrato JSON não muda. Proposta para o Kauê aplicar no arquivo oficial. | B3, B6, D3, §1 |
 | 28/09/2026 | §1: nota sobre o Gurobi Compute Server (dependência de rede, timeout ainda mais provisório, limite de 1 job por vez). Proposta minha para o Kauê revisar e, se concordar, aplicar no arquivo oficial. | §1 |
 | 25/09/2026 | Item **B1** (§2.4) confirmado pelo grupo: o frontend converte porções em quantidade (B1). **§1.1:** ingredientes com lote vencido deixam de contar como estoque disponível enviado ao Python (decisão do grupo). | B1 |
 | 20/09/2026 | Item **B5** (§2.4) confirmado pelo Lucas: cadastro de Administrador só até existir o primeiro (D-A). Caso de teste correspondente registrado como CT01B no Plano de Testes. | B5 |

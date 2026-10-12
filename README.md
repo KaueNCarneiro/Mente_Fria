@@ -1,6 +1,6 @@
 # Mente Fria
 
-Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: uma açaiteria), que centraliza o controle de estoque, produtos, ingredientes, pedidos e clientes. Seu diferencial é calcular, via Programação Linear, a quantidade ideal de produção de cada produto para maximizar a receita com os recursos disponíveis.
+Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: uma açaiteria), que centraliza o controle de estoque, produtos, ingredientes, pedidos e clientes. Seu diferencial é calcular, via Programação Linear Inteira, a quantidade ideal de produção de cada produto para maximizar a receita com os recursos disponíveis.
 
 **Deploy:** ainda não publicado — previsto para a Sprint 4 (Backlog Priorizado, US20). Plataformas definidas: GitHub Pages (frontend) e Render (backend + banco). O link entra aqui assim que existir, mesmo que instável.
 **Equipe:** Leonardo Fagundes Oliveira (RA 2840482421009) — Diogo Pereira Miranda (RA 2840482423006) — Lucas Gabriel Valadares Bassi (RA 2840482423008) — Kauê Nogueira Carneiro (RA 2840482423039) · Laboratório de Engenharia de Software · ADS Fatec Ribeirão Preto
@@ -8,7 +8,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 ## Stack
 - Frontend: JavaScript (ES modules), HTML e CSS, sem build — deploy no GitHub Pages
 - Backend: Java 25 + Spring Boot 4.0.8 (Spring JDBC, sem JPA), build com Maven 3.9 (via Maven Wrapper)
-- Otimização: Python 3.14 + Gurobi 13.0.1 — módulo de Programação Linear (recomendação de produção), chamado pelo backend como subprocesso (JSON via stdin/stdout)
+- Otimização: Python 3.14 + Gurobi 13.0.1 — módulo de Programação Linear Inteira (recomendação de produção), chamado pelo backend como subprocesso (JSON via stdin/stdout)
 - Banco de dados: PostgreSQL 16 — deploy no Render
 
 ## Como rodar localmente
@@ -116,4 +116,4 @@ Como rodar:
 Testes de integração com Testcontainers e CI (GitHub Actions) estão planejados em `docs/Plano_de_Testes_Mente_Fria.md`, mas ainda não existem.
 
 ## Licença / Uso acadêmico
-Projeto desenvolvido para a disciplina de Laboratório de Engenharia de Software — ADS, Fatec Ribeirão Preto, 2026.
+Projeto desenvolvido para a disciplina de Laboratório de Engenharia de Software — ADS, Fatec Ribeirão Preto, 2026. A licença Gurobi usada é a acadêmica (WLS), restrita a uso não comercial: o sistema serve à demonstração acadêmica e não deve ser usado em operação comercial sem outra licença.

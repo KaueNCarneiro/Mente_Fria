@@ -16,14 +16,15 @@
 
 ### 0.0 Da v5.1 para a v5.2 (27/10, respostas da equipe)
 
-1. **Contrato v2 aprovado** (A10). Falta o Kauê aplicá-lo ao oficial.
+1. **Contrato v2 aprovado** (A10) e aplicado ao oficial (item 9).
 2. **Mensagem ao professor pronta** em `sprint-3-mensagem-professor.md` (P3): mudanças de conteúdo, licença, data da avaliação e sprint extra.
 3. **A16, A17 e A20 aprovadas.** O catálogo de marketing passou de 12 para **18 ideias** (A20). Na A17, o copo continua na lista de ingredientes, porque no banco ele é um.
 4. **Descarte por linha (A12) entrou**, como opcional: backend pronto e testado (CT71; a suíte vai a **92**). Se apertar, o botão é o primeiro corte (A28).
 5. **Render (A21): deploy definitivo no sábado 31**, para o banco gratuito durar até 30/11. Ensaio opcional na qua/qui numa conta pessoal, apagado no mesmo dia.
 6. **P2: `gurobipy` 13.0.3.**
-7. **A15 corrigida:** um merge do branch `sprint-3` **não** desfaz o PR #24 (simulado). O risco é menor do que o descrito na v5.1.
+7. **A15 corrigida:** um merge do branch `sprint-3` **não** desfaz o PR #24 (simulado e, depois, conferido no merge real, PR #25: A29). Os documentos chegaram à `main` pelo PR #27. Falta juntar os dois `.env.example`.
 8. **A28: gatilhos na sexta 30 à noite**: cortar o botão da A12 se houver atraso; Sprint 4 relâmpago no sábado se tudo estiver pronto.
+9. **Contrato oficial atualizado para a v2** (A10), com autorização do Kauê; falta o commit.
 
 ### 0.1 Da v5 para a v5.1 (noite de 26/10)
 
@@ -105,7 +106,7 @@ Classificação pela evidência, não pelo que os relatórios afirmam.
 | **BD01** (Docker) | **Causa encontrada em 26/10** (A26): *sockets* travados nas pastas do Docker; contorno verificado | Diogo registra |
 | Retrospectiva da Sprint 2, Reviews, perda do Git | Pendentes | Fase 8 (Kauê) |
 | `requirements.txt` em UTF-16; versão do Gurobi | Pendente (P2) | Fase P |
-| Branch `origin/sprint-3` desatualizado | Risco baixo (A15, corrigida em 27/10) | Kauê (`.env.example` e apagar o branch) |
+| Branch `origin/sprint-3` | **Merges feitos e conferidos** (PRs #25, #26 e #27; A29) | Kauê (juntar os `.env.example`; apagar o `sprint-3`) |
 
 ---
 
@@ -115,7 +116,7 @@ Classificação pela evidência, não pelo que os relatórios afirmam.
 
 **Dentro, como opcional:** o botão "Descartar" por linha (A12, entrou em 27/10). É o primeiro corte se houver atraso (A28).
 
-**Fora da Sprint 3:** US13 (Could), US15 e US16 (Should), US19, US26 e US27 (Could). **Sprint 4 relâmpago:** se, na sexta 30 à noite, tudo da Sprint 3 estiver na `main` e as seis telas prontas, o sábado 31 pode receber 1 ou 2 histórias pequenas (sugestão: US27 e US26), sem atrasar o deploy definitivo (A28). Caso contrário, elas ficam para depois da janela de testes, se o professor permitir.
+**Fora da Sprint 3:** US13 (Could), US15 e US16 (Should), US19, US26 e US27 (Could). **Sprint 4 relâmpago:** se, na sexta 30 à noite, tudo da Sprint 3 estiver na `main` e as seis telas prontas, o sábado 31 pode receber 1 ou 2 histórias pequenas (sugestão: US27 e US26), sem atrasar o deploy definitivo (A28). Se o professor estender a janela de testes, a Sprint 4 relâmpago também pode usar o início dela (P7, mantida em 27/10). Caso contrário, as histórias ficam para depois da janela de testes, se o professor permitir.
 
 **Mudanças de conteúdo a comunicar ao professor (P3, terça 27; mensagem pronta em `sprint-3-mensagem-professor.md`):** receita → lucro (F9); reposição com orçamento; dashboard com a receita máxima estimada do último cálculo (A16, A17); licença de avaliação do Gurobi no deploy (A22); banco criado em 31/10, válido até 30/11 (A21); sprint extra (A28).
 
@@ -129,7 +130,7 @@ As regras de negócio detalhadas da v4.6 **continuam valendo**: estoque por linh
 
 | Fase | O que entrega | Quem | Depende de | Pronto quando… (verificável) | Tutorial |
 |---|---|---|---|---|---|
-| **0 — Contrato v2 e aviso** | Contrato v2 (aprovado em 27/10) aplicado ao oficial; mensagem ao professor (P3) | Kauê (contrato), Diogo e Lucas (aviso) | — | Commit do contrato; mensagem enviada e resposta guardada | Kauê §2; `sprint-3-mensagem-professor.md` |
+| **0 — Contrato v2 e aviso** | Contrato v2 **aplicado ao oficial em 27/10** (falta o commit; o Kauê revisa); mensagem ao professor (P3) | Kauê (revisão), Diogo e Lucas (aviso) | — | Commit do contrato; mensagem enviada e resposta guardada | Kauê §2; `sprint-3-mensagem-professor.md` |
 | **1 — Fundação do backend** | Segurança, JWT, CORS, erros | Lucas | — | `SegurancaEErrosTest`: **18/18** | Lucas §2 |
 | **Banco** | Patch do DDL, 41 testes, seed de demonstração, `sql_repositorios_sprint3.md`, repositórios Java | Diogo | — | `32 \| 0` e `41 \| 0`; experimentos A e B; repositórios no PR com os testes das fases | Diogo §2–§8 |
 | **P — Python v2** | `otimizador.py` v2, exemplos, `requirements.txt` UTF-8, 2ª máquina | Kauê | Contrato §1 | `25 passed` (com a Fase Q, `47 passed`) em **duas** máquinas | Kauê §3–§7 |

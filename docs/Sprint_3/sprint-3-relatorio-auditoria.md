@@ -37,6 +37,16 @@
 | A11 | Quem escreve a frase? | Já estava na lista do Diogo (§9.2, item 7). O tutorial do Kauê dava a mesma tarefa a ele; a duplicidade foi removida |
 | P7 | Sprint 4 relâmpago, se sobrar tempo | Gatilho na sexta 30 à noite (A28); pergunta incluída na mensagem ao professor |
 
+**Segunda rodada de 27/10:**
+
+| Pendência | Resposta da equipe | O que foi feito |
+|---|---|---|
+| A10 | "O Kauê confirmou que você pode alterar o contrato oficial" | **Aplicado** em `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (revisão de 27/10 na seção 3). Formatos conferidos contra o código e os exemplos testados; caminhos antigos do §0 corrigidos. Não commitado |
+| A15 | "Dei merge; está certo?" | **Conferido (A29):** o PR #25 está certo e manteve a correção do `.env`. O PR #26 levou os documentos para o `sprint-3`, e o PR #27 os levou para a `main`, que manteve a correção do `.env`. Nenhuma senha real subiu. Um `git reset --hard` às 17:19 apagou as alterações não commitadas (contrato e 7 documentos); foram refeitas a partir desta conversa |
+| A11 | Fica com o Diogo | Registrado |
+| A20 | A "A18" era a A20 | Registrado |
+| P7 | Manter a Sprint 4 relâmpago; talvez estender os testes | Mantida; a pergunta extra da mensagem agora pede também a extensão da janela de testes |
+
 ### A.1 Situação depois da v5.1
 
 **Todos os Must do Termo de Aceite estão na Sprint 3, e todo o código que eles exigem está escrito e testado em `docs/Sprint_3/referencia/`.**

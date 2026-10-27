@@ -27,7 +27,7 @@
 
 | Ordem | Entrega | Quando | Depende de | Libera |
 |---|---|---|---|---|
-| **1** | **Aplicar o Contrato v2 ao oficial** (A10: **aprovado pela equipe em 27/10**) e a P2 (**13.0.3**, decidida em 27/10) | **Ter 27** | — | **Lucas (Fase 3) e Leonardo (telas)** |
+| **1** | **Revisar o contrato oficial v2** (A10: aprovado em 27/10 e **já aplicado** a seu pedido; confira a seção 3 dele) e a P2 (**13.0.3**, decidida em 27/10) | **Ter 27** | — | **Lucas (Fase 3) e Leonardo (telas)** |
 | 2 | **PR da Fase P + Q:** módulos de produção e de reposição, testes e exemplos (`47 passed`) | Ter 27 – **Qua 28** | Item 1 (§1 e §1.6) | Lucas (Fase 4A); você (Fase 5) |
 | 3 | **Ensaio de deploy** (opcional, recomendado), numa conta pessoal, apagado no mesmo dia (A21) | Qua 28 ou Qui 29 | Fases 1–2 na `main` | Os problemas do Render aparecem antes do sábado |
 | 4 | Ambiente reproduzido numa **2ª máquina** | Qua 28 | Item 2 | — |
@@ -224,7 +224,7 @@ O seu papel é **o contrato e a prova**. O Java já está pronto em `referencia/
 
 | # | Tarefa | Quando | Evidência |
 |---|---|---|---|
-| 1 | **Branch `origin/sprint-3` (A15, corrigida em 27/10):** ele ficou para trás da `main`. Tem um commit que a `main` não tem (PR #22, `backend/env.example` **sem o ponto**, com comentários sobre as variáveis) e **não** tem a correção do PR #24 (o caminho do `.env`). Um merge dele na `main` **não** desfaz o PR #24 (simulado sem alterar nada); só traria um segundo arquivo de exemplo. O risco é alguém **começar a trabalhar a partir dele**. Faça assim: (1) leve os comentários úteis do `env.example` para o `backend/.env.example` da `main`, num PR; (2) crie todo branch novo a partir da `main`; (3) depois, apague o `sprint-3`, se a equipe concordar | Ter 27 | PR do `.env.example`; branch apagado |
+| 1 | **Branch `sprint-3` e `.env.example` (A15, A29):** o merge do `sprint-3` na `main` foi feito em 27/10 (PR #25) e conferido: a correção do PR #24 continua. Agora a `main` tem **dois** arquivos de exemplo: `backend/.env.example` (5 variáveis) e `backend/env.example` (sem o ponto, com comentários e as variáveis da Sprint 3). Faça assim: (1) junte os dois no `backend/.env.example` e apague o `env.example`, num PR; (2) crie todo branch novo a partir da `main` atualizada. Os documentos da auditoria já chegaram à `main` (PR #27); o `sprint-3` pode ser apagado, se a equipe concordar | Ter 27 | PR do `.env.example` |
 | 2 | **Daily de 10 minutos** (seg a sáb): o que fiz, o que farei, o que me bloqueia. Bloqueio → resolver no mesmo dia (regra da equipe) | Diária | Notas curtas em `docs/Sprint_3/` |
 | 3 | **Acompanhar:** a resposta do professor à mensagem (P3, `sprint-3-mensagem-professor.md`; A16, A17 e A20 já aprovadas em 27/10) | Ter 27 – Qua 28 | `resposta-professor.md` |
 | 4 | **CT20:** um integrante sobe o projeto do zero **só** com o README; anote onde travou | Sáb 31 | Relato e PR no README |

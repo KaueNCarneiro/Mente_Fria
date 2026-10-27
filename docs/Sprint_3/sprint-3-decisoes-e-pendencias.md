@@ -1,0 +1,122 @@
+# Decisões e pendências — Sprint 3 — Mente Fria
+
+**Revisão:** 27/10/2026 (v5.2: respostas da equipe às pendências). Antes: 26/10, noite (v5.1: entram US14, US17, US18 e US20; cópia em `historico/v5.1-27-10-antes-das-respostas/`). **Substitui** a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e o registro de 14/10 (`historico/Registro_de_Decisoes_e_Pendencias_Sprint3.md`), ambos preservados.
+
+**Como usar:**
+- Antes de executar um passo marcado com "Por quê?" nos tutoriais, confira aqui a decisão correspondente.
+- Ao fechar uma pendência, mova a linha para a seção 1, com a data e o motivo.
+- Nunca apague uma decisão. Se ela mudar, acrescente uma linha nova explicando a mudança.
+
+**Legenda de identificadores (todos já existentes no projeto, exceto onde dito):**
+- `F1–F12`: pontos da análise de 14/10.
+- `D1–D22`: respostas da equipe de 13/10 (roteiro v4.6, §9).
+- `P2–P7`: pendências de 14/10.
+- **`A1–A28`: novos**, criados nesta auditoria, com o prefixo "A" para não colidir com os oficiais.
+
+**"Proposta"** = já está no código de `referencia/` e passou nos testes, mas o PO (Lucas) pode trocar. Trocar custa pouco: cada uma está isolada num método.
+
+---
+
+## 1. Decisões em vigor
+
+### 1.1 Datas e escopo
+
+| # | Decisão | Origem |
+|---|---|---|
+| A1 | A **Sprint 3 vai até 01/11/2026** e a **janela de testes e correções vai de 01/11 a 06/11/2026**. O calendário do v4.6 (núcleo 16/10, extensão 18/10, Sprint 4 até 30/10) **deixa de valer** | Usuário, 26/10 |
+| A2 | Escopo (tarde de 26/10): US1–US7, US9, US10, US11, US12 e as mudanças do banco | Usuário, 26/10 — **ampliado pela A2b** |
+| **A2b** | **Escopo final da Sprint 3: US1–US7, US9–US12, US14, US17, US18 e US20**, mais as mudanças do banco. Ficam **fora**: US13, US15, US16, US19, US26 e US27 (Could e Should). Todos os Must do Termo de Aceite estão dentro | Usuário, noite de 26/10 ("Consegue adicionar essas quatro histórias … dentro dessa Sprint?") |
+| A3 | ~~US14, US17, US18 e US20 sem sprint~~ — **encerrada pela A2b**. Não há mais o que negociar de escopo com o professor; continua valendo **avisá-lo das mudanças de conteúdo** (P3: receita → lucro, reposição com orçamento, conteúdo do dashboard, licença em produção) | Encerrada em 26/10 |
+
+### 1.2 Decisões de 14/10, revalidadas em 26/10
+
+As que foram executadas trazem o resultado. "Java" = testes de integração do backend de `referencia/` (PostgreSQL 16 real via Testcontainers).
+
+| # | Decisão | Situação em 26/10 |
+|---|---|---|
+| F1 | CHECKs estritos para `quantidade_restante` e `motivo` | **Validada** no PostgreSQL embutido **e no Docker real** (16.15): 41/41; com os CHECKs literais, 37/41 (T55, T62, T64, T66) |
+| F2 / D11 | Seed oficial com **estoque 0**; estoque de demonstração só em `seed_demo.sql` | **Validada** (soma 0,000; seed de demonstração confere no Docker) |
+| F3 | `hoje` calculado no Java (`America/Sao_Paulo`) e enviado como `:hoje` | **Validada no Java** (todas as consultas recebem `:hoje`; teste das 23h30) e **ampliada pela A9** |
+| F4 | `/api/teste/python` só com `@Profile("dev")` | **Validada no Java:** fora do `dev` → `401`; no `dev`, o eco real devolve `AÇAÍ (POLPA)`; no container de produção → `401` |
+| F5 | JWT com `jjwt` 0.13.0 | **Validada** (Jackson 2.21.5 convive com o Jackson 3.1.5) |
+| F6 | Gurobi com `MIPGap = 0` e verificação em inteiros | **Validada** (25 testes de produção; 200 instâncias contra o oráculo) e **aplicada também à reposição** (A19) |
+| F7 | O Diogo cria os `*Repository`, o Lucas os controllers e serviços | Mantida. As assinaturas agora são **código compilado** em `referencia/backend/` |
+| F8 | Demonstração: **151/1/0**, lucro **1.011,71**, receita **1.966,80** | **Validada** pelo oráculo, pelo Java com o Python **real** (188 ms) e **dentro do container de deploy** (3,1 s com 0,1 CPU) |
+| F9 | Receita → lucro altera o Termo: avisar o professor antes de editar | Mantida (P3). Nada foi editado nos `.docx` |
+| F10 | US9: "saída de produtos" → "baixa de **ingredientes**" | Mantida (documento ainda não alterado) |
+| F11 | `consumo` (Java↔Python) só com ingredientes de consumo > 0 | **Validada** |
+| F12 | Definição única de "consumo" (dashboard × reposição) | **Resolvida pela A18** |
+| D10 | Estoque por **linhas**; venda nunca consome vencido; descarte só consome vencido | **Validada** em SQL (S1–S5, 30/30) **e no Java** (S1–S5 e concorrência 5/5 pelo serviço real) |
+| 14/10 | **Cancelar pedido não devolve estoque** (US27); US27b fora | Mantida |
+| 14/10 (US14) | Período (dias) + orçamento; 8 ingredientes até 30 dias e 15 acima; consumo = pedidos × composição; **cancelados contam**; saldo **válido**; maximizar a **menor cobertura**; até 2 casas; tabela por custo de compra; `POST` | **Implementadas e validadas** (Python: 22 testes + oráculo; Java: 8 testes; ponta a ponta com o Gurobi real) |
+| 14/10 (US17) | Dashboard = Tela 03; período = **mês** (padrão: o atual); ranking com Rank, Usuário, Qtd. de pedidos, Valor total e Tipos de produto; filtros Usuário, Tipo de produto e Valor (depois de somar); "tipo" = nome do produto; só pedidos `ATIVO` | **Implementadas e validadas** (5 testes de integração com conta à mão; seed de demonstração conferido) |
+| 14/10 (US18) | Resultado da Tela 12 guardado **na memória do backend**; priorizado = quantidade > 0, maior primeiro, desempate pelo menor id; **até 3**; catálogo fixo de ideias; nada é publicado | **Implementadas e validadas** (4 testes) |
+
+### 1.3 Decisões técnicas desta auditoria
+
+São correções ou detalhes necessários para o código funcionar. **Não alteram** requisitos, salvo onde está escrito "Proposta".
+
+| # | Decisão | Por quê | Quem |
+|---|---|---|---|
+| A4 | Tirar `<scope>runtime</scope>` do driver PostgreSQL | O `GlobalExceptionHandler` importa `PSQLException`; com `runtime`, **não compila** (verificado) | Lucas |
+| A5 | Bean de CORS do tipo **`UrlBasedCorsConfigurationSource`** | Com o tipo genérico há 2 beans e **a aplicação não sobe** (verificado) | Lucas |
+| A6 | Corrigir os textos "cancelar devolve o estoque" | Contradiziam a decisão de 14/10 | Feito |
+| A7 | `MethodArgumentTypeMismatchException` e `MissingServletRequestParameterException` → `400`; `AccessDeniedException` → `403` em JSON | Viravam `500` (verificado) | Lucas |
+| A8 | Módulos Python leem a entrada com **`utf-8-sig`** | O pipe do PowerShell envia BOM (verificado) | Kauê |
+| A9 | `data_pedido` e `data_movimentacao` recebem `:agora` do Java (São Paulo) | O banco do Render usa UTC: um pedido às 22h de 31/10 cairia em novembro no dashboard. **Validado no Java** (pedido às 23h30 de 31/10 conta em outubro) | Lucas, Diogo |
+| **A16** | **Aprovada pela equipe em 27/10.** O dashboard mantém a **"receita máxima estimada"** e os **"produtos prioritários"** que o Termo de Aceite cita, lidos do **último cálculo de produção** guardado na memória (sem chamar o Python), mais a **situação do estoque** (quantos ingredientes estão no mínimo ou abaixo e quantos têm vencido). Sem cálculo, o bloco mostra "Gere a recomendação na tela Produção" | O v4.6 retirava a "receita máxima estimada" do dashboard, mas o Termo **assinado** a exige (critério de pronto e escopo). Assim o Termo é cumprido sem custo de processamento | Lucas (PO) |
+| **A17** | **Aprovada pela equipe em 27/10.** "Ingredientes mais utilizados" vêm ordenados pelo **custo do que foi usado** (R$), mostrando também a quantidade e a unidade. O copo descartável **continua na lista**: no banco ele é um ingrediente (id 7, unidade `un`), porque tem estoque e custo | Ordenar por quantidade compara kg com unidades: no seed, o copo (16 un) passaria à frente do açaí (7,800 kg). Pelo custo, o açaí fica em 1º (R$ 144,30) e o copo em 4º (R$ 5,60). Esconder embalagens exigiria uma coluna nova no banco: **descartado** pela equipe em 27/10 | Lucas (PO) |
+| **A18** | **F12 resolvida.** Consumo = Σ `pedido_produto.quantidade` × `produto_ingrediente.quantidade_utilizada`, por data do pedido. A **reposição** conta todos os pedidos (inclusive cancelados, decisão de 14/10); o **dashboard** conta só `ATIVO`. Descartes e saídas convencionais **não** entram | Uma fórmula só, com o filtro de status documentado. A composição atual vale para o passado porque não existe rota para editar composição (se um dia existir, revisar) | — |
+| **A19** | Detalhes da reposição (US14): período = **os últimos N dias contando hoje**; só entram ingredientes **com consumo > 0**; mínimo e necessidade arredondados **para cima** em centésimos; orçamento que não cobre os mínimos devolve **os mínimos e quanto falta** (`status: "sucesso"`, `orcamento_suficiente: false`); com folga, estágio 2 usa a sobra do orçamento e estágio 3 desempata pelo **mais consumido**; módulo separado `reposicao.py`, que reaproveita o ambiente Gurobi do `otimizador.py` | Eram os pontos "a formalizar" da Fase Q (v4.6). Conferidos contra um oráculo de força bruta em 150 instâncias | Kauê (revisa o modelo) |
+| **A20** | **Aprovada pela equipe em 27/10.** Marketing: a ideia de cada produto vem do catálogo por **rodízio a partir do dia do ano do cálculo** (sem repetir no mesmo resultado); cada sugestão mostra também o **lucro por copo**. **Catálogo ampliado de 12 para 18 ideias** (27/10, a pedido da equipe): parceria pós-treino, horário mais vazio, adicional por conta da casa, indique um amigo, peça uma avaliação e reposte os clientes. **Reler com o cliente** | "1ª ideia para o 1º produto" usaria sempre as mesmas 3 ideias. O lucro por copo era a "proposta opcional" do v4.6. **Skill de marketing:** a busca com `find-skills` (27/10) achou a `marketing-ideas` (coreyhaines31, 147 mil instalações), voltada a **software (SaaS)**, e skills de restaurante com menos de 50 instalações. **Nenhuma foi instalada**; as 6 ideias novas são redação da equipe | Lucas (PO) |
+| **A21** | **Deploy (US20):** backend em **Docker no Render** (plano free, região Virginia), **PostgreSQL 16 free** no Render, frontend no **GitHub Pages por Actions**. Limites confirmados na documentação do Render em 26/10: **o Postgres free expira 30 dias depois de criado** (mais 14 dias de carência); o serviço free desliga após 15 min sem uso e leva ~1 min para voltar; 512 MB e 0,1 CPU. Por isso o frontend usa **tempo limite de 90 s** no Pages | Simulado na máquina (512 MB, 0,1 CPU): sobe em **83 s**; pico de memória **133 MiB**; fluxo completo sem falhas | Kauê (dono do repositório) e Lucas |
+| **A22** | **Licença do Gurobi:** a WLS **não está disponível** (confirmado pelo usuário em 26/10). Desenvolvimento, testes e produção usam a **licença de avaliação que vem com o `pip`** ("trial license … problems of limited size", página do `gurobipy` no PyPI). Os modelos do projeto cabem nesse limite (verificado). **Substitui a A14 e a P5.** A A11 (Compute Server) deixa de bloquear | O uso dessa licença num servidor público precisa de **confirmação do professor** (P3) | Lucas (PO) |
+| **A23** | JSON em `snake_case` por **configuração global** (`spring.jackson.property-naming-strategy=SNAKE_CASE`), e não `@JsonProperty` campo a campo | Menos código e nenhum campo esquecido. **Validado** no Boot 4 (todos os testes conferem os nomes) | Lucas |
+| **A24** | As rotas simuladas do teste da Fase 1 (`RotasDeTesteController`) ficam no perfil **`teste-seguranca`** | Sem isso, quando os controllers reais existem, o `@SpringBootTest` carrega as duas versões e **não sobe** ("mapeamento ambíguo") | Lucas |
+| **A25** | Testes de integração terminam em **`Test`** (não `IT`), recriam o schema **antes de cada teste** a partir do `bd/Script_DDL.sql` e usam um **relógio ajustável** em São Paulo | O Surefire padrão **ignora** `*IT`; o schema limpo deixa cada teste independente; o relógio fixo torna datas testáveis | Lucas |
+| **A26** | **BD01, causa encontrada:** o Docker Desktop desta máquina trava ao iniciar porque arquivos de *socket* (`AF_UNIX`) ficam inacessíveis em `%LOCALAPPDATA%\Docker\run` e `%LOCALAPPDATA%\docker-secrets-engine` ("The file cannot be accessed by the system"). **Contorno verificado:** fechar o Docker Desktop, `wsl --shutdown`, **renomear** as duas pastas e abrir de novo. **Nunca** usar "Reset to factory defaults": apaga o `mente-fria-db` | Hipótese (não comprovada): o Windows 11 desta máquina é uma versão Insider (build 26300). Os arquivos travados não podem ser apagados nem renomeados, só a pasta | Diogo registra na evidência do BD01 |
+| **A27** | O backend executa **uma otimização por vez** (fila com tempo limite) | Licenças acadêmicas e de avaliação limitam sessões simultâneas; duas recomendações ao mesmo tempo poderiam falhar | Lucas |
+| **A28** | **Gatilhos de corte e de "Sprint 4 relâmpago"** (27/10). Conferência na **sexta, 30/10, à noite**: (a) se as Telas 10/16, 11/17 e 12 **não** estiverem funcionando com o backend real, o **botão "Descartar" da A12 sai** (o backend dele fica, já testado); (b) se **todos** os PRs das Fases 1–6 estiverem na `main` e as seis telas prontas, o sábado 31 pode virar uma **Sprint 4 relâmpago** com 1 ou 2 histórias pequenas da P7 (sugestão: US27 e US26), **sem** atrasar o deploy definitivo nem o CT67–CT70 | Pedido da equipe em 27/10. A janela de testes (01–06/11) não serve para desenvolver (roteiro §7), então a única folga possível é o sábado. A pergunta sobre a sprint extra está na mensagem ao professor | Lucas (PO) decide na sexta; o Claude lembra quando for chamado |
+
+---
+
+## 2. Bloqueios e decisões abertas
+
+| # | Pendência | Dono | Prazo | Recomendação |
+|---|---|---|---|---|
+| A10 | **Contrato v2: aprovado pela equipe em 27/10.** Falta **aplicar** ao contrato oficial, num PR | Kauê | **27/10** | Copiar a proposta como está (inclusive o descarte por linha, §2.4). Os formatos são **exatamente** os do código validado |
+| P3 | Avisar o professor: receita → lucro (F9); reposição com orçamento; dashboard (A16, A17); licença de avaliação do Gurobi (A22); data de criação do banco (A21); sprint extra (A28) | Diogo (envia), Lucas (revisa) | **27/10** | **Mensagem pronta:** `sprint-3-mensagem-professor.md`. Guardar a resposta em `docs/Sprint_3/resposta-professor.md` |
+| A21 | **Adiada em 27/10**, para o banco gratuito durar o máximo possível. Falta decidir **quem** cria a conta definitiva no Render | Equipe | Quem: **qui 29/10**. Criação: **sáb 31/10** | **Banco e serviço definitivos no sábado 31, de manhã:** expira em **30/11** (apagado em 14/12 sem upgrade); anotar no README. Não dá para passar de 31/10: a janela de testes (01–06/11) é no ambiente publicado. **Ensaio recomendado** na qua 28 ou qui 29, numa **conta pessoal** de um integrante, apagando banco e serviço no mesmo dia (cada conta só pode ter **um** banco gratuito ativo). Sem o ensaio, os problemas do Render só aparecem no sábado; a simulação local (83 s, 133 MiB) reduz esse risco, mas não o elimina. A data da avaliação foi perguntada ao professor |
+| A11 | Compute Server no desenvolvimento | Diogo (documentos) | sex 30/10 | **Não bloqueia mais** (A22). A frase "sem Compute Server e sem WLS: licença de avaliação" já está na lista do Diogo (tutorial do Diogo, §9.2, item 7: Arquitetura), no PR dos documentos |
+| A12 | **Entrou em 27/10:** atalho `POST /api/estoque/linhas/{id}/descarte` | Lucas (backend, vem com a Fase 3), Leonardo (botão) | Fase 3 (qui 29); botão até sex 30 | **Implementado e testado** em `referencia/` (`descarteDeUmaLinhaVencidaZeraSoEssaLinha`, CT71; a suíte vai a 92). Se atrasar, **só o botão sai** (A28, item a); o backend fica |
+| P2 | **Decidida em 27/10: `gurobipy` 13.0.3.** Falta aplicar nos arquivos | Kauê (`requirements.txt`), Diogo (Arquitetura) | 27/10 | As duas versões passaram nos 47 testes; o `Dockerfile` já usa 13.0.3 |
+| A13 | Teste de navegador instável (original e dividido) | Leonardo | Antes de 01/11 | Ver tutorial do Leonardo, §7.1 |
+| A15 | Branch `origin/sprint-3` desatualizado. **Corrigido em 27/10:** um merge dele na `main` **não** desfaz o PR #24 (simulado com `git merge-tree`, sem alterar nada: só acrescentaria `backend/env.example`). O risco é **começar trabalho a partir dele** (caminho antigo do `.env`) e ficar com **dois arquivos de exemplo** diferentes | Kauê | 27/10 | Levar os comentários úteis do `backend/env.example` para o `backend/.env.example` da `main`; criar os branches novos sempre a partir da `main`; depois, apagar o branch `sprint-3` (decisão do Kauê) |
+| P7 | US13, US15, US16, US19, US26, US27 | Equipe | Gatilho: sex 30/10 | Fora da Sprint 3 (A2b). **Sprint 4 relâmpago** no sábado 31 só se o gatilho da A28 (item b) for atingido; pergunta enviada ao professor |
+
+**Encerradas ou substituídas nesta revisão** (mantidas aqui para rastreabilidade):
+
+| # | Era | Situação |
+|---|---|---|
+| A3 | US14, US17, US18 e US20 sem sprint | Encerrada pela **A2b** (26/10, noite) |
+| A14 | Licença WLS acadêmica do Lucas em produção: só o titular usa, sem uso operacional | **Substituída pela A22** (não há WLS) |
+| P5 | Licença WLS do Lucas e Python 3.14.7 | WLS: **substituída pela A22**. Python 3.14.7: segue não testado (sem impacto conhecido) |
+| F12 | Definição única de consumo | **Resolvida pela A18** |
+| P6 | Medir o timeout de 10 s | **Fechada:** 188 ms na máquina; 3,1 s com 0,1 CPU |
+| A16, A17, A20 | Propostas de conteúdo (dashboard e marketing) | **Aprovadas em 27/10** (A20 com o catálogo ampliado para 18 ideias) |
+
+---
+
+## 3. Divergências entre skills e decisões do projeto
+
+As decisões do projeto prevalecem.
+
+| Skill | O que ela recomenda | O que o projeto faz | Motivo |
+|---|---|---|---|
+| `311-frameworks-spring-jdbc` | `JdbcClient` como API padrão | **`NamedParameterJdbcTemplate`** (D4) | Decisão registrada; trocar agora é retrabalho |
+| `springboot-tdd` | Meta de **80%** de cobertura com JaCoCo | **Sem meta numérica** (Plano de Testes §2) | Testes avaliados por requisito e risco |
+| `springboot-tdd` | `@DataJpaTest`, `@MockBean` | Sem JPA; `@MockitoBean`; integração com Testcontainers | O projeto não usa JPA; `@MockBean` saiu no Boot 4 |
+| `springboot-security` | Bean Validation (`@Valid`) | Validação **manual** que devolve todos os campos | Decisão de 14/10 (mensagens do `mapa_constraints.md`) |
+| `springboot-security` | Filtro JWT com `@Component` | Filtro criado no `SecurityConfig` | Evita registrar o filtro duas vezes |
+| `springboot-security` | Rate limiting e cabeçalhos extras | Não incluídos | Fora dos requisitos |
+| `render-docker` | Plano `starter` nos exemplos | Plano **free** | Projeto acadêmico, sem custo; limites registrados na A21 |

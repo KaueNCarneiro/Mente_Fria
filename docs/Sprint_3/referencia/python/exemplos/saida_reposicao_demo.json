@@ -1,0 +1,16 @@
+{
+  "status": "sucesso",
+  "orcamento_suficiente": true,
+  "custo_total": 11.10,
+  "valor_faltante": 0.0,
+  "cobertura_minima": 1.0,
+  "itens": [
+    { "ingrediente_id": 5, "quantidade_sugerida": 0.74, "quantidade_minima_compra": 0.02, "quantidade_necessaria": 0.74, "custo_estimado": 11.10 },
+    { "ingrediente_id": 1, "quantidade_sugerida": 0.0, "quantidade_minima_compra": 0.0, "quantidade_necessaria": 0.0, "custo_estimado": 0.0 },
+    { "ingrediente_id": 2, "quantidade_sugerida": 0.0, "quantidade_minima_compra": 0.0, "quantidade_necessaria": 0.0, "custo_estimado": 0.0 },
+    { "ingrediente_id": 3, "quantidade_sugerida": 0.0, "quantidade_minima_compra": 0.0, "quantidade_necessaria": 0.0, "custo_estimado": 0.0 },
+    { "ingrediente_id": 4, "quantidade_sugerida": 0.0, "quantidade_minima_compra": 0.0, "quantidade_necessaria": 0.0, "custo_estimado": 0.0 },
+    { "ingrediente_id": 6, "quantidade_sugerida": 0.0, "quantidade_minima_compra": 0.0, "quantidade_necessaria": 0.0, "custo_estimado": 0.0 },
+    { "ingrediente_id": 7, "quantidade_sugerida": 0.0, "quantidade_minima_compra": 0.0, "quantidade_necessaria": 0.0, "custo_estimado": 0.0 }
+  ]
+}

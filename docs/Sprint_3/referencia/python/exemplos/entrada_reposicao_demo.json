@@ -1,0 +1,12 @@
+{
+  "orcamento": 100.00,
+  "ingredientes": [
+    { "id": 7, "consumo_periodo": 31.000, "quantidade_estoque": 269.000, "quantidade_minima": 50.000, "custo_unitario": 0.35 },
+    { "id": 1, "consumo_periodo": 14.250, "quantidade_estoque": 45.750, "quantidade_minima": 10.000, "custo_unitario": 18.50 },
+    { "id": 3, "consumo_periodo": 0.840, "quantidade_estoque": 5.160, "quantidade_minima": 2.000, "custo_unitario": 22.00 },
+    { "id": 2, "consumo_periodo": 0.780, "quantidade_estoque": 14.220, "quantidade_minima": 5.000, "custo_unitario": 12.00 },
+    { "id": 5, "consumo_periodo": 0.720, "quantidade_estoque": 1.980, "quantidade_minima": 2.000, "custo_unitario": 15.00 },
+    { "id": 4, "consumo_periodo": 0.450, "quantidade_estoque": 11.050, "quantidade_minima": 3.000, "custo_unitario": 5.50 },
+    { "id": 6, "consumo_periodo": 0.240, "quantidade_estoque": 4.760, "quantidade_minima": 1.500, "custo_unitario": 28.00 }
+  ]
+}

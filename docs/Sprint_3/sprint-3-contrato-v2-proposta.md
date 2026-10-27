@@ -1,6 +1,6 @@
 # Contrato de Comunicação v2 — PROPOSTA para aprovação (Sprint 3)
 
-**Status:** proposta da auditoria de 26/10/2026, **aprovada pela equipe em 27/10** (A10); falta o Kauê aplicar ao oficial. **Não substitui** o contrato oficial (`docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md`, mantido pelo Kauê).
+**Status:** proposta da auditoria de 26/10/2026, **aprovada pela equipe e aplicada ao contrato oficial em 27/10** (A10, com autorização do Kauê). A partir de agora, a fonte de verdade é o oficial; este arquivo fica como registro. **Não substitui** o contrato oficial (`docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md`, mantido pelo Kauê).
 **Para virar oficial:** Kauê, Lucas e Leonardo revisam (pendência A10, prazo **27/10**) e o Kauê aplica no contrato oficial, registrando na seção 3 dele ("Histórico de revisões").
 **Origem de cada item:**
 - roteiro v4.6, §5 e §10.2;

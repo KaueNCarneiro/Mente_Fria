@@ -30,7 +30,7 @@ Pensamos em registrar essas mudanças como um **adendo datado** ao Termo, sem re
 2. **Licença do Gurobi no servidor.** Não conseguimos a licença acadêmica do Gurobi que funciona em servidor (a WLS). O sistema publicado vai usar a **licença de avaliação** que já vem com a instalação do Gurobi pelo `pip`. Ela limita o tamanho dos problemas, mas os nossos cabem com folga (testamos). Podemos usar essa licença no sistema publicado?
 3. **Datas da avaliação.** Vamos publicar o sistema no plano gratuito do Render, e o banco de dados gratuito de lá **expira 30 dias depois de criado**. Para aproveitar o prazo ao máximo, pretendemos criá-lo só em **31/10**; ele ficaria no ar até **30/11**. Até quando o senhor vai precisar acessar o sistema publicado? Se for depois de 30/11, a gente se planeja para recriar o banco.
 
-**Uma pergunta extra.** Se terminarmos a Sprint 3 antes de 01/11, podemos adiantar algumas das histórias de prioridade menor (por exemplo, cancelar pedido, US27) numa sprint curta extra? Ou o senhor prefere que a gente use o tempo só para testes e correções?
+**Uma pergunta extra.** Se sobrar tempo, gostaríamos de adiantar algumas das histórias de prioridade menor (por exemplo, cancelar pedido, US27) numa sprint curta extra. Para isso, seria possível estender um pouco o período de testes, que hoje vai de 01 a 06/11? Ou o senhor prefere que a gente use esse tempo só para testes e correções?
 
 Obrigado! Qualquer coisa, estamos à disposição.
 

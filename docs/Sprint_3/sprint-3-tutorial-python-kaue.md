@@ -72,7 +72,7 @@
    - acrescente à §2 as mensagens padrão, o `PATCH` no CORS e as rotas de estoque, pedido e recomendação;
    - registre a linha na seção 3, "Histórico de revisões";
    - mantenha a §1.5 (eco).
-4. **A11 (Compute Server) não bloqueia mais:** o Compute Server não é necessário (A34); a sua WLS roda dentro do próprio processo Python. O **Diogo** registra na Arquitetura (§2.1, §3.3, §5) e no Plano de Testes (§4.2), no PR de documentos dele (tutorial do Diogo, §9.2), que desenvolvimento, testes e produção usam a **licença de avaliação do `pip`**. Você revisa. Se a WLS chegar, os módulos já leem `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` (§7).
+4. **A11 (Compute Server) não bloqueia mais:** o Compute Server não é necessário (A34); a sua WLS roda dentro do próprio processo Python. O **Diogo** registra na Arquitetura (§2.1, §3.3, §5) e no Plano de Testes (§4.2), no PR de documentos dele (tutorial do Diogo, §9.2), que desenvolvimento e testes usam a **licença restrita do `pip`**, que existe a **sua WLS acadêmica** (pessoal, até 25/09/2027) e que, no Render, o solver só roda com autorização escrita da Gurobi (A30, A34). Você revisa. Os módulos já leem `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` (§7).
 
 5. **P2 decidida em 27/10: `gurobipy` 13.0.3** (as duas versões passaram nos 47 testes). Fixe 13.0.3 no `requirements.txt` (já está) e no README; o Diogo atualiza a Arquitetura (§2.1).
 6. **Documente o modelo** em `docs/Apoio/Modelo_Matematico_Producao.md`:

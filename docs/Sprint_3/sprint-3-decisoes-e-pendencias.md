@@ -103,7 +103,7 @@ São correções ou detalhes necessários para o código funcionar. **Não alter
 | # | Era | Situação |
 |---|---|---|
 | A3 | US14, US17, US18 e US20 sem sprint | Encerrada pela **A2b** (26/10, noite) |
-| A14 | Licença WLS acadêmica do Lucas em produção: só o titular usa, sem uso operacional | **Substituída pela A22** (não há WLS) |
+| A14 | Licença WLS acadêmica do Lucas em produção: só o titular usa, sem uso operacional | **Substituída pela A22** (não há WLS), que por sua vez foi **corrigida pela A34** (27/10): a WLS existe e é a do **Kauê**; o uso no Render depende da Gurobi (A30) |
 | P5 | Licença WLS do Lucas e Python 3.14.7 | WLS: **substituída pela A22**. Python 3.14.7: segue não testado (sem impacto conhecido) |
 | F12 | Definição única de consumo | **Resolvida pela A18** |
 | P6 | Medir o timeout de 10 s | **Fechada:** 188 ms na máquina; 3,1 s com 0,1 CPU |

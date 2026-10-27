@@ -20,7 +20,7 @@
 >   - imagem Docker montada e rodada **com os limites do Render free** (512 MB, 0,1 CPU): sobe em 83 s; pico de 133 MiB; recomendação 151/1/0 com o Gurobi **dentro do container** em 3,1 s; fluxo completo sem falhas;
 >   - o comando que carrega o DDL no banco remoto foi testado (§12.4).
 > - **Defeito achado e corrigido (A8):** o PowerShell envia um BOM antes do JSON; os dois módulos leem com `utf-8-sig`.
-> - **Licença:** **não há WLS** (confirmado em 26/10, A22). Tudo roda com a licença de avaliação do `pip`, que basta para os tamanhos do projeto.
+> - **Licença (corrigida em 27/10, A34):** você tem uma **WLS acadêmica**, válida até 25/09/2027, de uso **pessoal**. Desenvolvimento e testes rodam com a licença restrita do `pip`. **No Render, o solver só roda depois que a Gurobi autorizar por escrito** (A30): você envia a pergunta (`sprint-3-licenca-gurobi.md`, §3).
 > - **Não verificado:** a criação real do *blueprint* no Render (precisa da sua conta) e Python 3.14.7.
 
 ## 0. O que você entrega e em que ordem
@@ -34,7 +34,7 @@
 | 5 | **Fase 4A em dupla** com o Lucas | Qui 29 | Lucas (Fase 3) | Tela 12 |
 | 6 | **PR da Fase 5:** Java da reposição (`ReposicaoTest` 8/8 e o Python real) | **Sex 30** | Fase 3; repositório do Diogo (consulta 9) | Tela 13 |
 | 7 | Plano de Testes: CT23, CT24, CT29, CTs de Python, **CT51–CT57** (reposição) e **CT67–CT70** (deploy) | Qui 29 – Sex 30 | — | Janela de testes |
-| 8 | **Deploy definitivo** (conta, banco e serviço criados **neste dia**; banco expira em 30/11) e CT67–CT70 no ambiente publicado | **Sáb 31**, de manhã | Tudo na `main`; quem cria a conta (decisão do PO, qui 29) | Janela de testes |
+| 8 | **Deploy definitivo** (conta, banco e serviço criados **neste dia**; banco expira em 30/11) e CT67–CT70 no ambiente publicado | **Sáb 31**, à noite (A32) | Tudo na `main`; quem cria a conta (decisão do PO, qui 29) | Janela de testes |
 | 9 | Facilitação: Review, Retro, relatório, CT20, registro do Git, branch `sprint-3` | Ter 27 – Dom 01/11 | — | Encerramento |
 
 **Pronto quando:**
@@ -72,7 +72,7 @@
    - acrescente à §2 as mensagens padrão, o `PATCH` no CORS e as rotas de estoque, pedido e recomendação;
    - registre a linha na seção 3, "Histórico de revisões";
    - mantenha a §1.5 (eco).
-4. **A11 (Compute Server) não bloqueia mais:** não há WLS nem Compute Server hoje (A22). O **Diogo** registra na Arquitetura (§2.1, §3.3, §5) e no Plano de Testes (§4.2), no PR de documentos dele (tutorial do Diogo, §9.2), que desenvolvimento, testes e produção usam a **licença de avaliação do `pip`**. Você revisa. Se a WLS chegar, os módulos já leem `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` (§7).
+4. **A11 (Compute Server) não bloqueia mais:** o Compute Server não é necessário (A34); a sua WLS roda dentro do próprio processo Python. O **Diogo** registra na Arquitetura (§2.1, §3.3, §5) e no Plano de Testes (§4.2), no PR de documentos dele (tutorial do Diogo, §9.2), que desenvolvimento e testes usam a **licença restrita do `pip`**, que existe a **sua WLS acadêmica** (pessoal, até 25/09/2027) e que, no Render, o solver só roda com autorização escrita da Gurobi (A30, A34). Você revisa. Os módulos já leem `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` (§7).
 
 5. **P2 decidida em 27/10: `gurobipy` 13.0.3** (as duas versões passaram nos 47 testes). Fixe 13.0.3 no `requirements.txt` (já está) e no README; o Diogo atualiza a Arquitetura (§2.1).
 6. **Documente o modelo** em `docs/Apoio/Modelo_Matematico_Producao.md`:
@@ -199,13 +199,13 @@ Get-Content -Raw -Encoding utf8 optimization\exemplos\entrada_contrato.json | py
 
 ## 7. Ambiente do Gurobi
 
-**Situação em 26/10 (A22):** **não há licença WLS.** O `gurobipy` instalado pelo `pip` vem com uma **licença de avaliação** que resolve problemas de tamanho limitado (página do `gurobipy` no PyPI). Os dois modelos do projeto cabem nela: 3 produtos e até 15 ingredientes, muito abaixo do limite. Todos os testes da auditoria, inclusive dentro do container de deploy, rodaram assim.
+**Situação em 27/10 (A34, corrige a A22):** existe a **sua WLS acadêmica** (válida até 25/09/2027, só para você, trabalhos de disciplina). O `gurobipy` instalado pelo `pip` também vem com uma **licença restrita** que resolve problemas de tamanho limitado (página do `gurobipy` no PyPI). Os dois modelos do projeto cabem nela: 3 produtos e até 15 ingredientes, muito abaixo do limite. Todos os testes da auditoria, inclusive dentro do container de deploy, rodaram assim.
 
 1. **Desenvolvimento e testes:** nada a configurar. `pip install -r optimization/requirements.txt` e pronto.
-2. **Produção (Render):** também a licença de avaliação. **Pergunta ao professor** (P3, tutorial do Diogo §9.1): o uso num servidor público é aceitável? Registre a resposta.
+2. **Produção (Render):** **só com autorização escrita da Gurobi** (professor, 27/10; A30). Você responde ao e-mail de aprovação da sua licença com o texto de `sprint-3-licenca-gurobi.md` (§3). Com a autorização, cadastra no Render as variáveis do item 5; sem ela, vale o plano B (A31), e você faz a demonstração da otimização no seu computador, com a sua WLS.
 3. **Banner:** o `OutputFlag 0` antes de `start()` evita que mensagens de licença vazem para o `stdout`. O teste `test_stdout_contem_somente_o_json_em_utf8` é a guarda.
 4. **Segunda máquina:** peça a outro integrante que clone a branch, crie o próprio `venv`, rode `pip install -r optimization/requirements.txt` e `python -m pytest optimization/tests -q`. **Anote o resultado** (`47 passed`): é o que encerra a pendência "só funciona no PC do Kauê".
-5. **Se um dia houver WLS:** os módulos leem `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID`; o Java as repassa ao processo filho. **Nunca** no Git. A licença acadêmica permite 2 sessões simultâneas (token de 5 min): não rode a suíte inteira com essas variáveis; teste com poucos casos (`-k "contrato or didatico"`).
+5. **A sua WLS:** os módulos leem `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID`; o Java as repassa ao processo filho. **Nunca** no Git. A licença acadêmica permite 2 sessões simultâneas (token de 5 min): não rode a suíte inteira com essas variáveis; teste com poucos casos (`-k "contrato or didatico"`).
 
 ## 8. Fase 4A, em dupla com o Lucas (quinta 29)
 
@@ -377,7 +377,7 @@ Copie de `docs/Sprint_3/referencia/deploy/` para a **raiz** do repositório: `Do
 |---|---|
 | `Dockerfile` | Estágio 1: compila o backend com o Maven do projeto. Estágio 2: Python 3.14 + `gurobipy` 13.0.3 + o JRE 25 da imagem oficial Temurin; usuário sem privilégio; heap limitada para sobrar memória ao Python |
 | `.dockerignore` | Lista do que **pode** entrar (`backend/` e `optimization/app/`). `.env`, `docs/`, `.git` e `venv` ficam de fora |
-| `render.yaml` | O serviço web (Docker, *health check* em `/api/saude`) e o banco. `DB_*` vêm do banco; `JWT_SECRET` é gerado pelo Render; `CORS_ALLOWED_ORIGIN` é perguntado na criação. **Não há `GRB_*`** (A22) |
+| `render.yaml` | O serviço web (Docker, *health check* em `/api/saude`) e o banco. `DB_*` vêm do banco; `JWT_SECRET` é gerado pelo Render; `CORS_ALLOWED_ORIGIN` é perguntado na criação. **Não há `GRB_*` no arquivo**: só você as cria no painel, e só com a autorização da Gurobi (A30, A34) |
 
 ### 12.2 Testar a imagem na sua máquina antes (recomendado)
 
@@ -414,7 +414,7 @@ Pré-requisitos: as Fases 1–2 na `main` e o PR do §12.1 aprovado.
 
 **Por que duas vezes (A21, 27/10):** o banco gratuito expira **30 dias depois de criado**, e cada conta só pode ter **um** banco gratuito ativo (documentação do Render, lida em 27/10).
 - **Ensaio:** numa **conta pessoal** de um integrante, com as Fases 1–2. Faça os passos abaixo e o §12.5 (itens 1 a 3). **No mesmo dia, apague o banco e o serviço.**
-- **Definitivo:** na conta que o PO escolher (quinta 29), **no sábado 31 de manhã**, com tudo na `main`. O banco vale até **30/11**. Não pode ser depois de 31/10: a janela de testes é no ambiente publicado.
+- **Definitivo:** na conta que o PO escolher (quinta 29), **no sábado 31 à noite**, com tudo na `main`. O banco vale até **30/11**, no mesmo horário em que foi criado; 30/11 é a data-limite dada pelo professor (A32). Logo depois do seed, faça o backup (§12.6). Não pode ser depois de 31/10: a janela de testes é no ambiente publicado.
 
 1. Crie a conta no Render entrando **com o GitHub** e dê acesso ao repositório.
 2. No painel do Render: **New > Blueprint** → escolha o repositório. O Render encontra o `render.yaml` na raiz.
@@ -455,6 +455,38 @@ docker run --rm postgres:16 psql "$URL" -tA -c "SELECT nome, quantidade_estoque 
 | 5 | Logs do serviço no painel | Sem `ERROR`; sem senha ou token impressos |
 
 **Sábado 31:** com tudo na `main`, o fluxo inteiro do CT68 na URL publicada. Guarde prints com a URL visível em `docs/Sprint_3/evidencias/`.
+
+**Licença (A30, resposta do professor):** enquanto a Gurobi não autorizar por escrito, o solver **não** roda no Render. O item 4 da tabela acima vale só com a autorização; sem ela, vale o plano B (`sprint-3-licenca-gurobi.md`, §4).
+
+### 12.6 Backup e restauração do banco (pedido do professor; A32)
+
+**Por quê:** o professor considera **30/11** a data-limite do sistema publicado e pediu um backup **com a restauração testada**. O banco gratuito expira 30 dias depois de criado, **no mesmo horário**: criado no sábado 31 às 9 h, ele para no dia 30/11 às 9 h. Por isso, crie o banco definitivo **o mais tarde possível no sábado**, à noite, e tenha o backup pronto.
+
+**Fazer o backup** (na raiz do repositório; a pasta `backup` fica **fora do Git**, porque o arquivo tem os dados e os hashes de senha):
+
+```powershell
+$URL = "<External Database URL>?sslmode=require"      # nunca comite esta URL: tem a senha
+New-Item -ItemType Directory -Force backup | Out-Null
+docker run --rm -v "${PWD}\backup:/backup" postgres:16 pg_dump "$URL" -Fc --no-owner --no-privileges -f /backup/mente_fria_2026-10-31.dump
+```
+
+**Testar a restauração** num banco local descartável (**não** use o `mente-fria-db`):
+
+```powershell
+docker run -d --name mf-restore -e POSTGRES_PASSWORD=teste -e POSTGRES_DB=mente_fria postgres:16
+docker cp backup\mente_fria_2026-10-31.dump mf-restore:/tmp/b.dump
+docker exec mf-restore pg_restore -U postgres -d mente_fria --no-owner --no-privileges --exit-on-error /tmp/b.dump
+docker exec mf-restore psql -U postgres -d mente_fria -tA -c "SELECT count(*) FROM pedido;"
+docker rm -f mf-restore
+```
+
+**Você deve ver:** o `pg_restore` sem erro e o mesmo número de pedidos do sistema publicado. Registre em `docs/Sprint_3/evidencias/` (é o critério do adendo, item 5).
+
+**Restaurar num banco novo do Render** (se o banco expirar ou for recriado): crie o banco, pegue a nova URL e rode `pg_restore -d "$URL_NOVO" --no-owner --no-privileges --exit-on-error` com o arquivo, como acima, em vez de rodar o DDL e o seed. O `--no-owner` existe porque o usuário do banco novo é outro.
+
+**Quando fazer backup:** logo depois do seed (sábado 31); ao fim da janela de testes (06/11); uma vez por semana; e em **29/11**, véspera da data-limite.
+
+**O que já foi verificado (27/10, auditoria):** com containers locais PostgreSQL 16, a cópia (`pg_dump -Fc`) do banco com o DDL e o `seed_demo.sql` foi restaurada num banco novo, de **outro dono**, com `--no-owner --no-privileges`. Ficaram iguais: as contagens das 7 tabelas, a soma dos saldos, a regra do saldo (0 violações) e o texto `Açaí (polpa)`. Depois da restauração, um cadastro novo recebeu o id seguinte, sem colisão. **Contra o Render, não foi testado** (o `pg_dump` pela URL com `sslmode=require` depende da conta).
 
 ## Erros comuns
 

@@ -154,9 +154,10 @@ O endpoint temporário `GET /api/teste/python` (o Java lê o nome do primeiro in
 
 ### 1.6 Licença do Gurobi e execução
 
-- **Não há licença WLS nem Gurobi Compute Server** (decisão A22, 26/10/2026). Desenvolvimento, testes e produção usam a **licença de avaliação** que vem com o `gurobipy` instalado pelo `pip` (versão **13.0.3**, decisão P2). Ela limita o tamanho dos problemas; os modelos do projeto cabem nesse limite (verificado na Sprint 3). O uso no sistema publicado foi perguntado ao professor.
-- O Java repassa ao processo filho as variáveis `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` **se existirem**. Se a WLS chegar, basta criar essas variáveis: **o contrato JSON não muda**.
-- *Histórico:* as notas de 28/09, 02/10 e 08/10/2026 sobre Compute Server local e "Alternativa C" (WLS do Lucas no container) ficaram sem efeito com a A22; ver a seção 3.
+- **Licenças disponíveis** (A34, 27/10/2026): uma **WLS acadêmica** do Kauê, válida até 25/09/2027, de uso **pessoal** ("uma única pessoa específica"), para trabalhos de disciplina; e a **licença restrita** que vem com o `gurobipy` 13.0.3 instalado pelo `pip` (decisão P2), usada no desenvolvimento e nos testes. Não há Gurobi Compute Server: ele não é necessário, porque a WLS roda dentro do próprio processo Python.
+- **No sistema publicado (Render), o solver só roda com autorização expressa da Gurobi** (orientação do professor em 27/10/2026; decisão A30), com qualquer das duas licenças. Sem ela, vale o plano B da equipe (A31), e as rotas de otimização podem responder `503` com uma mensagem tratada.
+- O Java repassa ao processo filho as variáveis `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` **se existirem**. Com a autorização da Gurobi, o titular (Kauê) cria essas variáveis no Render: **o contrato JSON não muda**. Os valores nunca vão para o Git.
+- *Histórico:* as notas de 28/09, 02/10 e 08/10/2026 sobre Compute Server local e "Alternativa C" (WLS do Lucas no container) foram revistas: não há Compute Server; a WLS acadêmica que existe é a do Kauê (A34), e o uso dela no Render depende da Gurobi (A30); ver a seção 3.
 
 ### 1.7 Reposição (UC14/US14) — `optimization/app/reposicao.py`
 
@@ -192,7 +193,7 @@ Casas: `orcamento` e `custo_unitario` com até 2; quantidades com até 3. `id` n
 
 ## 2. Contrato Frontend ↔ Backend (REST API)
 
-**Base URL:** `http://localhost:8080` (local). As rotas abaixo **já começam com `/api`**. Produção: a URL do serviço no Render, definida no deploy (o banco gratuito é criado em 31/10/2026 e expira 30 dias depois; a data fica no README). O frontend guarda a base em um único lugar, `frontend/js/config.js`: no `github.io` ele usa a URL do Render com tempo limite de 90 s (o serviço gratuito "dorme" após 15 min sem uso); em qualquer outro endereço, `http://localhost:8080` com 15 s.
+**Base URL:** `http://localhost:8080` (local). As rotas abaixo **já começam com `/api`**. Produção: a URL do serviço no Render, definida no deploy (o banco gratuito é criado em 31/10/2026, à noite, e expira 30 dias depois; o sistema fica disponível até 30/11/2026, data-limite da avaliação, com backup testado; a data fica no README). O frontend guarda a base em um único lugar, `frontend/js/config.js`: no `github.io` ele usa a URL do Render com tempo limite de 90 s (o serviço gratuito "dorme" após 15 min sem uso); em qualquer outro endereço, `http://localhost:8080` com 15 s.
 
 **Autenticação:** JWT no header `Authorization: Bearer <token>`, obtido em `POST /api/auth/login`. Todas as rotas exigem token válido, **exceto** `POST /api/auth/login`, `POST /api/auth/registro` (só enquanto não existir Administrador) e `GET /api/saude`. O token vale **2 horas**; token expirado = `401`. O `subject` do token é o id do usuário: **quem fez a ação** (pedido, movimentação) vem do token, **nunca** do corpo.
 
@@ -578,6 +579,7 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 
 | Data | Alteração | Itens |
 |---|---|---|
+| 27/10/2026 (noite) | **§1.6:** solver no Render só com autorização expressa da Gurobi (resposta do professor; A30, A31); licenças corrigidas: existe a WLS acadêmica do Kauê, válida até 25/09/2027, de uso pessoal (A34). **§2:** disponibilidade até 30/11/2026, com backup (A32) | A30–A32, A34 |
 | 27/10/2026 | **Versão 2 (Sprint 3)**, aprovada pela equipe; aplicada a pedido do grupo, com autorização do Kauê. **§1:** modelo por **lucro** (`custo_unitario` na entrada; `margem_estimada` e `consumo` na saída); saldo **válido** por linha; tabela de mensagens de erro; BOM aceito; uma execução por vez; eco só no perfil `dev`; **§1.6** licença de avaliação do Gurobi 13.0.3 (sem WLS nem Compute Server: as notas de 28/09, 02/10 e 08/10 ficam sem efeito); **§1.7** módulo de reposição. **§2:** validade do token (2 h); `PATCH` no CORS; snake_case global; fuso de São Paulo; códigos `405` e `422` do Python; mensagens padrão de `400`, `401`, `404`, `405` e `500`; formatos completos de ingredientes, produtos, usuários e login; rotas da Sprint 3 e lista do que fica fora; **§2.4** estoque por linhas e descarte por linha (A12); **§2.5** pedidos com baixa e `GET`; **§2.6** recomendação; **§2.7** reposição passa a `POST`; **§2.8** dashboard; **§2.9** marketing. **§0:** caminhos atualizados (`docs/Apoio/`, `bd/`) | A8, A9, A12, A16–A23, A27, D3, F4, F9, P2 |
 | 08/10/2026 | **Itens B3, B6 e D3 confirmados pela equipe** (B5 e B1 já estavam confirmados); removidas as marcações "(confirmar com …)". **§1:** nota do Compute Server atualizada — licença de produção será a do Lucas; produção decidida pelo grupo: **Alternativa C** (licença WLS direta no container do backend, sem Compute Server; Opção A descartada); o contrato JSON não muda. Proposta para o Kauê aplicar no arquivo oficial. | B3, B6, D3, §1 |
 | 28/09/2026 | §1: nota sobre o Gurobi Compute Server (dependência de rede, timeout ainda mais provisório, limite de 1 job por vez). Proposta minha para o Kauê revisar e, se concordar, aplicar no arquivo oficial. | §1 |

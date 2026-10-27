@@ -14,6 +14,15 @@
 
 ## 0. O que mudou
 
+### 0.00 Resposta do professor (27/10, noite) — v5.3
+
+Texto completo em `resposta-professor.md`.
+1. **Adendo ao Termo aceito:** rascunho em `sprint-3-adendo-termo-de-aceite.md` (A33), com o cálculo do lucro explícito. Os demais documentos só mudam **depois** da aprovação do adendo.
+2. **Licença do Gurobi no Render NÃO autorizada** até a Gurobi confirmar por escrito (A30). Pedido pronto em `sprint-3-licenca-gurobi.md`; plano B a decidir (A31).
+3. **Sistema publicado até 30/11**, com backup e restauração testados (A32). O banco definitivo passa a ser criado **no sábado 31 à noite**.
+4. **Obrigatórios primeiro:** a lista de cortes mudou (§7). A sprint extra só acontece com o obrigatório testado e estável (A28).
+5. **Lacuna encontrada:** o Termo aceitou "Must + Should" e cita alertas de vencimento e de reposição no critério de pronto, mas US15/US16 estão fora. O adendo, item 4, propõe como tratar (decisão da equipe).
+
 ### 0.0 Da v5.1 para a v5.2 (27/10, respostas da equipe)
 
 1. **Contrato v2 aprovado** (A10) e aplicado ao oficial (item 9).
@@ -97,7 +106,7 @@ Classificação pela evidência, não pelo que os relatórios afirmam.
 | Backend de US1–US7 | Pendente no repositório; **pronto fora** | Fases 1 e 2 (Lucas) |
 | Hello World Java → Python | Pendente no repositório; **pronto fora** (eco real no perfil `dev`) | Fase P + Fase 4A |
 | CORS | **Pronto fora** (inclusive a origem do GitHub Pages) | Fase 1 |
-| Python fora do PC do Kauê | **Pendente** | Fase P (2ª máquina). Sem WLS: licença de avaliação do `pip` (A22) |
+| Python fora do PC do Kauê | **Pendente** | Fase P (2ª máquina), com a licença restrita do `pip`. A WLS acadêmica do Kauê é pessoal (A34) |
 | Testes do backend, Testcontainers | **Prontos fora** (92) | Fases 1–6 |
 | `.env` | Corrigido em 14/10 (PR #24) | Concluído; README a alinhar |
 | CT20 (subir do zero só com o README) | Nunca executado | Fase 8 (Kauê) |
@@ -178,20 +187,22 @@ Fases 1–2 na main (28/10) ──> ENSAIO opcional (conta pessoal, apagado no m
 | **Qua 28** | **PR da Fase P + Q** (47 testes); ensaio de deploy (opcional, conta pessoal) | Repositórios de movimentação, pedido, reposição e dashboard; `seed_demo.sql`; `sql_repositorios_sprint3.md` | **PR da Fase 2** (15/15) → avisar o Leo; ensaio de deploy com o Kauê (opcional) | `config.js` + *workflow* do Pages (com o Kauê); Telas de Estoque e Pedido com API simulada |
 | **Qui 29** | **Fase 4A em dupla**; Java da reposição; ensaio, se não foi na quarta | Plano de Testes: casos do banco; DER e mapa de constraints | **PR da Fase 3** (15/15); Fase 4A em dupla; **decidir quem cria a conta definitiva do Render** | **Gate da Fase 2** (manhã); Estoque e Pedido com o backend real |
 | **Sex 30** | **PR da Fase 5** (reposição); casos do Python e da US14 no Plano | Documentos (Backlog, Termo como adendo, Arquitetura, UML) | **PR da Fase 4A** e **PR da Fase 6** (dashboard e marketing); **à noite, conferir os gatilhos da A28** | Tela 12; Tela 03; botão "Descartar" (A12) |
-| **Sáb 31** | **Deploy definitivo, de manhã** (conta, banco e serviço criados hoje; banco vale até 30/11); **CT67–CT70** no ambiente publicado; README; CT20 com um colega | Revisar PRs; Plano de Testes completo; evidências | PRs revisados; Tela 14 (se o Leo precisar) | Telas 13 e 14; testes de navegador |
+| **Sáb 31** | **Deploy definitivo, à noite** (conta, banco e serviço criados hoje; o banco vale até 30/11 no mesmo horário; A32) e **backup** logo depois do seed; **CT67–CT70** no ambiente publicado; README; CT20 com um colega | Revisar PRs; Plano de Testes completo; evidências | PRs revisados; Tela 14 (se o Leo precisar) | Telas 13 e 14; testes de navegador |
 | **Dom 01/11** | **Review e Retrospectiva**; evidências | Evidências do banco | Congelamento do código | Evidências do frontend; aceite **na URL publicada** |
 | **01–06/11** | Janela de testes **no ambiente publicado**: só correções (v4.6, §4.4, item 5); fluxo registrar → teste que reproduz → `fix/...` → PR → retestar | | | |
 
-**Se algo escorregar, corte nesta ordem** (do primeiro a sair ao último):
+**Se algo escorregar, corte nesta ordem** (do primeiro a sair ao último; revista em 27/10 pela orientação do professor: os **adicionais** saem antes):
 1. Botão "Descartar" por linha (A12). O backend fica; só o botão sai.
-2. Acabamento visual das telas.
-3. Detalhe por linha da Tela 10 (`GET .../linhas`).
-4. Filtros do ranking **na tela** (o backend já os tem).
-5. Bloco "Plano de produção" no dashboard.
+2. Filtros do ranking **na tela** (o backend já os tem).
+3. Ranking por usuário na Tela 03 (adicional do dashboard; adendo, item 3).
+4. Acabamento visual das telas.
+
+**Não cortar:** o bloco "Plano de produção" do dashboard (é a "receita máxima estimada" e os "produtos prioritários" do Termo) e o detalhe por linha da Tela 10 (é o que mostra "Vence em breve" e "Vencida", a cobertura atual do alerta de vencimento; adendo, item 4).
 
 **Conferência da sexta 30, à noite (A28)**, feita pelo PO:
 - **Corte:** as Telas 10/16, 11/17 e 12 funcionam com o backend real? Se **não**, o botão da A12 sai.
-- **Sprint 4 relâmpago:** todos os PRs das Fases 1–6 estão na `main` e as seis telas prontas? Se **sim**, o sábado pode receber US27 e/ou US26, **depois** do deploy definitivo e do CT67–CT70.
+- **Sprint 4 relâmpago:** todos os PRs das Fases 1–6 estão na `main`, as seis telas prontas **e testadas, sem defeito aberto** nas obrigatórias? Se **sim**, o sábado pode receber US27 e/ou US26, sem atrasar o deploy definitivo nem o CT67–CT70. Na dúvida, não (orientação do professor, 27/10).
+- **Licença (A30):** chegou autorização escrita da Gurobi? Se **não**, o deploy de sábado vai com o plano B (A31).
 
 **Nenhuma história Must sai.** Se mesmo assim não couber, o PO conversa com o professor **antes** de 01/11. Não use a janela de testes para desenvolver.
 
@@ -234,7 +245,9 @@ Fases 1–2 na main (28/10) ──> ENSAIO opcional (conta pessoal, apagado no m
 | Gargalo no Lucas (caminho crítico) | Média / Alto | Todo o Java pronto; Kauê com a reposição; Diogo com os repositórios |
 | **Render free:** banco expira em 30 dias; serviço dorme após 15 min; 0,1 CPU (sobe em ~83 s; primeiro login ~7 s) | Certa / Médio | Banco criado no sábado 31 (vale até 30/11); data da avaliação perguntada ao professor; `config.js` com 90 s; "acordar" o serviço antes de cada sessão de teste (A21) |
 | **Primeiro contato com o Render só no sábado** (se o ensaio não for feito) | Média / Alto | Ensaio na qua/qui numa conta pessoal; simulação local já feita |
-| **Licença do Gurobi em produção** (sem WLS) | Média / Médio | Licença de avaliação funciona com os modelos do projeto; confirmar o uso com o professor (A22) |
+| **Licença do Gurobi no servidor não autorizada** (professor, 27/10) | **Alta / Alto** | O Kauê pergunta à Gurobi se a WLS acadêmica dele (válida até 2027, uso pessoal) pode rodar no Render; plano B pronto até sexta (A30, A31, A34) |
+| **Banco expira no dia 30/11, data-limite da avaliação** | Média / Alto | Criar no sábado à noite; backups com restauração testada (A32) |
+| **Alertas de vencimento e de reposição (Termo) com US15/US16 fora** | Média / Médio | Adendo, item 4: registrar a cobertura atual ou tornar o prazo parametrizável (A33) |
 | Contrato v2 não aprovado a tempo | Baixa / Alto | Proposta igual ao código; 30 min de reunião na terça |
 | Trabalho só local, sem push (nada no GitHub desde 14/10) | Média / Alto | **Um PR por fase, todos os dias** |
 | Docker de outra máquina com o mesmo BD01 | Média / Médio | Contorno da A26 (renomear as pastas; nunca "Reset to factory defaults") |

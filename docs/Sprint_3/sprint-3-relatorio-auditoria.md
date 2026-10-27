@@ -37,6 +37,18 @@
 | A11 | Quem escreve a frase? | Já estava na lista do Diogo (§9.2, item 7). O tutorial do Kauê dava a mesma tarefa a ele; a duplicidade foi removida |
 | P7 | Sprint 4 relâmpago, se sobrar tempo | Gatilho na sexta 30 à noite (A28); pergunta incluída na mensagem ao professor |
 
+**Resposta do professor (27/10, noite)** — texto em `resposta-professor.md`:
+
+| Ponto | O que o professor disse | O que foi feito |
+|---|---|---|
+| Adendo | Aceito; descrever alterações, justificativas e critérios; explicitar o cálculo do lucro | Rascunho em `sprint-3-adendo-termo-de-aceite.md` (A33), com a fórmula do lucro e os custos considerados e não considerados, conferidos no código |
+| Reposição e dashboard | Obrigatórios primeiro | Lista de cortes refeita: saem antes o botão da A12, os filtros e o ranking; **não** saem o bloco da receita máxima estimada nem o detalhe por linha |
+| Licença | Não considerar autorizada sem confirmação expressa da Gurobi; planejar alternativa | Documentação oficial lida; pedido à Gurobi pronto; plano B a decidir (`sprint-3-licenca-gurobi.md`; A30, A31). **Risco elevado para Alto** |
+| Datas | 30/11 é a data-limite; backup e restauração testados | Backup e restauração **validados** em containers locais (validação 39); procedimento no Kauê §12.6; banco definitivo no sábado **à noite** (A32) |
+| Sprint extra | Pode, se não prejudicar a qualidade | Gatilho da A28 endurecido: só com o obrigatório testado e estável |
+| Licença (complemento) | — | O e-mail de aprovação da Gurobi ao Kauê mostra uma **WLS acadêmica válida até 25/09/2027** (A34), o que corrige a A22. A cláusula "para uma única pessoa (não um processo que roda em nome de usuários diferentes)" mantém a dúvida sobre o Render: a pergunta à Gurobi passou a ser sobre essa licença, enviada pelo Kauê. O Compute Server não é necessário |
+| — | — | **Lacuna nova:** o Termo aceita "Must + Should" e cita alertas no critério de pronto, mas US15/US16 estão fora. Adendo, item 4: decisão da equipe |
+
 **Segunda rodada de 27/10:**
 
 | Pendência | Resposta da equipe | O que foi feito |
@@ -235,6 +247,7 @@ Todas em cópias no diretório temporário da sessão, fora do repositório.
 | **36** | Catálogo com 18 ideias (A20) | `MarketingTest` 4/4: rodízio do dia 301 continua na ideia 3; 18 títulos distintos | **Aprovado** |
 | **37** | A15: merge do `sprint-3` na `main` (simulação) | `git merge-tree`: resultado = `main` + `backend/env.example`; o `application.properties` mantém `./.env` | **Aprovado** (corrige a v5.1) |
 | **38** | Regras do Render free (A21) | Documentação lida em 27/10: um banco gratuito ativo por conta; expira em 30 dias, mais 14 de carência; não diz se é possível criar outro depois; 750 horas gratuitas por mês | **Aprovado**, com a lacuna anotada |
+| **39** | **Backup e restauração** (A32, 27/10) | Containers temporários PostgreSQL 16: DDL + 2 usuários + `seed_demo.sql` → `pg_dump -Fc` (22 KB) → `pg_restore --no-owner --no-privileges` num banco novo, com outro dono: exit 0; retrato **igual** (7 tabelas, soma dos saldos 358, 0 violações, `Açaí (polpa)`); novo cadastro com id 3 sem colisão. Containers removidos | **Aprovado** localmente; contra o Render, **não validado** |
 
 **Skills aplicadas:**
 

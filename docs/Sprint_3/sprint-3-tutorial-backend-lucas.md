@@ -428,8 +428,8 @@ O passo a passo do Render está no tutorial do **Kauê, §12**; o do GitHub Page
    - **No mesmo dia, apagar o banco e o serviço do ensaio.** Cada conta só pode ter um banco gratuito ativo.
    - Sem o ensaio, o primeiro contato com o Render é no sábado, um dia antes do fim. Os problemas mais prováveis (memória, tempo de subida, CORS) já foram simulados na máquina, mas o Render real não.
 2. **Quinta 29:** como PO, decidir **quem** cria a conta definitiva.
-3. **Licença (A22):** não há WLS. Não crie `GRB_*` no Render; o `gurobipy` usa a licença de avaliação. Confirme com o professor, na mensagem da terça, que o uso é aceitável.
-4. **Sábado 31, de manhã: deploy definitivo** pelo *blueprint*, com tudo na `main`. Anotar no README a **data de expiração do banco** (30/11). Depois, rodar no ambiente publicado o fluxo do CT68 e conferir CT69 e CT70.
+3. **Licença (A30, resposta do professor em 27/10):** o uso do solver no Render **não está autorizado** até a Gurobi confirmar por escrito. Como PO: envie o pedido de `sprint-3-licenca-gurobi.md` (§3) até quarta, decida o plano B (A31) e, na sexta à noite, confirme se o deploy vai com o solver ou com o plano B. Se a Gurobi autorizar, **o Kauê** (titular da WLS, A34) cria as variáveis `GRB_*` no Render; sem autorização, não rode o solver lá.
+4. **Sábado 31, à noite: deploy definitivo** pelo *blueprint*, com tudo na `main` (o banco expira no mesmo horário de 30/11, a data-limite; A32). Anotar no README a **data de expiração do banco** (30/11). Depois, rodar no ambiente publicado o fluxo do CT68 e conferir CT69 e CT70.
 
 **O que a simulação local mostrou** (container com 512 MB e 0,1 CPU):
 

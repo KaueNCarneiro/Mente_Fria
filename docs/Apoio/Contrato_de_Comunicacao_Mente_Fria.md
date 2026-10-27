@@ -125,13 +125,60 @@ O Roteiro da Sprint 1 usa o **banco real** (`mente_fria`) e um endpoint **tempor
 { "status": "sucesso", "echo": "AÇAÍ (POLPA)" }
 ```
 
+<<<<<<< Updated upstream
 Esse endpoint é **removido** depois que o Hello World for validado (ele não tem controle de acesso).
+=======
+Se `echo` não for texto, a resposta é `{"status": "erro", "mensagem": "Campo 'echo' ausente ou inválido"}`.
+
+O endpoint temporário `GET /api/teste/python` (o Java lê o nome do primeiro ingrediente no banco, envia ao Python e devolve a resposta) existe **só no perfil `dev`** do Spring (decisão F4). Fora dele a rota não existe e responde `401`; por isso ele não precisa ser apagado antes do deploy.
+
+### 1.6 Licença do Gurobi e execução
+
+- **Licenças disponíveis** (A34, 27/10/2026): uma **WLS acadêmica** do Kauê, válida até 25/09/2027, de uso **pessoal** ("uma única pessoa específica"), para trabalhos de disciplina; e a **licença restrita** que vem com o `gurobipy` 13.0.3 instalado pelo `pip` (decisão P2), usada no desenvolvimento e nos testes. Não há Gurobi Compute Server: ele não é necessário, porque a WLS roda dentro do próprio processo Python.
+- **No sistema publicado (Render), o solver só roda com autorização expressa da Gurobi** (orientação do professor em 27/10/2026; decisão A30), com qualquer das duas licenças. Sem ela, vale o plano B da equipe (A31), e as rotas de otimização podem responder `503` com uma mensagem tratada.
+- O Java repassa ao processo filho as variáveis `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` **se existirem**. Com a autorização da Gurobi, o titular (Kauê) cria essas variáveis no Render: **o contrato JSON não muda**. Os valores nunca vão para o Git.
+- *Histórico:* as notas de 28/09, 02/10 e 08/10/2026 sobre Compute Server local e "Alternativa C" (WLS do Lucas no container) foram revistas: não há Compute Server; a WLS acadêmica que existe é a do Kauê (A34), e o uso dela no Render depende da Gurobi (A30); ver a seção 3.
+
+### 1.7 Reposição (UC14/US14) — `optimization/app/reposicao.py`
+
+Mesmas regras gerais do §1 (um JSON de ida, um de volta, código de saída 0 com `status`, UTF-8, aceita BOM, uma execução por vez).
+
+**Requisição (Java → Python).** O Java já escolheu os ingredientes (os 8 mais consumidos para períodos até 30 dias; os 15 mais consumidos acima disso) e envia o **saldo válido**:
+
+```json
+{ "orcamento": 100.00,
+  "ingredientes": [ { "id": 5, "consumo_periodo": 0.720, "quantidade_estoque": 1.980,
+                      "quantidade_minima": 2.000, "custo_unitario": 15.00 } ] }
+```
+
+Casas: `orcamento` e `custo_unitario` com até 2; quantidades com até 3. `id` não pode repetir.
+
+**Resposta de sucesso** (exemplo guardado em `optimization/exemplos/saida_reposicao_demo.json`):
+
+```json
+{ "status": "sucesso", "orcamento_suficiente": true, "custo_total": 11.10, "valor_faltante": 0.0,
+  "cobertura_minima": 1.0,
+  "itens": [ { "ingrediente_id": 5, "quantidade_sugerida": 0.74, "quantidade_minima_compra": 0.02,
+               "quantidade_necessaria": 0.74, "custo_estimado": 11.10 } ] }
+```
+
+- `itens` traz **um item por ingrediente recebido**, do maior para o menor `custo_estimado` (empate: menor id).
+- `quantidade_sugerida` tem até **2 casas** e fica entre `quantidade_minima_compra` e `quantidade_necessaria`.
+- **Orçamento que não cobre os mínimos:** `orcamento_suficiente: false`, `quantidade_sugerida` = o mínimo de cada um, `valor_faltante` = quanto falta, `cobertura_minima: null`.
+- `cobertura_minima` (0 a 1) é informativa e **não aparece para o dono** (termo técnico).
+
+**Erros** (`status: "erro"`): `Orçamento inválido`, `Nenhum ingrediente consumido no período`, `Números inválidos em ingredientes`, `Ingrediente sem custo unitário válido`, `JSON de entrada inválido`.
+>>>>>>> Stashed changes
 
 ---
 
 ## 2. Contrato Frontend ↔ Backend (REST API)
 
+<<<<<<< Updated upstream
 **Base URL:** `http://localhost:8080` (local). As rotas abaixo **já começam com `/api`**. Produção: a URL do serviço no Render, definida no deploy. O frontend guarda a base em um único lugar, `frontend/js/config.js` (`API_BASE_URL`).
+=======
+**Base URL:** `http://localhost:8080` (local). As rotas abaixo **já começam com `/api`**. Produção: a URL do serviço no Render, definida no deploy (o banco gratuito é criado em 31/10/2026, à noite, e expira 30 dias depois; o sistema fica disponível até 30/11/2026, data-limite da avaliação, com backup testado; a data fica no README). O frontend guarda a base em um único lugar, `frontend/js/config.js`: no `github.io` ele usa a URL do Render com tempo limite de 90 s (o serviço gratuito "dorme" após 15 min sem uso); em qualquer outro endereço, `http://localhost:8080` com 15 s.
+>>>>>>> Stashed changes
 
 **Autenticação:** JWT no header `Authorization: Bearer <token>`, obtido em `POST /api/auth/login`. Todas as rotas exigem token válido, **exceto** `POST /api/auth/login`, `POST /api/auth/registro` (só enquanto não existir Administrador) e `GET /api/saude`. O token tem validade curta (1 a 2 horas); token expirado = `401`.
 
@@ -335,6 +382,11 @@ Paginação em `GET /api/pedidos` e `GET /api/ingredientes` fica **fora do MVP**
 
 | Data | Alteração | Itens |
 |---|---|---|
+<<<<<<< Updated upstream
+=======
+| 27/10/2026 (noite) | **§1.6:** solver no Render só com autorização expressa da Gurobi (resposta do professor; A30, A31); licenças corrigidas: existe a WLS acadêmica do Kauê, válida até 25/09/2027, de uso pessoal (A34). **§2:** disponibilidade até 30/11/2026, com backup (A32) | A30–A32, A34 |
+| 27/10/2026 | **Versão 2 (Sprint 3)**, aprovada pela equipe; aplicada a pedido do grupo, com autorização do Kauê. **§1:** modelo por **lucro** (`custo_unitario` na entrada; `margem_estimada` e `consumo` na saída); saldo **válido** por linha; tabela de mensagens de erro; BOM aceito; uma execução por vez; eco só no perfil `dev`; **§1.6** licença de avaliação do Gurobi 13.0.3 (sem WLS nem Compute Server: as notas de 28/09, 02/10 e 08/10 ficam sem efeito); **§1.7** módulo de reposição. **§2:** validade do token (2 h); `PATCH` no CORS; snake_case global; fuso de São Paulo; códigos `405` e `422` do Python; mensagens padrão de `400`, `401`, `404`, `405` e `500`; formatos completos de ingredientes, produtos, usuários e login; rotas da Sprint 3 e lista do que fica fora; **§2.4** estoque por linhas e descarte por linha (A12); **§2.5** pedidos com baixa e `GET`; **§2.6** recomendação; **§2.7** reposição passa a `POST`; **§2.8** dashboard; **§2.9** marketing. **§0:** caminhos atualizados (`docs/Apoio/`, `bd/`) | A8, A9, A12, A16–A23, A27, D3, F4, F9, P2 |
+>>>>>>> Stashed changes
 | 08/10/2026 | **Itens B3, B6 e D3 confirmados pela equipe** (B5 e B1 já estavam confirmados); removidas as marcações "(confirmar com …)". **§1:** nota do Compute Server atualizada — licença de produção será a do Lucas; produção decidida pelo grupo: **Alternativa C** (licença WLS direta no container do backend, sem Compute Server; Opção A descartada); o contrato JSON não muda. Proposta para o Kauê aplicar no arquivo oficial. | B3, B6, D3, §1 |
 | 28/09/2026 | §1: nota sobre o Gurobi Compute Server (dependência de rede, timeout ainda mais provisório, limite de 1 job por vez). Proposta minha para o Kauê revisar e, se concordar, aplicar no arquivo oficial. | §1 |
 | 25/09/2026 | Item **B1** (§2.4) confirmado pelo grupo: o frontend converte porções em quantidade (B1). **§1.1:** ingredientes com lote vencido deixam de contar como estoque disponível enviado ao Python (decisão do grupo). | B1 |

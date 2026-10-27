@@ -302,9 +302,9 @@ O Termo foi aprovado em 28/08. **Todos os Must do Termo estão na Sprint 3** (A2
 3. **Dashboard (US17):** mostra faturamento do mês, mais vendidos, ingredientes mais usados, ranking por usuário e, como o Termo pede, a **receita máxima estimada** e os produtos prioritários do último cálculo (A16).
 4. **Publicação (US20):** Render (plano gratuito) e GitHub Pages. Duas perguntas:
    - o banco gratuito expira 30 dias depois de criado (A21): vamos criá-lo em 31/10 (vale até 30/11). Até quando o professor vai precisar do sistema publicado?
-   - o Gurobi roda com a licença de avaliação que vem com o `pip`, porque não temos a WLS (A22): o uso é aceitável?
+   - o Gurobi roda com a licença de avaliação que vem com o `pip`, porque não temos a WLS (A22): o uso é aceitável? **Resposta: só com confirmação expressa da Gurobi (A30).**
 
-Guarde a resposta em `docs/Sprint_3/`. **Só depois** edite o Termo, a Visão e o Backlog. No Termo assinado, registre a mudança como **adendo datado**, sem reescrever o texto aprovado.
+**Resposta recebida em 27/10** (`resposta-professor.md`). O professor aceitou o adendo datado e pediu as alterações, as justificativas e os critérios de aceitação; o rascunho está em **`sprint-3-adendo-termo-de-aceite.md`** (A33). Revise com o Lucas, envie e **só depois da aprovação** edite a Visão e o Backlog (§9.2). O Termo original não muda: o adendo é anexado a ele.
 
 ### 9.2 O que fazer (verificado em 26/10: os `.docx` são idênticos aos da `main`, então nada foi feito ainda)
 
@@ -316,7 +316,7 @@ Guarde a resposta em `docs/Sprint_3/`. **Só depois** edite o Termo, a Visão e 
 | 4 | **`docs/DER.md`** | Dicionário e diagrama: `movimentacao_estoque.quantidade_restante` e `motivo`; `pedido.status`, `data_cancelamento` e `usuario_cancelamento_id`. Reescrever as notas de FEFO (**por linha**) e de saldo ("= soma dos restantes"). Anotar o seed com estoque 0, o `seed_demo.sql` e o `:agora` (A9) |
 | 5 | **`docs/Apoio/mapa_constraints.md`** | Acrescentar `cliente`, `pedido`, `pedido_produto` e `movimentacao_estoque` (tabela abaixo). Corrigir a referência `sql_repositorios_sprint1.md` → `sql_repositorios.md` |
 | 6 | **`docs/Plano_de_Testes_Mente_Fria.md`** | Ajustar CT23, CT24 e CT29 e incorporar **CT30–CT71** de `sprint-3-casos-de-teste-propostos.md` (banco, estoque e dashboard são seus; Python, reposição e deploy, do Kauê). **Sem** meta de cobertura |
-| 7 | **`docs/Apoio/Arquitetura.md`** | D5 (a reposição com orçamento usa o solver, módulo `reposicao.py`); estoque por linhas; `@Profile("dev")`; `America/Sao_Paulo` (F3, A9); **sem Compute Server e sem WLS: licença de avaliação** (A11, A22); versão do Gurobi 13.0.3 (P2, decidida em 27/10); **deploy** como está em `referencia/deploy/` (Docker no Render, Pages por Actions, limites da A21) |
+| 7 | **`docs/Apoio/Arquitetura.md`** | D5 (a reposição com orçamento usa o solver, módulo `reposicao.py`); estoque por linhas; `@Profile("dev")`; `America/Sao_Paulo` (F3, A9); **sem Compute Server; licenças: WLS acadêmica do Kauê (pessoal, até 25/09/2027) e a restrita do `pip` no desenvolvimento; no Render, só com autorização da Gurobi** (A11, A30, A34); trocar "licença do Lucas" e "90 dias" por "licença do Kauê" e "um ano"; versão do Gurobi 13.0.3 (P2, decidida em 27/10); **deploy** como está em `referencia/deploy/` (Docker no Render, Pages por Actions, limites da A21) |
 | 8 | **Referências antigas em documentos vivos** | `sql_repositorios_sprint1.md` → `docs/Apoio/sql_repositorios.md`; `constraints_sprint1_teste.sql` → `bd/constraints_teste.sql`; `docs/Script_DDL.sql` → `bd/Script_DDL.sql`; `ARQUITETURA.md` → `docs/Apoio/Arquitetura.md`. Onde: Plano de Testes, `mapa_constraints.md` e o cabeçalho de `bd/constraints_teste.sql` (o Contrato já foi corrigido na v2, em 27/10). **Não** reescreva os relatórios de sprint: são histórico |
 | 9 | **`docs/Diagramas_UML.md`** | `calcularQuantidadeOtimaProducao()` passa a maximizar **lucro** |
 | 10 | **README** | Linha 3 (receita → lucro, depois da §9.1); comandos dos testes novos (§4); seed de demonstração (§8); **linha 5: a URL publicada** (o Kauê informa) |

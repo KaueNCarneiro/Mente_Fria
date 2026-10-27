@@ -11,7 +11,7 @@
 - `F1–F12`: pontos da análise de 14/10.
 - `D1–D22`: respostas da equipe de 13/10 (roteiro v4.6, §9).
 - `P2–P7`: pendências de 14/10.
-- **`A1–A28`: novos**, criados nesta auditoria, com o prefixo "A" para não colidir com os oficiais.
+- **`A1–A29`: novos**, criados nesta auditoria, com o prefixo "A" para não colidir com os oficiais.
 
 **"Proposta"** = já está no código de `referencia/` e passou nos testes, mas o PO (Lucas) pode trocar. Trocar custa pouco: cada uma está isolada num método.
 
@@ -84,15 +84,15 @@ São correções ou detalhes necessários para o código funcionar. **Não alter
 
 | # | Pendência | Dono | Prazo | Recomendação |
 |---|---|---|---|---|
-| A10 | **Contrato v2: aprovado pela equipe em 27/10.** Falta **aplicar** ao contrato oficial, num PR | Kauê | **27/10** | Copiar a proposta como está (inclusive o descarte por linha, §2.4). Os formatos são **exatamente** os do código validado |
 | P3 | Avisar o professor: receita → lucro (F9); reposição com orçamento; dashboard (A16, A17); licença de avaliação do Gurobi (A22); data de criação do banco (A21); sprint extra (A28) | Diogo (envia), Lucas (revisa) | **27/10** | **Mensagem pronta:** `sprint-3-mensagem-professor.md`. Guardar a resposta em `docs/Sprint_3/resposta-professor.md` |
 | A21 | **Adiada em 27/10**, para o banco gratuito durar o máximo possível. Falta decidir **quem** cria a conta definitiva no Render | Equipe | Quem: **qui 29/10**. Criação: **sáb 31/10** | **Banco e serviço definitivos no sábado 31, de manhã:** expira em **30/11** (apagado em 14/12 sem upgrade); anotar no README. Não dá para passar de 31/10: a janela de testes (01–06/11) é no ambiente publicado. **Ensaio recomendado** na qua 28 ou qui 29, numa **conta pessoal** de um integrante, apagando banco e serviço no mesmo dia (cada conta só pode ter **um** banco gratuito ativo). Sem o ensaio, os problemas do Render só aparecem no sábado; a simulação local (83 s, 133 MiB) reduz esse risco, mas não o elimina. A data da avaliação foi perguntada ao professor |
-| A11 | Compute Server no desenvolvimento | Diogo (documentos) | sex 30/10 | **Não bloqueia mais** (A22). A frase "sem Compute Server e sem WLS: licença de avaliação" já está na lista do Diogo (tutorial do Diogo, §9.2, item 7: Arquitetura), no PR dos documentos |
+| A11 | Compute Server no desenvolvimento. **Confirmado em 27/10: fica com o Diogo** | Diogo (documentos) | sex 30/10 | **Não bloqueia mais** (A22). A frase "sem Compute Server e sem WLS: licença de avaliação" já está na lista do Diogo (tutorial do Diogo, §9.2, item 7: Arquitetura), no PR dos documentos |
 | A12 | **Entrou em 27/10:** atalho `POST /api/estoque/linhas/{id}/descarte` | Lucas (backend, vem com a Fase 3), Leonardo (botão) | Fase 3 (qui 29); botão até sex 30 | **Implementado e testado** em `referencia/` (`descarteDeUmaLinhaVencidaZeraSoEssaLinha`, CT71; a suíte vai a 92). Se atrasar, **só o botão sai** (A28, item a); o backend fica |
 | P2 | **Decidida em 27/10: `gurobipy` 13.0.3.** Falta aplicar nos arquivos | Kauê (`requirements.txt`), Diogo (Arquitetura) | 27/10 | As duas versões passaram nos 47 testes; o `Dockerfile` já usa 13.0.3 |
 | A13 | Teste de navegador instável (original e dividido) | Leonardo | Antes de 01/11 | Ver tutorial do Leonardo, §7.1 |
-| A15 | Branch `origin/sprint-3` desatualizado. **Corrigido em 27/10:** um merge dele na `main` **não** desfaz o PR #24 (simulado com `git merge-tree`, sem alterar nada: só acrescentaria `backend/env.example`). O risco é **começar trabalho a partir dele** (caminho antigo do `.env`) e ficar com **dois arquivos de exemplo** diferentes | Kauê | 27/10 | Levar os comentários úteis do `backend/env.example` para o `backend/.env.example` da `main`; criar os branches novos sempre a partir da `main`; depois, apagar o branch `sprint-3` (decisão do Kauê) |
-| P7 | US13, US15, US16, US19, US26, US27 | Equipe | Gatilho: sex 30/10 | Fora da Sprint 3 (A2b). **Sprint 4 relâmpago** no sábado 31 só se o gatilho da A28 (item b) for atingido; pergunta enviada ao professor |
+| A15 | Branch `origin/sprint-3` desatualizado. **Corrigido em 27/10:** um merge dele na `main` **não** desfaz o PR #24 (simulado com `git merge-tree`, sem alterar nada: só acrescentaria `backend/env.example`). O risco é **começar trabalho a partir dele** (caminho antigo do `.env`) e ficar com **dois arquivos de exemplo** diferentes | Kauê | 27/10 | **Merge feito em 27/10 e conferido** (ver A29). Falta: levar os comentários úteis do `backend/env.example` para o `backend/.env.example` e apagar o `env.example` (agora os dois estão na `main`); criar os branches novos sempre a partir da `main` |
+| A29 | **Verificação dos merges de 27/10.** PR #25 (`sprint-3` → `main`): **certo**; a `main` manteve a correção do PR #24 (`./.env`) e ganhou só o `backend/env.example`. PR #26 (documentos → `sprint-3`): **certo, mas foi para o `sprint-3`, não para a `main`**; os 150 arquivos de `docs/Sprint_3/` chegaram inteiros e sem nenhuma senha real. A cópia local do Diogo ficou no branch `docs/sprint-3-adicionando-e-atualizando-documentacao`, criado **antes** do PR #24 (o `backend` local ainda tem o caminho antigo do `.env`) | Diogo | Hoje | (1) **Feito:** o PR #27 (`sprint-3` → `main`) levou `docs/Sprint_3/` para a `main`, que continua com a correção do PR #24. (2) Às 17:19 um `git reset --hard` apagou as alterações não commitadas (contrato e 7 documentos); **foram refeitas no branch `docs/sprint-3-contrato-de-comunicacao-atualizado`**. Commitar e abrir o PR desse branch para a `main` (só traz esses 8 arquivos). (3) Esse branch saiu do `sprint-3`, que não tem a correção do PR #24: depois do merge, voltar para a `main` (`git checkout main` e `git pull`) antes de mexer em código |
+| P7 | US13, US15, US16, US19, US26, US27 | Equipe | Gatilho: sex 30/10 | Fora da Sprint 3 (A2b). **Sprint 4 relâmpago mantida como plano (27/10):** no sábado 31, se o gatilho da A28 (item b) for atingido; e, se o professor estender a janela de testes, também no início dela. A mensagem ao professor pergunta as duas coisas |
 
 **Encerradas ou substituídas nesta revisão** (mantidas aqui para rastreabilidade):
 
@@ -104,6 +104,7 @@ São correções ou detalhes necessários para o código funcionar. **Não alter
 | F12 | Definição única de consumo | **Resolvida pela A18** |
 | P6 | Medir o timeout de 10 s | **Fechada:** 188 ms na máquina; 3,1 s com 0,1 CPU |
 | A16, A17, A20 | Propostas de conteúdo (dashboard e marketing) | **Aprovadas em 27/10** (A20 com o catálogo ampliado para 18 ideias) |
+| A10 | Contrato v2 | **Aplicado ao contrato oficial em 27/10** (`docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md`, revisão de 27/10 na seção 3), a pedido do Kauê. Os dois `[decidir]` da proposta foram adotados como propostos: situação "abaixo do mínimo" calculada pelo frontend; entrada com validade vencida aceita. **Falta commitar** |
 
 ---
 

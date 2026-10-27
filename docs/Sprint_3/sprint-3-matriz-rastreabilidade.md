@@ -5,7 +5,7 @@
 **Identificadores:**
 - Oficiais do projeto: US (Backlog), UC (`Diagramas_UML.md`), CT (Plano de Testes), D, F e P (roteiro v4.6 e registro de 14/10).
 - **A1–A27:** criados na auditoria (`sprint-3-decisoes-e-pendencias.md`).
-- **CT30–CT71:** **propostos** (`sprint-3-casos-de-teste-propostos.md`); viram oficiais quando entrarem no Plano de Testes.
+- **CT30–CT72:** **propostos** (`sprint-3-casos-de-teste-propostos.md`); viram oficiais quando entrarem no Plano de Testes.
 
 **Estado comprovado em 26/10:**
 - **Feito** = existe na `main` e funciona (testado);
@@ -14,7 +14,7 @@
 
 **Prioridade:** **P0** = bloqueia outras pessoas ou a entrega; **P1** = Must do núcleo; **P2** = Must da extensão ou qualidade obrigatória; **P3** = complementar.
 
-**Testes de `referencia/` citados:** backend 92 (PostgreSQL 16 real e Python real), Python 47, banco 32 + 41, frontend 14 (funções de apoio) e retratos `IGUAIS`.
+**Testes de `referencia/` citados:** backend 95 (PostgreSQL 16 real e Python real), Python 47, banco 32 + 41, frontend 14 (funções de apoio) e retratos `IGUAIS`.
 
 ## 1. Histórias de usuário
 
@@ -35,7 +35,7 @@
 | **US14** / UC14 — reposição (**Must**) | Backlog; redesenhada em 14/10 | **Pronto fora:** `reposicao.py` (22 testes + oráculo) e Java (8 testes + Python real); Tela 13 pendente | Fase Q (Python); `POST /api/reposicao/recomendacao`; Tela 13 | **Kauê** (Python e Java), Diogo (SQL 9), Leonardo (tela) | Kauê §11; Diogo §6–§7; Leonardo §6.5 | Fase P; Fase 3 (pedidos); A10 | CT51–CT57 | P1 |
 | **US17** / UC17 — dashboard (**Must**) | Backlog; Tela 03 | **Pronto fora:** SQL 10–13 (Docker e seed) e Java (5 testes); Tela 03 pendente. F12 resolvida (A18); conteúdo do Termo mantido (A16) | `GET /api/dashboard`; Tela 03 | **Diogo** (repositório), Lucas (serviço), Leonardo (tela) | Diogo §6–§7; Lucas §6; Leonardo §6.4 | Fase 3; Fase 4A (último plano) | CT58–CT63 | P1 |
 | **US18** / UC18 — marketing (**Must**) | Backlog; Apêndice B do v4.6 | **Pronto fora** (4 testes); Tela 14 pendente | `GET /api/marketing/sugestoes`; Tela 14 | Lucas, Leonardo | Lucas §6; Leonardo §6.6 | Fase 4A | CT64–CT66 | P1 |
-| **US20** — deploy (**Must**) | Backlog; Termo (critério de pronto) | **Pronto fora:** `Dockerfile` e `render.yaml` (imagem testada com 512 MB e 0,1 CPU, fluxo completo sem falhas), *workflow* do Pages e `config.js` (14/14). Deploy real **pendente**: ensaio opcional na qua/qui; **definitivo no sáb 31** (A21) | Render (backend + Postgres) e GitHub Pages | **Kauê** e Lucas (Render), Leonardo (Pages) | Kauê §12; Leonardo §9; Lucas §8 | Fases 1–2 no `main`; A21; A22 | CT67–CT70; URL pública (R6) | **P0** (a janela de testes depende) |
+| **US20** — deploy (**Must**) | Backlog; Termo (critério de pronto) | **Pronto fora:** `Dockerfile` e `render.yaml` (imagem testada com 512 MB e 0,1 CPU, fluxo completo sem falhas), *workflow* do Pages e `config.js` (14/14). Deploy real **pendente**: ensaio opcional na qua/qui; **definitivo no sáb 31** (A21) | Render (backend + Postgres) e GitHub Pages | **Kauê** e Lucas (Render), Leonardo (Pages) | Kauê §12; Leonardo §9; Lucas §8 | Fases 1–2 no `main`; A21; A22 | CT67–CT70, CT72 (B1); URL pública (R6) | **P0** (a janela de testes depende) |
 | **US13** (Could), **US15/US16** (Should), **US19**, **US26**, **US27** (Could) | Backlog / v4.6 | US13 e US27: schema pronto fora; resto não iniciado | **Fora da Sprint 3** (A2b) | — | — | — | — | — |
 
 ## 2. Pendências herdadas e decisões técnicas
@@ -61,6 +61,6 @@
 | A13 — Playwright instável | Auditoria | **Aberto** (original e dividido) | Diagnosticar e corrigir o teste | Leonardo | Leonardo §7.1 | — | 10 de 10 rodadas verdes | P2 |
 | A15 — branch `sprint-3` desatualizado | Auditoria (corrigida em 27/10: o merge não desfaz o PR #24) | Risco baixo | Levar os comentários do `env.example` para o `.env.example`; branches novos a partir da `main`; apagar o `sprint-3` | Kauê | Kauê §9 | — | PR do `.env.example` | P3 |
 | Documentos (receita → lucro, US9, US14, US17, US27, DER, mapa, Plano de Testes, Arquitetura, UML, Backlog "Sprint alvo") | v4.6 §10.1; auditoria | **Pendente** | Editar depois de avisar o professor | Diogo | Diogo §9 | P3 | PRs de documentação | P2 |
-| Plano de Testes (CT23, CT24, CT29; CT30–CT71) | v4.6 §4.4 | **Proposta pronta** | Incorporar **até 31/10** | Diogo, Kauê | Casos propostos | — | Plano atualizado | P2 |
+| Plano de Testes (CT23, CT24, CT29; CT30–CT72) | v4.6 §4.4 | **Proposta pronta** | Incorporar **até 31/10** | Diogo, Kauê | Casos propostos | — | Plano atualizado | P2 |
 | `[PREENCHER]` da Sprint 2, BE03, retrospectivas, perda do Git | Sprints 1 e 2 | Pendentes | Ver tutorial do Kauê | Kauê, Lucas | Kauê §9 | — | Atas e evidências | P3 |
 | CI (GitHub Actions para os testes) | Plano de Testes §1 | Inexistente | **Opcional** (o *workflow* do Pages não roda testes) | — | — | — | — | — |

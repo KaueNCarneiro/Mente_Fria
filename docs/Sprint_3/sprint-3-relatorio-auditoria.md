@@ -47,6 +47,7 @@
 | Datas | 30/11 é a data-limite; backup e restauração testados | Backup e restauração **validados** em containers locais (validação 39); procedimento no Kauê §12.6; banco definitivo no sábado **à noite** (A32) |
 | Sprint extra | Pode, se não prejudicar a qualidade | Gatilho da A28 endurecido: só com o obrigatório testado e estável |
 | Licença (complemento) | — | O e-mail de aprovação da Gurobi ao Kauê mostra uma **WLS acadêmica válida até 25/09/2027** (A34), o que corrige a A22. A cláusula "para uma única pessoa (não um processo que roda em nome de usuários diferentes)" mantém a dúvida sobre o Render: a pergunta à Gurobi passou a ser sobre essa licença, enviada pelo Kauê. O Compute Server não é necessário |
+| Plano B da licença | — | **Decidido pela equipe: B1** (a B2 foi explicada e descartada por dar mais trabalho). Implementado e validado (validações 40–43); CT72 |
 | — | — | **Lacuna nova:** o Termo aceita "Must + Should" e cita alertas no critério de pronto, mas US15/US16 estão fora. Adendo, item 4: decisão da equipe |
 
 **Segunda rodada de 27/10:**
@@ -65,11 +66,11 @@
 
 | Parte | O que está pronto | Testes |
 |---|---|---|
-| Backend | Completo: US1–US7, US9–US12, US14, US17, US18 e o descarte por linha (A12, 27/10) | **92** (27/10), com PostgreSQL 16 real e o Python real |
+| Backend | Completo: US1–US7, US9–US12, US14, US17, US18 e o descarte por linha (A12, 27/10) e o plano B1 da licença (A31) | **95** (27/10), com PostgreSQL 16 real e o Python real |
 | Python | Produção e reposição | **47** |
 | Banco | Schema novo, seed de demonstração, consultas 1–13 | **32 + 41**, também no Docker real |
 | Deploy | `Dockerfile`, *blueprint*, *workflow* do Pages | Imagem rodada com os limites do Render free, fluxo completo sem falhas |
-| Frontend | Funções de apoio das telas novas e `config.js` de produção | **14/14** |
+| Frontend | Funções de apoio das telas novas e `config.js` de produção | **15/15** (27/10) |
 
 O trabalho da equipe até 01/11 passa a ser:
 - **copiar, entender, rodar os testes de cada fase, abrir os PRs e fazer o aceite**;
@@ -190,7 +191,7 @@ Os materiais de 14/10 tinham conteúdo técnico majoritariamente correto, mas n�
 | `sprint-3-tutorial-frontend-leonardo.md` | Atualizado | **§6.4–§6.6** Telas 03, 13 e 14 com as funções de apoio; **§9** GitHub Pages |
 | `sprint-3-decisoes-e-pendencias.md` | Atualizado | A2b; A3 encerrada; **A16–A27**; pendências abertas |
 | `sprint-3-contrato-v2-proposta.md` | Atualizado | §1.5–§1.6 (licença, reposição Java↔Python), §2.7–§2.9 (reposição, dashboard, marketing), mensagens de erro novas. **Igual ao código** |
-| `sprint-3-casos-de-teste-propostos.md` | Atualizado | **CT51–CT71**; coluna "Validado em 26/10" com o teste que prova cada caso |
+| `sprint-3-casos-de-teste-propostos.md` | Atualizado | **CT51–CT72**; coluna "Validado em 26/10" com o teste que prova cada caso |
 | `sprint-3-matriz-rastreabilidade.md` | Atualizado | US14, US17, US18 e US20; estados comprovados da noite |
 | `referencia/backend/` | **Completo** | 49 classes Java, 12 classes de teste, `pom.xml` e `pom.xml.diff` (aplica sobre a `main`), `application.properties` |
 | `referencia/python/` | Acrescentado | `app/reposicao.py`, `tests/oraculo_reposicao.py`, `tests/test_reposicao.py`, exemplos `entrada_`/`saida_reposicao_demo.json` |
@@ -248,6 +249,10 @@ Todas em cópias no diretório temporário da sessão, fora do repositório.
 | **37** | A15: merge do `sprint-3` na `main` (simulação) | `git merge-tree`: resultado = `main` + `backend/env.example`; o `application.properties` mantém `./.env` | **Aprovado** (corrige a v5.1) |
 | **38** | Regras do Render free (A21) | Documentação lida em 27/10: um banco gratuito ativo por conta; expira em 30 dias, mais 14 de carência; não diz se é possível criar outro depois; 750 horas gratuitas por mês | **Aprovado**, com a lacuna anotada |
 | **39** | **Backup e restauração** (A32, 27/10) | Containers temporários PostgreSQL 16: DDL + 2 usuários + `seed_demo.sql` → `pg_dump -Fc` (22 KB) → `pg_restore --no-owner --no-privileges` num banco novo, com outro dono: exit 0; retrato **igual** (7 tabelas, soma dos saldos 358, 0 violações, `Açaí (polpa)`); novo cadastro com id 3 sem colisão. Containers removidos | **Aprovado** localmente; contra o Render, **não validado** |
+| **40** | **Plano B1 da licença** (A31, 27/10): `ChaveOtimizador`, `OtimizadorDesligadoTest` | 3 testes novos; suíte completa **95/95** com o Python real | **Aprovado** |
+| **41** | Quebrar de propósito (A31) | Sem a chave na produção: "expected: 503 but was: 500"; código restaurado e conferido com `diff` | **Aprovado** |
+| **42** | Tutorial do Lucas fase por fase com a `ChaveOtimizador` na Fase 4A e o teste novo na Fase 6 | Todas as fases passam; sem `MF_PYTHON`, as classes do Python real são puladas; o código final é igual ao de `referencia/` | **Aprovado** |
+| **43** | Funções de apoio (texto do plano com a otimização desligada) e `render.yaml` com `OTIMIZADOR_HABILITADO` | **15/15**; YAML lido sem erro | **Aprovado**; Render e telas reais **não validados** |
 
 **Skills aplicadas:**
 
@@ -257,7 +262,7 @@ Todas em cópias no diretório temporário da sessão, fora do repositório.
 | `springboot-tdd` | 91 testes no ciclo vermelho → verde; Testcontainers; **sem** meta de 80% e **sem** JPA |
 | `311-frameworks-spring-jdbc` | Repositórios: `Optional` × `queryForObject`; `RETURNING`; nulos tipados; `@Transactional` só onde não há Python; `JdbcClient` × D4 registrado |
 | `sql-code-review` | A9; índices; `FOR UPDATE`; consultas 9–13 (parâmetros nomeados, `HAVING`, `CAST` dos opcionais) |
-| `test-scenarios` | CT30–CT71 |
+| `test-scenarios` | CT30–CT72 |
 | `diagnosing-bugs` | A13 (tarde); à noite, o método "ciclo que fica vermelho" guiou os experimentos de quebrar de propósito |
 | `render-docker` | `Dockerfile` multi-estágio, `.dockerignore`, *blueprint*; documentação atual do Render lida antes de escrever, como a skill exige |
 | `render-deploy` | **Não** usada: o deploy real exige as contas da equipe; o passo a passo está no tutorial do Kauê |

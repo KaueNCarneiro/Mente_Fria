@@ -5,6 +5,7 @@
 - CT30–CT37 têm os mesmos números que o tutorial do banco de 14/10 já usava.
 - **CT51–CT70 são novos** (US14, US17, US18 e US20, que entraram na Sprint 3 pela decisão A2b).
 - **CT71 é novo** (27/10): descarte de uma linha vencida pelo botão (A12). Fica na seção da US9.
+- **CT72 é novo** (27/10): otimização desligada no servidor (plano B1 da licença, A31). Fica na seção da US20.
 - Os alertas (US15/US16) continuam fora; quando voltarem, usam o próximo número livre.
 
 **Sem meta de cobertura** (Plano de Testes, §2).
@@ -102,6 +103,7 @@ Cenário de referência (conta à mão): 15/09 Dono 2× Tradicional; 05/10 Func 
 | CT68 | Fluxo do Termo no ambiente publicado | Deploy no Render + Pages | Admin e Funcionário | Pela URL HTTPS do Pages: cadastro → login → entrada de estoque → recomendação → pedido → baixa; reposição; dashboard; marketing | DEP, E2E | Não (depende do deploy real); **o mesmo fluxo passou no container local** |
 | CT69 | CORS do GitHub Pages | Idem | — | `OPTIONS` com a origem do Pages → `200` com `Access-Control-Allow-Origin`; outra origem → `403` | DEP | Sim no container local; no Render, não |
 | CT70 | Primeira chamada depois de o serviço "dormir" | Serviço sem uso por 15 min | Admin | A tela espera (até 90 s) e funciona; **não** aparece "O servidor demorou para responder" | DEP, E2E | Não (`config.js` conferido: 90 s no Pages, 15 s local) |
+| CT72 | Otimização desligada no servidor (plano B1 da licença, A31) | `OTIMIZADOR_HABILITADO=false` (como no Render sem autorização da Gurobi) | Admin e Funcionário | Produção → `503` "A recomendação está disponível só na demonstração local da equipe.", sem chamar o Python (Funcionário continua `403`); reposição: campo inválido → `400`, sem pedidos → `200`, com pedidos → `503`; marketing → mensagem própria; dashboard → `200` com `otimizador_habilitado: false`; as Telas 03, 12, 13 e 14 mostram a mensagem como aviso | INT, DEP, E2E | **Sim** (`OtimizadorDesligadoTest`, 3 testes; tirar a chave de propósito derruba o teste). No Render e nas telas, não |
 
 ### Segurança e erros (US3, US7, infraestrutura)
 

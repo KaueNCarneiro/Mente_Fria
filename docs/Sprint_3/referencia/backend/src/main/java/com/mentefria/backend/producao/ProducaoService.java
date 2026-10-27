@@ -5,6 +5,7 @@ import com.mentefria.backend.ingrediente.IngredienteRepository;
 import com.mentefria.backend.ingrediente.IngredienteRepository.IngredienteOtimizador;
 import com.mentefria.backend.produto.Produto;
 import com.mentefria.backend.produto.ProdutoRepository;
+import com.mentefria.backend.python.ChaveOtimizador;
 import com.mentefria.backend.python.ModulosPython.OtimizadorProducao;
 import com.mentefria.backend.python.ProcessoPython.FalhaPython;
 import java.math.BigDecimal;
@@ -45,14 +46,16 @@ public class ProducaoService {
     private final UltimaRecomendacao ultima;
     private final JsonMapper json;
     private final Clock clock;
+    private final ChaveOtimizador chave;
 
     public ProducaoService(IngredienteRepository ingredientes, ProdutoRepository produtos, OtimizadorProducao otimizador,
-                           UltimaRecomendacao ultima, JsonMapper json, Clock clock) {
+                           UltimaRecomendacao ultima, JsonMapper json, Clock clock, ChaveOtimizador chave) {
         this.ingredientes = ingredientes; this.produtos = produtos; this.otimizador = otimizador;
-        this.ultima = ultima; this.json = json; this.clock = clock;
+        this.ultima = ultima; this.json = json; this.clock = clock; this.chave = chave;
     }
 
     public Recomendacao recomendar() {
+        chave.exigir();                                                              // plano B da licença (A31): 503 sem chamar o Python
         LocalDate hoje = LocalDate.now(clock);
         List<IngredienteOtimizador> ings = ingredientes.entradaOtimizador(hoje);     // saldo VÁLIDO (CT29), inclusive 0
         List<Produto.Basico> ativos = produtos.listarAtivos();

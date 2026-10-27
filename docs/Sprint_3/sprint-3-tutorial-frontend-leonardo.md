@@ -10,9 +10,9 @@
 > - **Novo na v5.1 (US14, US17, US18 e US20 entraram na Sprint 3):**
 >   - funções de apoio das **Telas 03 (Dashboard), 13 (Reposição) e 14 (Marketing)** em `referencia/frontend/js/apoio_telas_novas.js`;
 >   - o **`config.js` de produção** (GitHub Pages × local) em `referencia/deploy/config.js`;
->   - os dois conferidos com Node: **14/14** verificações (`ferramentas/testar_apoio_telas.mjs`);
+>   - os dois conferidos com Node: **15/15** verificações (`ferramentas/testar_apoio_telas.mjs`);
 >   - o *workflow* do Pages (`referencia/deploy/frontend-pages.yml`) tem a sintaxe conferida e as versões das *actions* atualizadas;
->   - **o backend completo está pronto e testado** em `referencia/backend/` (92 testes), e os formatos do Contrato v2 são exatamente os dele.
+>   - **o backend completo está pronto e testado** em `referencia/backend/` (95 testes), e os formatos do Contrato v2 são exatamente os dele.
 > - **Não verificado:** as telas novas em si (o desenho e o código são seus), a publicação real no Pages (precisa do repositório) e a integração com o backend publicado.
 > - **Mudança de caminhos:** o tutorial de 14/10 citava `referencia_frontend/`, uma pasta que nunca existiu. O material está em **`docs/Sprint_3/referencia/frontend/`**, já na estrutura certa: `js/`, `js/screens/` e `ferramentas/`.
 
@@ -228,7 +228,7 @@ Formatos: **Contrato v2** (`sprint-3-contrato-v2-proposta.md`, §2.4 a §2.9), d
 node ferramentas\testar_apoio_telas.mjs .
 ```
 
-**Você deve ver:** `14 verificações passaram.` (26/10).
+**Você deve ver:** `15 verificações passaram.` (27/10).
 
 Cada tela é **um módulo** em `js/screens/` e **um PR**. Registre a rota no `router.js` e no menu do `shell.js` **só quando a tela existir**.
 
@@ -301,6 +301,8 @@ const payloadPedido = (clienteId, itens) => ({cliente_id: clienteId ? Number(cli
 
 **Bloqueada até o Contrato v2 e a Fase 4A.**
 
+**Plano B1 da licença (A31), vale para as Telas 12, 13 e 14:** no Render, a otimização fica desligada até a Gurobi autorizar. Aí `POST /api/producao/recomendacao` e `POST /api/reposicao/recomendacao` respondem **`503`** com `{"mensagem":"A recomendação está disponível só na demonstração local da equipe."}`. Mostre essa `mensagem` como **aviso informativo** (não como erro em vermelho) e mantenha a tela utilizável. No marketing, a mensagem já vem pronta no campo `mensagem`. Nos testes de navegador, simule também um `503`.
+
 - Botão **"Gerar recomendação"** → `request('/api/producao/recomendacao', {method:'POST'})`, com "Calculando…". O `REQUEST_TIMEOUT_MS` (15 s) é maior que os 10 s do backend.
 - Mostre "Quanto produzir" (produto, quantidade, lucro por copo) e dois destaques: **"Lucro potencial"** (`margem_estimada`) e **"Receita estimada"**.
 
@@ -326,7 +328,7 @@ const avisoGeral = rec => rec.some(i => i.quantidade > 0) ? null
 | Mais vendidos | `mais_vendidos[]` | Tabela: produto, quantidade, valor |
 | Ingredientes mais utilizados | `ingredientes_mais_utilizados[]` | Tabela: ingrediente, quantidade **com a unidade**, custo (já vem ordenado pelo custo, A17) |
 | Ranking de vendas | `ranking[]` | Colunas **Rank, Usuário, Quantidade de pedidos, Valor total, Tipos de produto** (decisão de 14/10). Filtros: Usuário (`GET /api/usuarios` + o próprio Administrador), Tipo de produto (`GET /api/produtos`, vários) e Valor mín./máx. |
-| Plano de produção | `ultimo_plano` (pode ser `null`) | `textoUltimoPlano(plano)`. Com `null`: "Ainda não há plano de produção. Gere a recomendação na tela Produção." e um link para `#/producao` (A16: é a "receita máxima estimada" do Termo) |
+| Plano de produção | `ultimo_plano` (pode ser `null`) e `otimizador_habilitado` | `textoUltimoPlano(plano, otimizador_habilitado)`. Com a otimização desligada no servidor (A31): "O plano de produção está disponível só na demonstração local da equipe.", **sem** link. Com `null` e ligada: "Ainda não há plano de produção. Gere a recomendação na tela Produção." e um link para `#/producao` (A16: é a "receita máxima estimada" do Termo) |
 | Situação do estoque | `estoque.ingredientes_abaixo_do_minimo`, `ingredientes_com_vencido` | Dois números, com link para `#/estoque` |
 
 **Para conferir com o seed de demonstração, no mês atual:**
@@ -455,14 +457,14 @@ O *workflow* e o `config.js` **não foram executados no GitHub** na auditoria: d
 | No Pages: "O servidor demorou para responder" | `config.js` antigo (15 s) e o Render dormindo | §9.1 |
 | No Pages: `blocked by CORS policy` | `CORS_ALLOWED_ORIGIN` no Render diferente da origem do Pages | Só `https://<usuario>.github.io`, sem caminho (§9.3) |
 | No Pages: tela sem estilo ou módulo não encontrado (404) | Caminho absoluto no `index.html` | Caminhos relativos (§9.3) |
-| `14 verificações` não aparece | `apoio_telas_novas.js` ou `config.js` não copiados para `frontend/js/` | §6 e §9.1 |
+| `15 verificações` não aparece | `apoio_telas_novas.js` ou `config.js` não copiados para `frontend/js/` | §6 e §9.1 |
 
 ## Checklist final
 
 - [ ] Baseline (22 OK, registrando quantas rodadas) e `retrato_antes.json`
 - [ ] `app.js` dividido; `node --check`; **`IGUAIS`**; 22 OK
 - [ ] Guarda por lista (tabela da §4)
-- [ ] `config.js` de produção e *workflow* do Pages; `testar_apoio_telas.mjs` com 14/14
+- [ ] `config.js` de produção e *workflow* do Pages; `testar_apoio_telas.mjs` com 15/15; Telas 12, 13 e 14 com a mensagem do `503` (A31)
 - [ ] Aceite real da Fase 2 com 16 evidências
 - [ ] Estoque, Pedido, Produção, **Dashboard, Reposição e Marketing** com testes e **sem termo técnico**
 - [ ] A13 investigada e registrada

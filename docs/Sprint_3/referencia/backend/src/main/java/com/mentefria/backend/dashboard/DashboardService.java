@@ -9,6 +9,7 @@ import com.mentefria.backend.ingrediente.IngredienteRepository;
 import com.mentefria.backend.ingrediente.IngredienteRepository.EstoqueItem;
 import com.mentefria.backend.marketing.MarketingService;
 import com.mentefria.backend.producao.UltimaRecomendacao;
+import com.mentefria.backend.python.ChaveOtimizador;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDate;
@@ -34,15 +35,17 @@ public class DashboardService {
     public record ResumoEstoque(int ingredientesAbaixoDoMinimo, int ingredientesComVencido) {}
     public record Painel(String mes, Faturamento faturamento, List<ProdutoVendido> maisVendidos,
                          List<IngredienteUtilizado> ingredientesMaisUtilizados, List<RankingItem> ranking,
-                         UltimoPlano ultimoPlano, ResumoEstoque estoque) {}
+                         UltimoPlano ultimoPlano, ResumoEstoque estoque, boolean otimizadorHabilitado) {}
 
     private final DashboardRepository dashboard;
     private final IngredienteRepository ingredientes;
     private final UltimaRecomendacao ultima;
     private final Clock clock;
+    private final ChaveOtimizador chave;
 
-    public DashboardService(DashboardRepository dashboard, IngredienteRepository ingredientes, UltimaRecomendacao ultima, Clock clock) {
-        this.dashboard = dashboard; this.ingredientes = ingredientes; this.ultima = ultima; this.clock = clock;
+    public DashboardService(DashboardRepository dashboard, IngredienteRepository ingredientes, UltimaRecomendacao ultima, Clock clock,
+                            ChaveOtimizador chave) {
+        this.dashboard = dashboard; this.ingredientes = ingredientes; this.ultima = ultima; this.clock = clock; this.chave = chave;
     }
 
     @Transactional(readOnly = true)
@@ -71,6 +74,7 @@ public class DashboardService {
             if (e.quantidadeVencida().signum() > 0) vencido++;
         }
         return new Painel(m.toString(), dashboard.faturamento(inicio, fim), dashboard.maisVendidos(inicio, fim),
-                dashboard.ingredientesMaisUtilizados(inicio, fim), ranking, plano, new ResumoEstoque(abaixo, vencido));
+                dashboard.ingredientesMaisUtilizados(inicio, fim), ranking, plano, new ResumoEstoque(abaixo, vencido),
+                chave.habilitado());                       // false: a Tela 03 explica que o plano só existe na demonstração local (A31)
     }
 }

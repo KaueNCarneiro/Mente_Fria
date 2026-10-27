@@ -57,7 +57,7 @@ Fontes: o e-mail de aprovação da Gurobi ao Kauê (guardado com ele; o número 
 - **Confirmado em 27/10:** a faculdade é a **FATEC Ribeirão Preto**, e a açaiteria é **fictícia** (uso só acadêmico).
 - **[preencher]** O número da licença (está no e-mail de aprovação) e o e-mail institucional do Kauê, na assinatura.
 
-## 4. Plano B para a demonstração (se não houver autorização a tempo) — [decidir]
+## 4. Plano B para a demonstração — **decidido em 27/10: B1** (implementado em `referencia/`; ver a §5)
 
 | Opção | Como funciona | O que muda | Prós | Contras |
 |---|---|---|---|---|
@@ -65,3 +65,24 @@ Fontes: o e-mail de aprovação da Gurobi ao Kauê (guardado com ele; o número 
 | **B2 — Solver aberto no servidor** | No Render, os mesmos modelos rodam com um solver de código aberto (HiGHS, que vem no SciPy), com o mesmo contrato JSON; localmente, continua o Gurobi | Novos módulos Python (os oráculos de força bruta já existem para conferir); `requirements` e `Dockerfile` | Sistema completo na URL | O Termo cita "Python + Gurobi": **precisa da aprovação do professor**; mais trabalho e risco a 4 dias do fim |
 
 **Recomendação:** preparar a **B1** até sexta 30. Se a Gurobi autorizar a WLS no Render antes disso, a B1 fica desligada e o Kauê cadastra a licença no Render (§2). A B2 só vale a pena se o professor exigir a otimização **na URL publicada** e a Gurobi negar.
+
+## 5. Como a B1 funciona (implementada em 27/10)
+
+**No Render:** o `render.yaml` cria `OTIMIZADOR_HABILITADO=false`. Com isso:
+- `POST /api/producao/recomendacao` e `POST /api/reposicao/recomendacao` respondem `503` com "A recomendação está disponível só na demonstração local da equipe.", **sem chamar o Python** (a reposição ainda valida os campos antes e, sem pedidos no período, responde normalmente);
+- o marketing responde que as sugestões dependem da recomendação, disponível só na demonstração local;
+- o dashboard traz `otimizador_habilitado: false`, e a Tela 03 explica que o plano só existe na demonstração local;
+- **todo o resto** (cadastros, estoque, pedidos, dashboard do mês) funciona na URL publicada.
+
+**Na demonstração local (Kauê, no computador dele, com a WLS dele):**
+1. Na pasta do projeto, com o banco local e o seed de demonstração, defina as variáveis da licença **só na sessão do PowerShell**, com os valores do portal da Gurobi:
+   ```powershell
+   $env:GRB_WLSACCESSID = "<do portal>"; $env:GRB_WLSSECRET = "<do portal>"; $env:GRB_LICENSEID = "<número da licença>"
+   ```
+2. Suba o backend normalmente (`OTIMIZADOR_HABILITADO` não precisa ser definida: o padrão é ligado) e abra o frontend local.
+3. Mostre a Tela 12 (151/1/0 com o seed), a Tela 13 e a Tela 14.
+4. Feche o PowerShell no fim: as variáveis somem com ele. **Nunca** grave os valores em arquivo do projeto.
+
+**Se a Gurobi autorizar o uso no Render:** o Kauê cria as três `GRB_*` no painel do serviço e troca `OTIMIZADOR_HABILITADO` para `true`. O Render publica de novo sozinho.
+
+**O que foi verificado (27/10):** `OtimizadorDesligadoTest` (3 testes: produção `503` sem chamar o Python e `403` para o Funcionário; reposição `400` → `200` sem pedidos → `503` com pedidos; marketing e dashboard com as mensagens) e a suíte completa com **95 testes, 0 falhas**, com o Python real. Ao remover de propósito a chave da produção, o teste falhou ("esperado 503, veio 500"). O tutorial do Lucas, aplicado fase por fase, passou em todas as fases. As funções de apoio das telas: **15/15**. O `render.yaml` foi lido sem erros. **Não testado:** no Render real e nas telas reais (ainda não existem).

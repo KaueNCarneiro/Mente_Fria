@@ -96,6 +96,7 @@ class DashboardTest extends IntegracaoBase {
         cenario();
         var antes = chamar("GET", "/api/dashboard", admin, null).corpo();
         assertThat(antes.get("ultimo_plano").isNull()).isTrue();
+        assertThat(antes.get("otimizador_habilitado").asBoolean()).isTrue();         // padrão: ligado (A31)
         // válido <= mínimo: leite condensado, granola, banana, morango (vencido), leite em pó = 5; com vencido: morango = 1
         assertThat(antes.get("estoque").get("ingredientes_abaixo_do_minimo").asInt()).isEqualTo(5);
         assertThat(antes.get("estoque").get("ingredientes_com_vencido").asInt()).isEqualTo(1);

@@ -28,7 +28,9 @@ export function validarFiltrosDashboard({mes, valorMin, valorMax} = {}) {
 }
 
 /** Tela 03: texto do bloco "Plano de produção" (receita máxima estimada do Termo), sem termos técnicos. */
-export function textoUltimoPlano(plano) {
+// otimizadorHabilitado vem do campo otimizador_habilitado do dashboard (plano B da licença, A31).
+export function textoUltimoPlano(plano, otimizadorHabilitado = true) {
+  if (!plano && !otimizadorHabilitado) return 'O plano de produção está disponível só na demonstração local da equipe.';
   if (!plano) return 'Ainda não há plano de produção. Gere a recomendação na tela Produção.';
   const prioridade = plano.produtos_priorizados.length ? ` Priorize: ${plano.produtos_priorizados.join(', ')}.` : '';
   return `Com o estoque de ${new Date(plano.calculado_em).toLocaleString('pt-BR')}, a venda pode chegar a ${real(plano.receita_estimada)}`

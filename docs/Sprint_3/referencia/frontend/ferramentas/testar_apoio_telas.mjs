@@ -16,6 +16,11 @@ caso('dashboard com todos os filtros', () => assert.equal(
 caso('filtros inválidos', () => assert.deepEqual(m.validarFiltrosDashboard({mes: '10/2026', valorMin: '50', valorMax: '10'}),
   {mes: 'Informe o mês no formato AAAA-MM.', valor_min: 'O valor mínimo não pode ser maior que o máximo.'}));
 caso('plano ausente', () => assert.match(m.textoUltimoPlano(null), /Gere a recomendação na tela Produção/));
+caso('plano com o otimizador desligado (A31)', () => {
+  const t = m.textoUltimoPlano(null, false);
+  assert.match(t, /só na demonstração local da equipe/); assert.doesNotMatch(t, /Gere a recomendação/);
+  assert.deepEqual(m.termosTecnicos(t), []);
+});
 caso('plano da demonstração', () => {
   const t = m.textoUltimoPlano({calculado_em: '2026-10-28T15:00:00', receita_estimada: 1966.8, margem_estimada: 1011.71,
     produtos_priorizados: ['Açaí Tradicional 300ml', 'Açaí Especial 500ml']});

@@ -26,8 +26,12 @@ services:
         generateValue: true            # 256 bits aleatórios em base64 (44 caracteres; o JwtService exige 32+)
       - key: CORS_ALLOWED_ORIGIN
         sync: false                    # o Render pergunta na criação. Ex.: https://kauencarneiro.github.io (sem barra no fim)
-      # Licença WLS: hoje NÃO há (sem ela, o gurobipy usa a licença limitada do pip). Quando houver, crie no painel
-      # GRB_WLSACCESSID, GRB_WLSSECRET e GRB_LICENSEID (decisões A11/A14). Nunca no Git.
+      # Plano B da licença (A31): o solver fica DESLIGADO no Render até a Gurobi autorizar por escrito (A30).
+      # Desligado, produção e reposição respondem 503 com mensagem; o resto do sistema funciona.
+      - key: OTIMIZADOR_HABILITADO
+        value: "false"
+      # Com a autorização: o Kauê (titular da WLS acadêmica, A34) cria no painel GRB_WLSACCESSID, GRB_WLSSECRET
+      # e GRB_LICENSEID e troca OTIMIZADOR_HABILITADO para true. Nunca no Git.
 
 databases:
   - name: mente-fria-db

@@ -5,7 +5,7 @@
 **Origem de cada item:**
 - roteiro v4.6, §5 e §10.2;
 - os tutoriais de 14/10;
-- código **executado** nesta auditoria: `referencia/python/` (47 testes: produção e reposição) e `referencia/backend/` (92 testes, com PostgreSQL 16 real e o Python real).
+- código **executado** nesta auditoria: `referencia/python/` (47 testes: produção e reposição) e `referencia/backend/` (95 testes, com PostgreSQL 16 real e o Python real).
 
 **Revisão da noite de 26/10 (v5.1):** entram a reposição (§1.6 e §2.7), o dashboard (§2.8) e o marketing (§2.9), porque US14, US17 e US18 entraram na Sprint 3 (decisão A2b). **Todos os formatos desta proposta são exatamente os que o backend de `referencia/` produz**, conferidos por teste.
 

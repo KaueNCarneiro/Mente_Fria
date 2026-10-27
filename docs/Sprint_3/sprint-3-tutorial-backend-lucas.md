@@ -6,10 +6,10 @@
 > **Leia primeiro: o que foi verificado.**
 >
 > - **O backend inteiro está escrito e testado** em `docs/Sprint_3/referencia/backend/`: Fases 1, 2, 3 e 4A, reposição (US14), dashboard (US17) e marketing (US18).
-> - **92 testes passam** (27/10, Boot 4.0.8, JDK 25):
+> - **95 testes passam** (27/10, Boot 4.0.8, JDK 25):
 >   - 18 de segurança e erros (MockMvc);
 >   - 13 da regra do açaí;
->   - 54 de integração com **PostgreSQL 16 real** (Testcontainers), inclusive o descarte por linha (A12);
+>   - 57 de integração com **PostgreSQL 16 real** (Testcontainers), inclusive o descarte por linha (A12) e a otimização desligada (plano B1, A31);
 >   - 7 com o **Python real** (`gurobipy` 13.0.3).
 > - **Experimentos "quebrar de propósito"** (a prova de que os testes pegam defeitos):
 >   - deixar a venda consumir linha vencida derrubou S1 e S4;
@@ -30,7 +30,7 @@
 |---|---|
 | `.env` | **Feito** (PR #24): rode sempre **de dentro de `backend/`** |
 | Backend na `main` | Só `GET /api/saude` e `GET /api/ingredientes` (3 campos) |
-| Backend em `referencia/` | **Completo e testado** (92 testes) |
+| Backend em `referencia/` | **Completo e testado** (95 testes) |
 | Banco novo | O Diogo abre o PR do DDL na **terça 27**. A Fase 2 **depende dele**: os testes esperam o seed com estoque 0 |
 | Docker | Necessário para os testes de integração. Se o Docker Desktop travar ao abrir, veja o **A26** (§7) |
 
@@ -40,7 +40,7 @@
 | 2 | Auth, usuários, unidades, ingredientes, produtos, preço (15 + 13 testes) | **Qua 28** | Fase 1; PR do banco (Diogo) | Gate do Leonardo; ensaio de deploy (opcional, A21) |
 | 3 | Estoque por linhas e pedido (15 testes) | **Qui 29** | Fase 2; Contrato v2 (A10) | Telas do Leonardo; reposição do Kauê |
 | 4A | Ponte com o Python e recomendação (7 testes + Python real), **em dupla com o Kauê** | **Qui 29 – Sex 30** | Fase P do Kauê; Fase 3 | Tela 12; marketing; dashboard |
-| 6 | **Dashboard e marketing** (5 + 4 testes) | **Sex 30** | Fases 3 e 4A; repositório do dashboard (Diogo) | Telas 03 e 14 |
+| 6 | **Dashboard e marketing** (5 + 4 testes, mais 3 da otimização desligada) | **Sex 30** | Fases 3 e 4A; repositório do dashboard (Diogo) | Telas 03 e 14 |
 | 8 | **Deploy** (A21): ensaio opcional numa conta pessoal; **definitivo no sábado** | Qua 28 ou Qui 29 (ensaio) e **Sáb 31** (definitivo) | Fases 1–2 na `main` (ensaio); tudo na `main` (definitivo) | Janela de testes |
 | — | Decidir **quem** cria a conta definitiva do Render (PO) | **Qui 29** | — | Deploy de sábado |
 | — | **Gatilhos da A28** (PO): cortar o botão da A12? Sprint 4 relâmpago no sábado? | **Sex 30, à noite** | — | Sábado 31 |
@@ -314,7 +314,7 @@ Commit: `feat: seguranca JWT, CORS e tratamento padrao de erros`. **Faça o merg
 
 **Pré-requisitos:** Fase P do Kauê (`otimizador.py` v2 e a pasta `optimization/exemplos/` na `main`); Fase 3.
 
-**Copie:** `python/TestePythonController`, `producao/ProducaoService`, `producao/ProducaoController`; testes `Fase4ProducaoTest`, `PythonRealTest` e `python/ProcessoPythonTest`.
+**Copie:** `python/ChaveOtimizador` (plano B1 da licença, A31: o `ProducaoService` depende dela), `python/TestePythonController`, `producao/ProducaoService`, `producao/ProducaoController`; testes `Fase4ProducaoTest`, `PythonRealTest` e `python/ProcessoPythonTest`.
 
 ### 5.1 O que ler com atenção
 
@@ -362,7 +362,7 @@ $env:MF_PYTHON = "C:\caminho\Mente_Fria\optimization\.venv\Scripts\python.exe"
 
 **Pré-requisitos:** Fases 3 e 4A; o `DashboardRepository` do Diogo (consultas 10–13). Branch: `feature/backend-dashboard-marketing`.
 
-**Copie:** `dashboard/` (`DashboardRepository`, `DashboardService`, `DashboardController`), `marketing/` (`CatalogoIdeias`, `MarketingService`, `MarketingController`); testes `DashboardTest` e `MarketingTest`. Os dois pacotes vão juntos: o dashboard usa o critério de "priorizado" do marketing.
+**Copie:** `dashboard/` (`DashboardRepository`, `DashboardService`, `DashboardController`), `marketing/` (`CatalogoIdeias`, `MarketingService`, `MarketingController`); testes `DashboardTest`, `OtimizadorDesligadoTest` (plano B1, A31) e `MarketingTest`. Os dois pacotes vão juntos: o dashboard usa o critério de "priorizado" do marketing.
 
 ### 6.1 O que ler com atenção
 
@@ -379,10 +379,10 @@ $env:MF_PYTHON = "C:\caminho\Mente_Fria\optimization\.venv\Scripts\python.exe"
 **A16, A17 e A20 foram aprovadas pela equipe em 27/10.** O catálogo de marketing passou de 12 para 18 ideias (as 6 novas estão comentadas em `CatalogoIdeias`); releia-as com o cliente. Na A17, o copo continua entre os ingredientes, porque no banco ele é um: pelo custo, fica em 4º.
 
 ```powershell
-.\mvnw test "-Dtest=DashboardTest,MarketingTest"
+.\mvnw test "-Dtest=DashboardTest,MarketingTest,OtimizadorDesligadoTest"
 ```
 
-**Você deve ver:** 5 + 4 testes, sem falhas. O `DashboardTest` usa um cenário **calculado à mão**, comentado no topo da classe:
+**Você deve ver:** 5 + 4 + 3 testes, sem falhas. O `OtimizadorDesligadoTest` liga o perfil do Render (`app.otimizador.habilitado=false`) e prova que produção e reposição respondem `503` **sem chamar o Python**, enquanto o resto funciona. O `DashboardTest` usa um cenário **calculado à mão**, comentado no topo da classe:
 - outubro: 83,40 em 3 pedidos;
 - ranking Dono 44,70 e Func 38,70;
 - um pedido cancelado que não conta;
@@ -399,7 +399,7 @@ $env:MF_PYTHON = "C:\caminho\Mente_Fria\optimization\.venv\Scripts\python.exe"  
 .\mvnw test
 ```
 
-**Você deve ver** (depois de todas as fases, inclusive a 5 do Kauê): `Tests run: 92, Failures: 0, Errors: 0` com `MF_PYTHON`. Sem a variável, as classes `PythonRealTest` e `ProcessoPythonTest` aparecem como puladas.
+**Você deve ver** (depois de todas as fases, inclusive a 5 do Kauê): `Tests run: 95, Failures: 0, Errors: 0` com `MF_PYTHON`. Sem a variável, as classes `PythonRealTest` e `ProcessoPythonTest` aparecem como puladas.
 
 **Como a `IntegracaoBase` funciona (A25):**
 - **Um** PostgreSQL 16 para todas as classes (iniciado uma vez);
@@ -483,7 +483,7 @@ O plano free **dorme após 15 min**: antes de uma demonstração, abra a URL uns
 - [ ] Fase 3: **15/15**; `hoje` e `agora` do `Clock` em todo SQL de data
 - [ ] Fase 4A: **7/7**; com `MF_PYTHON`, eco e 151/1/0 com o Python real
 - [ ] Fase 6: **5/5** e **4/4**; A16, A17 e A20 confirmadas
-- [ ] Revisei o PR da Fase 5 do Kauê; a suíte completa dá **92**
+- [ ] Revisei o PR da Fase 5 do Kauê; a suíte completa dá **95**
 - [ ] Deploy: validação da Fase 2 na URL do Render; CT68–CT70 no sábado
 - [ ] README (URL e expiração do banco), Contrato v2 conferido, evidências
 

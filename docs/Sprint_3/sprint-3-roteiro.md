@@ -22,6 +22,7 @@ Texto completo em `resposta-professor.md`.
 3. **Sistema publicado até 30/11**, com backup e restauração testados (A32). O banco definitivo passa a ser criado **no sábado 31 à noite**.
 4. **Obrigatórios primeiro:** a lista de cortes mudou (§7). A sprint extra só acontece com o obrigatório testado e estável (A28).
 5. **Lacuna encontrada:** o Termo aceitou "Must + Should" e cita alertas de vencimento e de reposição no critério de pronto, mas US15/US16 estão fora. O adendo, item 4, propõe como tratar (decisão da equipe).
+6. **Plano B da licença decidido: B1** (A31). No Render, `OTIMIZADOR_HABILITADO=false`: produção e reposição respondem `503` com mensagem, e o resto funciona. A otimização é demonstrada pelo Kauê, com a WLS dele. Implementado e testado: a suíte do backend vai a **95** e as funções de apoio a **15**.
 
 ### 0.0 Da v5.1 para a v5.2 (27/10, respostas da equipe)
 
@@ -78,7 +79,7 @@ Texto completo em `resposta-professor.md`.
 | **Dashboard e marketing** | **US17, US18** | **Lucas** (+ Diogo no repositório do dashboard) |
 | **Publicação** (Render + GitHub Pages) | **US20** | **Kauê e Lucas** (Render), **Leonardo** (Pages) |
 | Frontend: módulos, guarda, aceite real e as Telas 10/16, 11/17, 12, **03, 13 e 14** | US1–US7, US9, US11, US12, US14, US17, US18 | Leonardo |
-| Plano de Testes (CT23, CT24, CT29 e CT30–CT71), relatório, evidências, retrospectiva | Processo | Kauê (facilitação) + todos |
+| Plano de Testes (CT23, CT24, CT29 e CT30–CT72), relatório, evidências, retrospectiva | Processo | Kauê (facilitação) + todos |
 
 ---
 
@@ -89,11 +90,11 @@ Verificado no repositório e por execução. Detalhes no relatório de auditoria
 | Camada | No repositório (`main`, `ac028cd`) | Pronto **fora** do repositório (em `referencia/`, já executado) |
 |---|---|---|
 | Banco | DDL da Sprint 1 e 32 testes (32/32) | Patch do DDL; **41/41** e **32/32** no Docker real; `seed_demo.sql`; consultas 1–13; FEFO e concorrência (30/30) |
-| Backend | Só `GET /api/saude` e `GET /api/ingredientes` (3 campos) | **Tudo** de US1–US7, US9–US12, US14, US17, US18: **92 testes** (18 de segurança, 13 da regra do açaí, 54 de integração com PostgreSQL 16 e 7 com o Python real) |
+| Backend | Só `GET /api/saude` e `GET /api/ingredientes` (3 campos) | **Tudo** de US1–US7, US9–US12, US14, US17, US18: **95 testes** (18 de segurança, 13 da regra do açaí, 54 de integração com PostgreSQL 16 e 7 com o Python real) |
 | Python | `otimizador.py` v1 (receita): 8/8 | v2 (lucro) **25/25** e **reposição 22/22**, com `gurobipy` 13.0.1 e 13.0.3; oráculos de força bruta |
 | Frontend | `app.js` com 235 linhas; 22 verificações do Playwright (instáveis: A13) | Divisão em módulos (25/25 telas idênticas); guarda por lista; funções de apoio das Telas 03/13/14 e `config.js` de produção (**14/14**) |
 | Deploy | Nada | `Dockerfile`, `.dockerignore`, `render.yaml`, *workflow* do Pages: imagem testada com 512 MB e 0,1 CPU |
-| Documentos | Visão, Termo e Backlog dizem "receita"; DER sem linhas; Contrato sem v2 | Contrato v2 (proposta igual ao código), decisões, casos de teste CT30–CT71 |
+| Documentos | Visão, Termo e Backlog dizem "receita"; DER sem linhas; Contrato sem v2 | Contrato v2 (proposta igual ao código), decisões, casos de teste CT30–CT72 |
 
 ---
 
@@ -107,7 +108,7 @@ Classificação pela evidência, não pelo que os relatórios afirmam.
 | Hello World Java → Python | Pendente no repositório; **pronto fora** (eco real no perfil `dev`) | Fase P + Fase 4A |
 | CORS | **Pronto fora** (inclusive a origem do GitHub Pages) | Fase 1 |
 | Python fora do PC do Kauê | **Pendente** | Fase P (2ª máquina), com a licença restrita do `pip`. A WLS acadêmica do Kauê é pessoal (A34) |
-| Testes do backend, Testcontainers | **Prontos fora** (92) | Fases 1–6 |
+| Testes do backend, Testcontainers | **Prontos fora** (95) | Fases 1–6 |
 | `.env` | Corrigido em 14/10 (PR #24) | Concluído; README a alinhar |
 | CT20 (subir do zero só com o README) | Nunca executado | Fase 8 (Kauê) |
 | `[PREENCHER]`/`[CONFIRMAR]` da Sprint 2 | Pendente | Fase 8. Só completar com fatos |
@@ -152,8 +153,8 @@ As regras de negócio detalhadas da v4.6 **continuam valendo**: estoque por linh
 | **6 — Dashboard e marketing (US17, US18)** | `GET /api/dashboard` e `GET /api/marketing/sugestoes` | **Lucas** (+ Diogo no repositório) | Fases 3 e 4A | `DashboardTest` **5/5**; `MarketingTest` **4/4** | Lucas §6; Diogo §7 |
 | **7 — Publicação (US20)** | Render (backend + Postgres) e GitHub Pages | **Kauê e Lucas** (Render), **Leonardo** (Pages) | Ensaio opcional (qua/qui, conta pessoal); **definitivo no sáb 31** com tudo na `main` (A21) | URL HTTPS no README; data de expiração do banco; CT67–CT70 | Kauê §12; Leonardo §9; Lucas §8 |
 | **Front 2** | Telas 10/16, 11/17 e 12 | Leonardo | Fases 3 e 4A | Testes de navegador; **sem termo técnico** | Leonardo §6.1–§6.3 |
-| **Front 3** | Telas **03, 13 e 14** | Leonardo (+ Lucas na 14, se preciso) | Fases 5 e 6 | Testes de navegador; funções de apoio 14/14 | Leonardo §6.4–§6.6 |
-| **8 — Qualidade e encerramento** | Plano de Testes (até CT71), README, evidências, relatório, retrospectiva, CT20 | Todos (Kauê facilita) | — | Plano completo **até 31/10** | Kauê §9; Diogo §9 |
+| **Front 3** | Telas **03, 13 e 14** | Leonardo (+ Lucas na 14, se preciso) | Fases 5 e 6 | Testes de navegador; funções de apoio 15/15 | Leonardo §6.4–§6.6 |
+| **8 — Qualidade e encerramento** | Plano de Testes (até CT72), README, evidências, relatório, retrospectiva, CT20 | Todos (Kauê facilita) | — | Plano completo **até 31/10** | Kauê §9; Diogo §9 |
 
 ---
 
@@ -225,14 +226,14 @@ Fases 1–2 na main (28/10) ──> ENSAIO opcional (conta pessoal, apagado no m
    | Banco | SQL com `constraints_*.sql` | 32 + 41 |
    | Python | `pytest` + oráculos | 25 (produção) + 22 (reposição) |
    | Backend sem banco | MockMvc | 18 + 13 |
-   | Backend com banco | Testcontainers (PostgreSQL 16) | 54 |
+   | Backend com banco | Testcontainers (PostgreSQL 16) | 57 |
    | Ponte Java → Python real | `MF_PYTHON` + `gurobipy` | 7 |
    | Frontend | Playwright com API simulada; funções de apoio com Node | 22 (instáveis, A13) + 14 |
    | Imagem de deploy | Docker com 512 MB e 0,1 CPU | Fluxo completo (14 verificações) |
    | Ponta a ponta | Aceite manual na URL publicada | CT68 |
 
 5. **Sem meta de cobertura** (Plano de Testes, §2).
-6. **Casos novos:** CT30–CT71, para o Diogo e o Kauê incorporarem ao Plano de Testes até 31/10.
+6. **Casos novos:** CT30–CT72, para o Diogo e o Kauê incorporarem ao Plano de Testes até 31/10.
 7. **Evidências** registradas **durante** a sprint em `docs/Sprint_3/evidencias/`.
 
 ---
@@ -269,5 +270,5 @@ Fases 1–2 na main (28/10) ──> ENSAIO opcional (conta pessoal, apagado no m
 - [ ] **Dashboard** do mês na Tela 03 com ranking e filtros (US17).
 - [ ] **Sugestões de campanha** na Tela 14 (US18).
 - [ ] Testes: banco `32|0` e `41|0`; Python `47 passed` em 2 máquinas; backend `mvnw test` verde (inclusive Testcontainers); Playwright estável.
-- [ ] Contrato v2 oficial; Plano de Testes até CT71; README sem "planejadas" para variáveis já em uso.
+- [ ] Contrato v2 oficial; Plano de Testes até CT72; README sem "planejadas" para variáveis já em uso.
 - [ ] Um PR revisado por fase, na `main`; evidências em `docs/Sprint_3/evidencias/`; retrospectiva registrada.

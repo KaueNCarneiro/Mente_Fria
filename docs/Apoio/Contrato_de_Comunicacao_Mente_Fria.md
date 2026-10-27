@@ -155,7 +155,7 @@ O endpoint temporário `GET /api/teste/python` (o Java lê o nome do primeiro in
 ### 1.6 Licença do Gurobi e execução
 
 - **Licenças disponíveis** (A34, 27/10/2026): uma **WLS acadêmica** do Kauê, válida até 25/09/2027, de uso **pessoal** ("uma única pessoa específica"), para trabalhos de disciplina; e a **licença restrita** que vem com o `gurobipy` 13.0.3 instalado pelo `pip` (decisão P2), usada no desenvolvimento e nos testes. Não há Gurobi Compute Server: ele não é necessário, porque a WLS roda dentro do próprio processo Python.
-- **No sistema publicado (Render), o solver só roda com autorização expressa da Gurobi** (orientação do professor em 27/10/2026; decisão A30), com qualquer das duas licenças. Sem ela, vale o plano B da equipe (A31), e as rotas de otimização podem responder `503` com uma mensagem tratada.
+- **No sistema publicado (Render), o solver só roda com autorização expressa da Gurobi** (orientação do professor em 27/10/2026; decisão A30), com qualquer das duas licenças. Sem ela, vale o **plano B1** (A31, decidido em 27/10): no Render, `OTIMIZADOR_HABILITADO=false`, e as rotas de produção e de reposição respondem `503 {"mensagem":"A recomendação está disponível só na demonstração local da equipe."}` **sem chamar o Python**. A otimização é demonstrada pelo Kauê, no computador dele, com a WLS dele. Localmente, a variável fica ligada (padrão `true`).
 - O Java repassa ao processo filho as variáveis `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` **se existirem**. Com a autorização da Gurobi, o titular (Kauê) cria essas variáveis no Render: **o contrato JSON não muda**. Os valores nunca vão para o Git.
 - *Histórico:* as notas de 28/09, 02/10 e 08/10/2026 sobre Compute Server local e "Alternativa C" (WLS do Lucas no container) foram revistas: não há Compute Server; a WLS acadêmica que existe é a do Kauê (A34), e o uso dela no Render depende da Gurobi (A30); ver a seção 3.
 
@@ -231,6 +231,7 @@ Casas: `orcamento` e `custo_unitario` com até 2; quantidades com até 3. `id` n
 | `409` | Conflito de unicidade: e-mail já cadastrado e cadastro de Administrador quando já existe um |
 | `422` | Regra de negócio de uma operação com dados válidos (ex.: estoque insuficiente) ou `status: "erro"` vindo do Python |
 | `500` | Falha técnica (sem *stack trace* na resposta) |
+| `503` | Otimização desligada no servidor (`OTIMIZADOR_HABILITADO=false`, plano B1 da licença, A31) |
 
 **Mensagens padrão** (v2):
 
@@ -243,6 +244,7 @@ Casas: `orcamento` e `custo_unitario` com até 2; quantidades com até 3. `id` n
 | Rota inexistente (com token válido) | 404 | `{"mensagem":"Recurso não encontrado."}` |
 | Recurso pelo id inexistente (`PUT /api/ingredientes/{id}`, `PUT /api/produtos/{id}/preco`, `GET /api/estoque/{id}/linhas`) | 404 | `{"mensagem":"Ingrediente não encontrado."}` / `{"mensagem":"Produto não encontrado."}` |
 | Método não suportado | 405 | `{"mensagem":"Método não permitido."}` |
+| Produção ou reposição com a otimização desligada no servidor (A31) | 503 | `{"mensagem":"A recomendação está disponível só na demonstração local da equipe."}` |
 | Erro inesperado | 500 | `{"mensagem":"Não foi possível concluir a operação."}`, sem *stack trace* nem detalhe interno |
 
 O frontend (`frontend/js/api.js`) trata assim: no `401` com sessão, chama `logout` e mostra "Sua sessão expirou. Entre novamente."; no `403`, preserva a sessão.
@@ -500,7 +502,7 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 - Os valores do exemplo são os do estoque do `seed_demo.sql` (validados com o Gurobi real). Com o seed oficial (estoque 0), tudo vem 0: é o esperado.
 - O Java calcula `lucro_por_copo` e recalcula receita e margem com `BigDecimal`.
 - O frontend mostra "Sem lucro" quando `lucro_por_copo ≤ 0` e "Falta ingrediente" quando `lucro_por_copo > 0` e a quantidade é 0. A tela **não** usa termos técnicos.
-- Erros: `status: "erro"` do Python → `422`; falha técnica ou timeout → `500`; Funcionário → `403`.
+- Erros: `status: "erro"` do Python → `422`; falha técnica ou timeout → `500`; Funcionário → `403`; otimização desligada no servidor → `503` (A31).
 - A última recomendação gerada fica guardada na memória do backend para o marketing (§2.9) e o dashboard (§2.8). Ela some se o backend reiniciar ou "dormir" (plano free).
 
 ### 2.7 Reposição (UC14/US14) — **`POST`** (antes `GET`; decisão de 14/10/2026)
@@ -521,7 +523,7 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 - `itens` vem do maior para o menor `custo_estimado`.
 - **Sem pedidos no período:** `200`, `itens: []` e `mensagem: "Não houve pedidos no período escolhido, então não há consumo para repor."` (o Python **não** é chamado).
 - **Orçamento insuficiente:** `orcamento_suficiente: false`, `valor_faltante > 0`, `mensagem: "O orçamento não cobre nem os mínimos. A tabela mostra os mínimos e quanto falta."`.
-- Erros: `400` com `campos.periodo_dias` ("Informe um período entre 1 e 365 dias.") e/ou `campos.orcamento` ("Informe o orçamento." / "O orçamento não pode ser negativo." / "Use no máximo 2 casas decimais no orçamento."); `422` com a mensagem do Python; `500` em falha técnica; Funcionário → `403`.
+- Erros: `400` com `campos.periodo_dias` ("Informe um período entre 1 e 365 dias.") e/ou `campos.orcamento` ("Informe o orçamento." / "O orçamento não pode ser negativo." / "Use no máximo 2 casas decimais no orçamento."); `422` com a mensagem do Python; `500` em falha técnica; Funcionário → `403`; otimização desligada no servidor → `503` (A31), depois da validação dos campos e só quando há consumo (sem pedidos no período, a resposta continua `200`).
 
 ### 2.8 Dashboard (UC17/US17) — Tela 03
 
@@ -537,13 +539,14 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
                  "tipos_de_produto": "Açaí Premium 700ml, Açaí Tradicional 300ml" } ],
   "ultimo_plano": { "calculado_em": "2026-10-28T15:00:00", "receita_estimada": 1966.80, "margem_estimada": 1011.71,
                     "produtos_priorizados": [ "Açaí Tradicional 300ml", "Açaí Especial 500ml" ] },
-  "estoque": { "ingredientes_abaixo_do_minimo": 1, "ingredientes_com_vencido": 1 } }
+  "estoque": { "ingredientes_abaixo_do_minimo": 1, "ingredientes_com_vencido": 1 },
+  "otimizador_habilitado": true }
 ```
 
 - Só pedidos `ATIVO` (cancelado não entra em faturamento, mais vendidos, ingredientes nem ranking).
 - `ingredientes_mais_utilizados` vem ordenado pelo **custo** do consumo (A17). O copo descartável aparece na lista, porque no banco ele é um ingrediente.
 - `ranking`: posição pelo valor total (desempate: quantidade de pedidos). O filtro de produto restringe também a quantidade e o valor; o filtro de valor vale **depois** de somar.
-- `ultimo_plano` traz a **receita máxima estimada** e os **produtos prioritários** que o Termo de Aceite exige, lidos do último cálculo de produção (A16). É `null` se ninguém gerou a recomendação desde que o backend subiu. `estoque` usa o saldo **válido**.
+- `ultimo_plano` traz a **receita máxima estimada** e os **produtos prioritários** que o Termo de Aceite exige, lidos do último cálculo de produção (A16). É `null` se ninguém gerou a recomendação desde que o backend subiu. `estoque` usa o saldo **válido**. `otimizador_habilitado` é `false` quando a otimização está desligada no servidor (A31): a Tela 03 explica que o plano só existe na demonstração local.
 - Erros: `400` com `campos.mes` ("Informe o mês no formato AAAA-MM.") ou `campos.valor_min` ("O valor mínimo não pode ser maior que o máximo."); Funcionário → `403`.
 
 ### 2.9 Marketing (UC18/US18) — Tela 14
@@ -558,7 +561,7 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 ```
 
 - Priorizados: quantidade recomendada > 0, maior primeiro (empate: menor id), **até 3**. As ideias vêm de um catálogo de 18, em rodízio pelo dia do cálculo, sem repetir no mesmo resultado (A20).
-- Sem cálculo: `calculado_em: null`, `sugestoes: []`, `mensagem: "Gere a recomendação na tela Produção para ver as sugestões."`.
+- Sem cálculo: `calculado_em: null`, `sugestoes: []`, `mensagem: "Gere a recomendação na tela Produção para ver as sugestões."`. Com a otimização desligada no servidor (A31): `mensagem: "As sugestões dependem da recomendação de produção, que neste endereço está disponível só na demonstração local da equipe."`.
 - Cálculo sem nenhum produto a produzir: `sugestoes: []` e `mensagem: "A última recomendação não indicou nenhum produto para produzir. Confira o estoque e gere a recomendação de novo."`.
 - Nada é publicado automaticamente (critério da US18).
 
@@ -579,6 +582,7 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 
 | Data | Alteração | Itens |
 |---|---|---|
+| 27/10/2026 (noite, 2) | **Plano B1 da licença (A31):** `OTIMIZADOR_HABILITADO`; código `503` nas rotas de produção e reposição; `otimizador_habilitado` no dashboard; mensagem própria no marketing | A31 |
 | 27/10/2026 (noite) | **§1.6:** solver no Render só com autorização expressa da Gurobi (resposta do professor; A30, A31); licenças corrigidas: existe a WLS acadêmica do Kauê, válida até 25/09/2027, de uso pessoal (A34). **§2:** disponibilidade até 30/11/2026, com backup (A32) | A30–A32, A34 |
 | 27/10/2026 | **Versão 2 (Sprint 3)**, aprovada pela equipe; aplicada a pedido do grupo, com autorização do Kauê. **§1:** modelo por **lucro** (`custo_unitario` na entrada; `margem_estimada` e `consumo` na saída); saldo **válido** por linha; tabela de mensagens de erro; BOM aceito; uma execução por vez; eco só no perfil `dev`; **§1.6** licença de avaliação do Gurobi 13.0.3 (sem WLS nem Compute Server: as notas de 28/09, 02/10 e 08/10 ficam sem efeito); **§1.7** módulo de reposição. **§2:** validade do token (2 h); `PATCH` no CORS; snake_case global; fuso de São Paulo; códigos `405` e `422` do Python; mensagens padrão de `400`, `401`, `404`, `405` e `500`; formatos completos de ingredientes, produtos, usuários e login; rotas da Sprint 3 e lista do que fica fora; **§2.4** estoque por linhas e descarte por linha (A12); **§2.5** pedidos com baixa e `GET`; **§2.6** recomendação; **§2.7** reposição passa a `POST`; **§2.8** dashboard; **§2.9** marketing. **§0:** caminhos atualizados (`docs/Apoio/`, `bd/`) | A8, A9, A12, A16–A23, A27, D3, F4, F9, P2 |
 | 08/10/2026 | **Itens B3, B6 e D3 confirmados pela equipe** (B5 e B1 já estavam confirmados); removidas as marcações "(confirmar com …)". **§1:** nota do Compute Server atualizada — licença de produção será a do Lucas; produção decidida pelo grupo: **Alternativa C** (licença WLS direta no container do backend, sem Compute Server; Opção A descartada); o contrato JSON não muda. Proposta para o Kauê aplicar no arquivo oficial. | B3, B6, D3, §1 |

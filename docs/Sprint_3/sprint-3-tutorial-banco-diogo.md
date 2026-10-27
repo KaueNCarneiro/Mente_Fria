@@ -315,7 +315,7 @@ O Termo foi aprovado em 28/08. **Todos os Must do Termo estão na Sprint 3** (A2
 | 3 | **Backlog** (US14, US27, Sprint alvo) | US14 com período e orçamento; nova **US27 — cancelar pedido** (Could; **não devolve estoque**); coluna "Sprint alvo": **US14, US17, US18 e US20 = Sprint 3** (A2b); US13, US15, US16, US19, US26 e US27 = fora |
 | 4 | **`docs/DER.md`** | Dicionário e diagrama: `movimentacao_estoque.quantidade_restante` e `motivo`; `pedido.status`, `data_cancelamento` e `usuario_cancelamento_id`. Reescrever as notas de FEFO (**por linha**) e de saldo ("= soma dos restantes"). Anotar o seed com estoque 0, o `seed_demo.sql` e o `:agora` (A9) |
 | 5 | **`docs/Apoio/mapa_constraints.md`** | Acrescentar `cliente`, `pedido`, `pedido_produto` e `movimentacao_estoque` (tabela abaixo). Corrigir a referência `sql_repositorios_sprint1.md` → `sql_repositorios.md` |
-| 6 | **`docs/Plano_de_Testes_Mente_Fria.md`** | Ajustar CT23, CT24 e CT29 e incorporar **CT30–CT71** de `sprint-3-casos-de-teste-propostos.md` (banco, estoque e dashboard são seus; Python, reposição e deploy, do Kauê). **Sem** meta de cobertura |
+| 6 | **`docs/Plano_de_Testes_Mente_Fria.md`** | Ajustar CT23, CT24 e CT29 e incorporar **CT30–CT72** de `sprint-3-casos-de-teste-propostos.md` (banco, estoque e dashboard são seus; Python, reposição e deploy, do Kauê). **Sem** meta de cobertura |
 | 7 | **`docs/Apoio/Arquitetura.md`** | D5 (a reposição com orçamento usa o solver, módulo `reposicao.py`); estoque por linhas; `@Profile("dev")`; `America/Sao_Paulo` (F3, A9); **sem Compute Server; licenças: WLS acadêmica do Kauê (pessoal, até 25/09/2027) e a restrita do `pip` no desenvolvimento; no Render, só com autorização da Gurobi** (A11, A30, A34); trocar "licença do Lucas" e "90 dias" por "licença do Kauê" e "um ano"; versão do Gurobi 13.0.3 (P2, decidida em 27/10); **deploy** como está em `referencia/deploy/` (Docker no Render, Pages por Actions, limites da A21) |
 | 8 | **Referências antigas em documentos vivos** | `sql_repositorios_sprint1.md` → `docs/Apoio/sql_repositorios.md`; `constraints_sprint1_teste.sql` → `bd/constraints_teste.sql`; `docs/Script_DDL.sql` → `bd/Script_DDL.sql`; `ARQUITETURA.md` → `docs/Apoio/Arquitetura.md`. Onde: Plano de Testes, `mapa_constraints.md` e o cabeçalho de `bd/constraints_teste.sql` (o Contrato já foi corrigido na v2, em 27/10). **Não** reescreva os relatórios de sprint: são histórico |
 | 9 | **`docs/Diagramas_UML.md`** | `calcularQuantidadeOtimaProducao()` passa a maximizar **lucro** |
@@ -376,7 +376,7 @@ Peça revisão ao Lucas e ao Kauê. **Antes**, apague qualquer cópia do `.patch
 - [ ] Mensagem ao professor (F9, P3: lucro, reposição, dashboard, deploy e licença) enviada e resposta guardada
 - [ ] Repositórios de `referencia/` copiados e lidos; testes de integração das fases verdes
 - [ ] `sql_repositorios_sprint3.md` com as consultas 1–13; `seed_demo.sql` no `bd/`; números do dashboard conferidos (§8)
-- [ ] Documentos da §9.2; CT30–CT71 no Plano de Testes até 31/10
+- [ ] Documentos da §9.2; CT30–CT72 no Plano de Testes até 31/10
 - [ ] PRs com "recriar o banco"
 
 ## Fora da Sprint 3 (decisão A2b)

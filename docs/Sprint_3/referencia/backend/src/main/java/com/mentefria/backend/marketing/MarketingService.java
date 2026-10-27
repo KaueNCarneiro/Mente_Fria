@@ -3,6 +3,7 @@ package com.mentefria.backend.marketing;
 import com.mentefria.backend.marketing.CatalogoIdeias.Ideia;
 import com.mentefria.backend.producao.Recomendacao;
 import com.mentefria.backend.producao.UltimaRecomendacao;
+import com.mentefria.backend.python.ChaveOtimizador;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,13 +23,16 @@ public class MarketingService {
     public static final String SEM_CALCULO = "Gere a recomendação na tela Produção para ver as sugestões.";
     public static final String SEM_PRIORIZADO = "A última recomendação não indicou nenhum produto para produzir. "
             + "Confira o estoque e gere a recomendação de novo.";
+    public static final String SEM_OTIMIZADOR = "As sugestões dependem da recomendação de produção, "
+            + "que neste endereço está disponível só na demonstração local da equipe.";
 
     public record Sugestao(int produtoId, String produto, int quantidadeRecomendada, BigDecimal lucroPorCopo, String selo,
                            String ideia, String comoFazer) {}
     public record Sugestoes(LocalDateTime calculadoEm, String mensagem, List<Sugestao> sugestoes) {}
 
     private final UltimaRecomendacao ultima;
-    public MarketingService(UltimaRecomendacao ultima) { this.ultima = ultima; }
+    private final ChaveOtimizador chave;
+    public MarketingService(UltimaRecomendacao ultima, ChaveOtimizador chave) { this.ultima = ultima; this.chave = chave; }
 
     /** Até 3 produtos priorizados, na ordem; os outros consumidores (dashboard) usam o mesmo critério. */
     public static List<Recomendacao.ItemRecomendado> priorizados(Recomendacao r) {
@@ -40,7 +44,7 @@ public class MarketingService {
 
     public Sugestoes sugestoes() {
         Optional<Recomendacao> guardada = ultima.ler();
-        if (guardada.isEmpty()) return new Sugestoes(null, SEM_CALCULO, List.of());
+        if (guardada.isEmpty()) return new Sugestoes(null, chave.habilitado() ? SEM_CALCULO : SEM_OTIMIZADOR, List.of());
         Recomendacao r = guardada.get();
         List<Recomendacao.ItemRecomendado> lista = priorizados(r);
         if (lista.isEmpty()) return new Sugestoes(r.calculadoEm(), SEM_PRIORIZADO, List.of());

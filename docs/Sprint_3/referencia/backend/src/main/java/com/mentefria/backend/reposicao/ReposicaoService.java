@@ -2,6 +2,7 @@ package com.mentefria.backend.reposicao;
 
 import com.mentefria.backend.config.ApiException;
 import com.mentefria.backend.ingrediente.IngredienteRepository;
+import com.mentefria.backend.python.ChaveOtimizador;
 import com.mentefria.backend.python.ModulosPython.OtimizadorReposicao;
 import com.mentefria.backend.python.ProcessoPython.FalhaPython;
 import com.mentefria.backend.reposicao.ReposicaoRepository.Consumo;
@@ -45,10 +46,12 @@ public class ReposicaoService {
     private final OtimizadorReposicao otimizador;
     private final JsonMapper json;
     private final Clock clock;
+    private final ChaveOtimizador chave;
 
     public ReposicaoService(ReposicaoRepository reposicao, IngredienteRepository ingredientes, OtimizadorReposicao otimizador,
-                            JsonMapper json, Clock clock) {
+                            JsonMapper json, Clock clock, ChaveOtimizador chave) {
         this.reposicao = reposicao; this.ingredientes = ingredientes; this.otimizador = otimizador; this.json = json; this.clock = clock;
+        this.chave = chave;
     }
 
     static Map<String, String> validar(PedidoReposicao req) {
@@ -74,6 +77,7 @@ public class ReposicaoService {
             return new RecomendacaoReposicao(agora, dias, req.orcamento(), true, BigDecimal.ZERO.setScale(2), BigDecimal.ZERO.setScale(2),
                     null, "Não houve pedidos no período escolhido, então não há consumo para repor.", List.of());
 
+        chave.exigir();                                                              // só aqui o solver é necessário (A31)
         Map<Integer, BigDecimal> saldo = ingredientes.saldosValidos(hoje);          // saldo VÁLIDO (decisão de 14/10)
         EntradaPy entrada = new EntradaPy(req.orcamento(), consumos.stream().map(c -> new IngredientePy(c.ingredienteId(),
                 c.consumo().setScale(3), saldo.getOrDefault(c.ingredienteId(), BigDecimal.ZERO), c.quantidadeMinima(),

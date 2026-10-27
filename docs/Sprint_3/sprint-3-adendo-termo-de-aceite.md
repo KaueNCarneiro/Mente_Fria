@@ -105,7 +105,7 @@ Este adendo registra os ajustes de escopo da Sprint 3. Para cada ajuste: o texto
 **Novo texto:** mantém o texto e acrescenta:
 - o sistema fica disponível pela URL publicada **até 30/11/2026**, data-limite indicada pelo professor;
 - o banco do plano gratuito do Render expira 30 dias depois de criado. A equipe faz **backup** do banco e já **testou a restauração** (procedimento no tutorial do Kauê, §12.6);
-- o solver de otimização só roda no sistema publicado com **licença autorizada pela Gurobi** para esse uso. Sem essa autorização, vale o plano alternativo de demonstração descrito na decisão A31 da equipe. **[decidir] e completar depois da resposta da Gurobi.**
+- o solver de otimização só roda no sistema publicado com **licença autorizada pela Gurobi** para esse uso. Sem essa autorização, vale o plano alternativo da equipe (decisão A31): no sistema publicado, as telas de produção, reposição e marketing informam que a recomendação está disponível só na demonstração local; a otimização é demonstrada pelo titular da licença acadêmica, no computador dele, como a licença permite. O restante do sistema funciona normalmente na URL publicada. **[atualizar depois da resposta da Gurobi]**
 
 **Critérios de aceitação:** CT67–CT70 (imagem dentro dos limites; fluxo do Termo pela URL publicada; CORS; primeira chamada depois de o serviço "dormir") e um teste de restauração do backup registrado em evidência.
 

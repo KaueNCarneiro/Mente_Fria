@@ -377,7 +377,7 @@ Copie de `docs/Sprint_3/referencia/deploy/` para a **raiz** do repositório: `Do
 |---|---|
 | `Dockerfile` | Estágio 1: compila o backend com o Maven do projeto. Estágio 2: Python 3.14 + `gurobipy` 13.0.3 + o JRE 25 da imagem oficial Temurin; usuário sem privilégio; heap limitada para sobrar memória ao Python |
 | `.dockerignore` | Lista do que **pode** entrar (`backend/` e `optimization/app/`). `.env`, `docs/`, `.git` e `venv` ficam de fora |
-| `render.yaml` | O serviço web (Docker, *health check* em `/api/saude`) e o banco. `DB_*` vêm do banco; `JWT_SECRET` é gerado pelo Render; `CORS_ALLOWED_ORIGIN` é perguntado na criação. **Não há `GRB_*` no arquivo**: só você as cria no painel, e só com a autorização da Gurobi (A30, A34) |
+| `render.yaml` | O serviço web (Docker, *health check* em `/api/saude`) e o banco. `DB_*` vêm do banco; `JWT_SECRET` é gerado pelo Render; `CORS_ALLOWED_ORIGIN` é perguntado na criação. **Não há `GRB_*` no arquivo**: só você as cria no painel, e só com a autorização da Gurobi (A30, A34). **`OTIMIZADOR_HABILITADO=false`** (plano B1, A31): com a autorização, troque para `true` no painel |
 
 ### 12.2 Testar a imagem na sua máquina antes (recomendado)
 
@@ -451,7 +451,7 @@ docker run --rm postgres:16 psql "$URL" -tA -c "SELECT nome, quantidade_estoque 
 | 1 | `https://<seu-servico>.onrender.com/api/saude` | `{"status":"ok","banco":"ok"}` (a primeira vez pode levar ~1 min) |
 | 2 | `https://<seu-servico>.onrender.com/api/teste/python` | `401` (o eco não existe em produção) |
 | 3 | No Pages: cadastro, login, ingredientes | Sem erro de CORS no F12 |
-| 4 | Recomendação com o seed de demonstração | 151/1/0 |
+| 4 | Recomendação com o seed de demonstração | **Plano B1 (A31), sem autorização da Gurobi:** `503` com "A recomendação está disponível só na demonstração local da equipe." **Com autorização** (variável em `true` e `GRB_*` criadas por você): 151/1/0 |
 | 5 | Logs do serviço no painel | Sem `ERROR`; sem senha ou token impressos |
 
 **Sábado 31:** com tudo na `main`, o fluxo inteiro do CT68 na URL publicada. Guarde prints com a URL visível em `docs/Sprint_3/evidencias/`.
@@ -487,6 +487,10 @@ docker rm -f mf-restore
 **Quando fazer backup:** logo depois do seed (sábado 31); ao fim da janela de testes (06/11); uma vez por semana; e em **29/11**, véspera da data-limite.
 
 **O que já foi verificado (27/10, auditoria):** com containers locais PostgreSQL 16, a cópia (`pg_dump -Fc`) do banco com o DDL e o `seed_demo.sql` foi restaurada num banco novo, de **outro dono**, com `--no-owner --no-privileges`. Ficaram iguais: as contagens das 7 tabelas, a soma dos saldos, a regra do saldo (0 violações) e o texto `Açaí (polpa)`. Depois da restauração, um cadastro novo recebeu o id seguinte, sem colisão. **Contra o Render, não foi testado** (o `pg_dump` pela URL com `sslmode=require` depende da conta).
+
+### 12.7 Demonstração local da otimização (plano B1, A31)
+
+Sem a autorização da Gurobi, **você** demonstra as Telas 12, 13 e 14 no seu computador, com a sua WLS. O passo a passo está em `sprint-3-licenca-gurobi.md`, §5. Ensaie uma vez antes da apresentação.
 
 ## Erros comuns
 

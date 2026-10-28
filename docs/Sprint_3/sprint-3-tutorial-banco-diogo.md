@@ -1,7 +1,7 @@
 # Tutorial — Sprint 3 (Banco de Dados e Documentos) — Diogo
 
-**Para:** Diogo Pereira Miranda · **Papel:** dados e qualidade da documentação · **Revisão:** 27/10/2026 (v5.2: mensagem ao professor pronta; P2 = 13.0.3; A11 com você) · **Substitui** a v5.1 (`historico/v5.1-27-10-antes-das-respostas/`), a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e `historico/Tutorial_Sprint3_BancoDeDados_Diogo.md`.
-**Base:** `sprint-3-roteiro.md` (v5.1), `sprint-3-decisoes-e-pendencias.md`, `sprint-3-casos-de-teste-propostos.md`.
+**Para:** Diogo Pereira Miranda · **Papel:** dados e qualidade da documentação · **Revisão:** 27/10/2026, noite (v5.3: **calendário deslocado um dia, A36**; antes, v5.2: mensagem ao professor pronta; P2 = 13.0.3; A11 com você) · **Substitui** a v5.1 (`historico/v5.1-27-10-antes-das-respostas/`), a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e `historico/Tutorial_Sprint3_BancoDeDados_Diogo.md`.
+**Base:** `sprint-3-roteiro.md` (v5.3), `sprint-3-decisoes-e-pendencias.md`, `sprint-3-casos-de-teste-propostos.md` e o contrato oficial `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2).
 
 > **O que foi verificado (26/10).**
 > - Tudo executado **duas vezes**: num PostgreSQL 16.10 embutido (tarde) e, à noite, no **Docker real (postgres:16, versão 16.15)**, com **os mesmos comandos `docker` deste tutorial** num container temporário.
@@ -11,19 +11,20 @@
 >   - O seed de demonstração confere com todos os valores da §8 e recusa a segunda execução. FEFO S1–S5 conferem. Concorrência 30/30 nas duas situações.
 > - **Os repositórios Java estão escritos, compilados e testados** em `docs/Sprint_3/referencia/backend/` (§7). Eles passam nos testes de integração do backend com PostgreSQL 16 real (Testcontainers).
 > - **Entraram US14 e US17** (decisão A2b). As consultas 9–13 (reposição e dashboard) foram executadas no Docker sobre o seed de demonstração (§6 e §8).
-> - **O Docker Desktop desta máquina (BD01) tem causa encontrada e contorno verificado** (§2, decisão A26).
+> - **O Docker Desktop desta máquina travou em 26/10 por outro motivo, com contorno verificado** (§2, decisão A26). *Correção de 27/10, noite: isso **não** é o BD01 da Sprint 2, que foi "Virtualization support not detected".*
 
 ## 0. O que você entrega e em que ordem
 
 | Prioridade | Entrega | Quando | Libera quem |
 |---|---|---|---|
-| **1** | **PR do banco:** patch do DDL e os 41 testes novos | **Ter 27** | Lucas (Fase 2 depende do seed com estoque 0), Kauê |
-| **2** | Mensagem ao professor: P3 (§9.1), com o Lucas | **Ter 27** | Toda a equipe |
-| **3** | Repositórios de usuário, unidade, ingrediente e produto (§7) | **Ter 27 – Qua 28** | Lucas (Fase 2) |
-| 4 | Repositórios de movimentação, pedido, **reposição** e **dashboard** (§7) | **Qua 28** | Lucas (Fases 3 e 6), Kauê (Fase 5) |
-| 5 | `seed_demo.sql` no repositório e `sql_repositorios_sprint3.md` (consultas 1–13) | Qua 28 | Todos (demonstração) |
-| 6 | Documentos (§9.2) e casos de teste do banco no Plano de Testes | Qui 29 – Sáb 31 | Janela de testes |
-| 7 | Registrar o BD01 (causa e contorno, A26) nas evidências | Até Sex 30 | — |
+| **1** | **PR do banco:** patch do DDL e os 41 testes novos | **Qua 28** | Lucas (Fase 2 depende do seed com estoque 0), Kauê |
+| **2** | Mensagem ao professor: P3 (§9.1), com o Lucas | **Feito em 27/10** | Toda a equipe |
+| **2b** | **Enviar o adendo** (`sprint-3-adendo-termo-de-aceite.md`, com a data preenchida) **e o pedido de prazo** (Sprint 3 até 02/11, A36) ao professor, com o Lucas. Texto pronto: `sprint-3-mensagem-professor-adendo.md` | **Qua 28** | Toda a equipe (o calendário depende do ok dele) |
+| **3** | Repositórios de usuário, unidade, ingrediente e produto (§7) | **Qua 28 – Qui 29** | Lucas (Fase 2) |
+| 4 | Repositórios de movimentação, pedido, **reposição** e **dashboard** (§7) | **Qui 29** | Lucas (Fases 3 e 6), Kauê (Fase 5) |
+| 5 | `seed_demo.sql` no repositório e `sql_repositorios_sprint3.md` (consultas 1–13) | Qui 29 | Todos (demonstração) |
+| 6 | Documentos (§9.2) e casos de teste do banco no Plano de Testes | Sex 30 – Dom 01/11 | Janela de testes |
+| 7 | Registrar a A26 nas evidências da Sprint 3 como **incidente novo** (o BD01 segue sem causa registrada) | Até Sáb 31 | — |
 
 **Pronto quando:**
 1. `32 | 0` e `41 | 0`;
@@ -58,7 +59,7 @@ git pull
 git checkout -b feature/banco-sprint3
 ```
 
-> **Se o `docker start` falhar** com `failed to connect to the docker API … dockerDesktopLinuxEngine`, o Docker Desktop não está pronto. **Nesta máquina, a causa foi encontrada em 26/10 (BD01, decisão A26):**
+> **Se o `docker start` falhar** com `failed to connect to the docker API … dockerDesktopLinuxEngine`, o Docker Desktop não está pronto. **Nesta máquina, em 26/10, a causa foi esta (decisão A26; não é o BD01 da Sprint 2):**
 > - **Sintoma:** a janela do Docker Desktop mostra *"An unexpected error occurred … starting services: … rename …\Docker\run\sailor-ingest.sock … The file cannot be accessed by the system"* (ou o mesmo com `docker-secrets-engine\engine.sock`).
 > - **Causa:** arquivos de *socket* que ficaram inacessíveis nas pastas do Docker. Não dá para apagá-los nem renomeá-los; dá para renomear **a pasta**.
 > - **Contorno (verificado):**
@@ -67,7 +68,7 @@ git checkout -b feature/banco-sprint3
 >   3. `Rename-Item "$env:LOCALAPPDATA\Docker\run" "run.antiga-$(Get-Date -Format yyyyMMdd-HHmm)"`
 >   4. `Rename-Item "$env:LOCALAPPDATA\docker-secrets-engine" "docker-secrets-engine.antiga-$(Get-Date -Format yyyyMMdd-HHmm)"`
 >   5. Abra o Docker Desktop. Em 26/10, o motor respondeu em 5 s.
-> - **Pode voltar** a cada reinício do Docker. Hipótese, não comprovada: o Windows desta máquina é uma versão Insider (build 26300). Registre isso como a solução do BD01 nas evidências.
+> - **Pode voltar** a cada reinício do Docker. Hipótese, não comprovada: o Windows desta máquina é uma versão Insider (build 26300). Registre isso como incidente novo nas evidências da Sprint 3, **não** como solução do BD01.
 
 **Baseline, antes de mudar qualquer coisa:**
 
@@ -302,15 +303,17 @@ O Termo foi aprovado em 28/08. **Todos os Must do Termo estão na Sprint 3** (A2
 3. **Dashboard (US17):** mostra faturamento do mês, mais vendidos, ingredientes mais usados, ranking por usuário e, como o Termo pede, a **receita máxima estimada** e os produtos prioritários do último cálculo (A16).
 4. **Publicação (US20):** Render (plano gratuito) e GitHub Pages. Duas perguntas:
    - o banco gratuito expira 30 dias depois de criado (A21): vamos criá-lo em 31/10 (vale até 30/11). Até quando o professor vai precisar do sistema publicado?
-   - o Gurobi roda com a licença de avaliação que vem com o `pip`, porque não temos a WLS (A22): o uso é aceitável? **Resposta: só com confirmação expressa da Gurobi (A30).**
+   - o Gurobi roda com a licença de avaliação que vem com o `pip`, porque não temos a WLS (A22): o uso é aceitável? **Resposta: só com confirmação expressa da Gurobi (A30).** *Correção: a WLS existe, é a do Kauê (A34); o professor foi avisado pessoalmente em 27/10 e manteve a orientação de validar com a Gurobi antes do Render.*
 
 **Resposta recebida em 27/10** (`resposta-professor.md`). O professor aceitou o adendo datado e pediu as alterações, as justificativas e os critérios de aceitação; o rascunho está em **`sprint-3-adendo-termo-de-aceite.md`** (A33). Revise com o Lucas, envie e **só depois da aprovação** edite a Visão e o Backlog (§9.2). O Termo original não muda: o adendo é anexado a ele.
 
-### 9.2 O que fazer (verificado em 26/10: os `.docx` são idênticos aos da `main`, então nada foi feito ainda)
+### 9.2 O que fazer — **feito em 27/10 (A37)**
+
+> **Atualização de 27/10, noite:** com o adendo aprovado, o grupo pediu que estas atualizações fossem feitas pelo Claude. Os itens 1, 2, 3, 4, 5, 6, 7, 9 e 10 abaixo foram aplicados, e o 8 também, nos documentos vivos (Plano de Testes, `mapa_constraints.md`, Arquitetura). **Sua parte agora:** revisar as mudanças, abrir os dois `.docx` no Word para conferir a formatação e cuidar do item 11 (A26 nas evidências) e do cabeçalho de `bd/constraints_teste.sql`, que é arquivo de código e ficou de fora. A tabela abaixo fica como registro do que foi pedido.
 
 | # | Documento | O que fazer (e por quê) |
 |---|---|---|
-| 1 | **Backlog** (US6, US10, US11, US17), **Visão** e **Termo** | Receita → **lucro** (depois da §9.1). US10: "maximizar o **lucro** com o estoque **válido**", e o critério ganha "custo dos ingredientes". US11: exibir quantidade, **lucro potencial** e receita estimada. US6: "cálculos de receita" → "cálculos". US17: **manter** "receita máxima estimada" (A16) e acrescentar o ranking e os filtros decididos em 14/10 |
+| 1 | **Backlog** (US6, US10, US11, US17) e **Visão** (o **Termo não é editado**: o adendo é anexado a ele) | Receita → **lucro** (depois da **aprovação do adendo**, A33). US10: "maximizar o **lucro** com o estoque **válido**", e o critério ganha "custo dos ingredientes". US11: exibir quantidade, **lucro potencial** e receita estimada. US6: "cálculos de receita" → "cálculos". US17: **manter** "receita máxima estimada" (A16) e acrescentar o ranking e os filtros decididos em 14/10 |
 | 2 | **Backlog** (US9) | "Saída de produtos" → "**baixa de ingredientes**" (F10) |
 | 3 | **Backlog** (US14, US27, Sprint alvo) | US14 com período e orçamento; nova **US27 — cancelar pedido** (Could; **não devolve estoque**); coluna "Sprint alvo": **US14, US17, US18 e US20 = Sprint 3** (A2b); US13, US15, US16, US19, US26 e US27 = fora |
 | 4 | **`docs/DER.md`** | Dicionário e diagrama: `movimentacao_estoque.quantidade_restante` e `motivo`; `pedido.status`, `data_cancelamento` e `usuario_cancelamento_id`. Reescrever as notas de FEFO (**por linha**) e de saldo ("= soma dos restantes"). Anotar o seed com estoque 0, o `seed_demo.sql` e o `:agora` (A9) |
@@ -319,8 +322,8 @@ O Termo foi aprovado em 28/08. **Todos os Must do Termo estão na Sprint 3** (A2
 | 7 | **`docs/Apoio/Arquitetura.md`** | D5 (a reposição com orçamento usa o solver, módulo `reposicao.py`); estoque por linhas; `@Profile("dev")`; `America/Sao_Paulo` (F3, A9); **sem Compute Server; licenças: WLS acadêmica do Kauê (pessoal, até 25/09/2027) e a restrita do `pip` no desenvolvimento; no Render, só com autorização da Gurobi** (A11, A30, A34); trocar "licença do Lucas" e "90 dias" por "licença do Kauê" e "um ano"; versão do Gurobi 13.0.3 (P2, decidida em 27/10); **deploy** como está em `referencia/deploy/` (Docker no Render, Pages por Actions, limites da A21) |
 | 8 | **Referências antigas em documentos vivos** | `sql_repositorios_sprint1.md` → `docs/Apoio/sql_repositorios.md`; `constraints_sprint1_teste.sql` → `bd/constraints_teste.sql`; `docs/Script_DDL.sql` → `bd/Script_DDL.sql`; `ARQUITETURA.md` → `docs/Apoio/Arquitetura.md`. Onde: Plano de Testes, `mapa_constraints.md` e o cabeçalho de `bd/constraints_teste.sql` (o Contrato já foi corrigido na v2, em 27/10). **Não** reescreva os relatórios de sprint: são histórico |
 | 9 | **`docs/Diagramas_UML.md`** | `calcularQuantidadeOtimaProducao()` passa a maximizar **lucro** |
-| 10 | **README** | Linha 3 (receita → lucro, depois da §9.1); comandos dos testes novos (§4); seed de demonstração (§8); **linha 5: a URL publicada** (o Kauê informa) |
-| 11 | **Evidências da Sprint 2 (BD01)** | Registrar a causa e o contorno da A26 (§2). É fato novo, não reescrita do histórico |
+| 10 | **README** | Linha 3 (receita → lucro, depois do adendo); linha 5 (deploy na Sprint 3, não na 4; **a URL publicada**, o Kauê informa); Gurobi **13.0.3** e licenças (A34); variáveis novas (`OTIMIZADOR_HABILITADO`, `REPOSICAO_SCRIPT`, `MF_PYTHON`); comandos dos testes novos (§4); seed de demonstração (§8) |
+| 11 | **Evidências (A26)** | Registrar a A26 como **incidente novo** nas evidências da Sprint 3. **Não** atribuir a causa ao BD01 da Sprint 2 ("Virtualization support not detected"), que segue sem causa registrada; se alguém souber o que resolveu o BD01, registrar como fato novo |
 
 **Linhas novas do `mapa_constraints.md`** (`NOT NULL` por **tabela + coluna**, porque o PostgreSQL informa as duas: verificado):
 
@@ -358,7 +361,7 @@ Peça revisão ao Lucas e ao Kauê. **Antes**, apague qualquer cópia do `.patch
 
 | Sintoma | Causa | O que fazer |
 |---|---|---|
-| `failed to connect to the docker API` | Docker Desktop sem o motor | §2 (BD01, A26: renomear as duas pastas; **nunca** "Reset to factory defaults") |
+| `failed to connect to the docker API` | Docker Desktop sem o motor | §2 (A26: renomear as duas pastas; **nunca** "Reset to factory defaults") |
 | `git apply` falha | `Script_DDL.sql` mudou depois de 08/10 | Usar `referencia/bd/Script_DDL.sql` como modelo |
 | `relation "usuario" already exists` | Script rodado duas vezes | Recriar o banco |
 | `violates check constraint "chk_movimentacao_restante"` | Entrada sem `quantidade_restante` | Toda `ENTRADA` grava `restante = quantidade` |
@@ -369,14 +372,14 @@ Peça revisão ao Lucas e ao Kauê. **Antes**, apague qualquer cópia do `.patch
 
 ## Checklist final
 
-- [ ] Docker funcionando (A26, se preciso) e BD01 registrado nas evidências
+- [ ] Docker funcionando (A26, se preciso) e a A26 registrada nas evidências como incidente novo
 - [ ] Baseline `32 | 0` antes e depois do patch
 - [ ] Patch aplicado; seed oficial com estoque 0; comentário da US27 correto
 - [ ] `41 | 0`; experimentos A (`37 | 4`) e B (`38 | 3`) registrados
 - [ ] Mensagem ao professor (F9, P3: lucro, reposição, dashboard, deploy e licença) enviada e resposta guardada
 - [ ] Repositórios de `referencia/` copiados e lidos; testes de integração das fases verdes
 - [ ] `sql_repositorios_sprint3.md` com as consultas 1–13; `seed_demo.sql` no `bd/`; números do dashboard conferidos (§8)
-- [ ] Documentos da §9.2; CT30–CT72 no Plano de Testes até 31/10
+- [ ] Documentos da §9.2; CT30–CT72 no Plano de Testes até 01/11 (A36)
 - [ ] PRs com "recriar o banco"
 
 ## Fora da Sprint 3 (decisão A2b)

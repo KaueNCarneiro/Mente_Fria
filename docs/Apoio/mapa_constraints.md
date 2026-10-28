@@ -1,8 +1,10 @@
-# Mapa de constraints → mensagens (Sprint 1)
+# Mapa de constraints → mensagens (Sprints 1 e 3)
+
+> **Atualizado em 27/10/2026 (Sprint 3):** acrescentadas as constraints de `cliente`, `pedido`, `pedido_produto` e `movimentacao_estoque` (estoque por linhas, `motivo`, status do pedido), com os testes T33–T73 de `constraints_sprint3_teste.sql`. Essas constraints existem no `Script_DDL.sql` de referência (`docs/Sprint_3/referencia/bd/`) e entram em `bd/` pelo PR do banco da Sprint 3; até lá, o `bd/Script_DDL.sql` da `main` ainda é o da Sprint 1.
 
 **Uso:** referência para o backend traduzir violações do banco em mensagens claras por campo (US7) e para o frontend exibi-las.
 As colunas **Campo na API** e **HTTP** ligam este mapa ao *Contrato de Comunicação* (§2): a chave de `campos` usa os mesmos nomes de campo do contrato (snake_case), e os códigos HTTP seguem o Contrato de Comunicação (§2), aprovado pelo Kauê em 20/09/2026.
-Cada linha tem um teste correspondente em `constraints_sprint1_teste.sql` (validado no PostgreSQL 16).
+Cada linha tem um teste correspondente: T01–T32 em `bd/constraints_teste.sql` (antes chamado `constraints_sprint1_teste.sql`) e T33–T73 em `constraints_sprint3_teste.sql` (Sprint 3; hoje em `docs/Sprint_3/referencia/bd/`). Todos validados no PostgreSQL 16.
 
 ## Regras de convivência entre aplicação e banco
 
@@ -46,6 +48,21 @@ Cada linha tem um teste correspondente em `constraints_sprint1_teste.sql` (valid
 | `produto_ingrediente` | `fk_produto_ingrediente_produto` | composição | `composicao` | Produto não encontrado. | 400 | T30 |
 | `unidade_medida_porcao_padrao` | `chk_unidade_porcao_padrao` | (só seed na Sprint 1) | — | — | — | T31 |
 | `unidade_medida_porcao_padrao` | `unidade_medida_porcao_padrao_pkey` | (só seed na Sprint 1) | — | — | — | T32 |
+| `cliente` | NOT NULL `nome`, `contato`, `endereco` | nome, contato, endereço | `nome`, `contato`, `endereco` | Informe o nome. / Informe o contato. / Informe o endereço. | 400 | T34–T36 |
+| `pedido` | `fk_pedido_cliente` | cliente | `cliente_id` | Cliente não encontrado. | 400 | T40 |
+| `pedido` | NOT NULL `usuario_id`, `fk_pedido_usuario`, `chk_pedido_valor_total`, `chk_pedido_status`, `chk_pedido_cancelamento`, `fk_pedido_usuario_cancelamento` | — | — | (erro interno: quem preenche é o backend) | 500 | T38, T39, T41–T46 |
+| `pedido_produto` | `chk_pedido_produto_quantidade` | quantidade | `itens` | A quantidade deve ser maior que zero. | 400 | T48 |
+| `pedido_produto` | `pedido_produto_pkey` | produto | `itens` | Este produto já foi adicionado ao pedido. | 400 | T50 |
+| `pedido_produto` | `fk_pedido_produto_produto` | produto | `itens` | Produto não encontrado. | 400 | T51 |
+| `pedido_produto` | `chk_pedido_produto_preco`, `fk_pedido_produto_pedido` | — | — | (erro interno: o preço vem do banco) | 500 | T49, T52 |
+| `movimentacao_estoque` | `chk_movimentacao_tipo`, NOT NULL `tipo` | tipo | `tipo` | Tipo de movimentação inválido. | 400 | T66, T70 |
+| `movimentacao_estoque` | `chk_movimentacao_quantidade` | quantidade | `quantidade` | A quantidade deve ser maior que zero. | 400 | T67 (CT26) |
+| `movimentacao_estoque` | `chk_movimentacao_data_validade` | validade | `data_validade` | A validade só pode ser informada em entradas. | 400 | T65 |
+| `movimentacao_estoque` | `chk_movimentacao_motivo` | motivo | `motivo` | Informe o motivo da saída. / Motivo de saída inválido. / O motivo só pode ser informado em saídas. | 400 | T58, T62, T63 |
+| `movimentacao_estoque` | `fk_movimentacao_ingrediente` | ingrediente | `ingrediente_id` | Ingrediente não encontrado. | 400 | T68 |
+| `movimentacao_estoque` | `chk_movimentacao_restante`, `fk_movimentacao_usuario` | — | — | (erro interno: quem preenche é o backend) | 500 | T55–T57, T64, T69 |
+| `ingrediente` | `chk_ingrediente_quantidade_estoque` (numa baixa) | — | — | Estoque insuficiente para o ingrediente <nome> / para o produto <nome>. | **422** | T71 (CT21, CT25) |
+| `unidade_medida_porcao_padrao` | `chk_unidade_porcao_padrao` (na alteração, US26) | porção padrão | `porcao_padrao` | A porção deve ser maior que zero. | 400 | T73 (US26 fora da Sprint 3) |
 
 ## Como a API devolve isso (definido no Contrato de Comunicação, §2)
 
@@ -70,19 +87,25 @@ Erros que não pertencem a um campo (ex.: estoque insuficiente) trazem só `mens
 | `403` | Perfil sem permissão (ex.: Funcionário tentando alterar preço) |
 | `404` | Recurso inexistente |
 | `409` | Conflito de unicidade: e-mail já cadastrado (`uq_usuario_email`) e cadastro de Administrador quando já existe um |
-| `422` | Regra de negócio de uma operação com dados válidos (ex.: estoque insuficiente — Sprint 2) |
+| `405` | Método não suportado na rota (Sprint 3) |
+| `422` | Regra de negócio de uma operação com dados válidos (ex.: estoque insuficiente) ou erro de dados vindo do Python |
+| `500` | Falha técnica, inclusive violação de constraint que o backend deveria ter evitado (as marcadas "erro interno" acima); sem detalhe interno na resposta |
+| `503` | Otimização desligada no servidor (plano B1 da licença, A31) |
 
 ---
 
 ## Regras que o banco **não** garante (ficam na aplicação)
 
 - **Senha com no mínimo 8 caracteres** (US1/CT02): o banco só vê o hash.
-- **Todo produto deve ter o açaí entre os ingredientes** (US5/CT15): decidido em 19/09/2026 — o nome do ingrediente, sem acentos e sem diferenciar maiúsculas, contém "acai" (ver `sql_repositorios_sprint1.md`, seção 4).
+- **Todo produto deve ter o açaí entre os ingredientes** (US5/CT15): decidido em 19/09/2026 — o nome do ingrediente, sem acentos e sem diferenciar maiúsculas, contém "acai" (ver `docs/Apoio/sql_repositorios.md`, seção 4).
+- **Estoque por linhas (Sprint 3, D10):** a baixa consome as linhas **válidas** da validade mais próxima para a mais distante; **estoque vencido nunca é vendido**; o descarte consome só linhas vencidas. O banco garante `quantidade_restante` entre 0 e a quantidade, mas a escolha das linhas e a invariante "saldo = soma dos restantes" são da aplicação.
+- **O motivo `PEDIDO`** só o backend grava: vindo do cliente, é `400` ("Motivo de saída inválido.").
+- **Datas** de pedido e de movimentação vêm do relógio do Java em `America/Sao_Paulo` (A9), não do `DEFAULT CURRENT_TIMESTAMP` do banco (que roda em UTC no Render).
 - **E-mail sem diferenciar maiúsculas:** o `UNIQUE` do PostgreSQL trata `Dono@Acai.com` e `dono@acai.com` como e-mails diferentes (verificado). **Proposta:** o backend grava e consulta o e-mail já normalizado (sem espaços nas pontas, em minúsculas).
 
 ## Necessidade que a FK cria para o backend e o frontend
 
-`ingrediente.unidade_medida` só aceita unidades já cadastradas em `unidade_medida_porcao_padrao`, e a tela de gestão de unidades (US26) só chega na Sprint 3. Na Sprint 1, o campo "unidade de medida" da tela de ingredientes deve ser uma **lista de seleção alimentada pelo banco** (nunca texto livre), o que exige um endpoint de leitura. Consulta sugerida:
+`ingrediente.unidade_medida` só aceita unidades já cadastradas em `unidade_medida_porcao_padrao`, e a tela de gestão de unidades (US26) ficou **fora da Sprint 3** (Adendo nº 1). Na Sprint 1, o campo "unidade de medida" da tela de ingredientes deve ser uma **lista de seleção alimentada pelo banco** (nunca texto livre), o que exige um endpoint de leitura. Consulta sugerida:
 
 ```sql
 SELECT unidade_medida, porcao_padrao
@@ -94,4 +117,4 @@ As unidades do seed são `kg`, `mg`, `l`, `ml` e `un` (minúsculas: a FK diferen
 
 ## Fora deste mapa
 
-As constraints de `cliente`, `pedido`, `pedido_produto` e `movimentacao_estoque` entram quando as histórias US9, US12 e US13 (Sprint 2) forem detalhadas.
+Nada das tabelas atuais. As constraints de `cliente`, `pedido`, `pedido_produto` e `movimentacao_estoque` entraram em 27/10/2026 (Sprint 3). O cadastro de clientes (US13) e o cancelamento de pedido (US27) estão fora da Sprint 3, mas suas constraints já existem no schema.

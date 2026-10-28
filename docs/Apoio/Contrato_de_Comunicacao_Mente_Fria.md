@@ -8,7 +8,7 @@
 
 > **Fonte de verdade.** Este documento prevalece sobre a `docs/Apoio/Arquitetura.md` e sobre os roteiros nos **nomes de campo, nos valores de `status` e no formato de erro**.
 >
-> **Origem da v2:** proposta da auditoria da Sprint 3 (`docs/Sprint_3/sprint-3-contrato-v2-proposta.md`). Todos os formatos desta versão são **exatamente** os que o backend e os módulos Python de `docs/Sprint_3/referencia/` produzem, conferidos por teste (92 testes no backend, 47 no Python).
+> **Origem da v2:** proposta da auditoria da Sprint 3 (`docs/Sprint_3/sprint-3-contrato-v2-proposta.md`). Todos os formatos desta versão são **exatamente** os que o backend e os módulos Python de `docs/Sprint_3/referencia/` produzem, conferidos por teste (95 testes no backend, 47 no Python).
 
 ---
 

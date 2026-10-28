@@ -1,7 +1,7 @@
 # Tutorial — Sprint 3 (Python/Gurobi, Reposição, Deploy, Contrato e Facilitação) — Kauê
 
-**Para:** Kauê Nogueira Carneiro · **Papel:** módulos de otimização, reposição (US14), publicação no Render (US20), Contrato Java ↔ Python, facilitação (Scrum Master) · **Revisão:** 27/10/2026 (v5.2: Contrato v2 aprovado; P2 = 13.0.3; deploy definitivo no sábado, A21; A15 corrigida) · **Substitui** a v5.1 (`historico/v5.1-27-10-antes-das-respostas/`), a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e `historico/Tutorial_Sprint3_Python_Kaue.md`.
-**Base:** `sprint-3-roteiro.md` (v5.1), `sprint-3-contrato-v2-proposta.md`, `sprint-3-decisoes-e-pendencias.md`.
+**Para:** Kauê Nogueira Carneiro · **Papel:** módulos de otimização, reposição (US14), publicação no Render (US20), Contrato Java ↔ Python, facilitação (Scrum Master) · **Revisão:** 27/10/2026, noite (v5.3: **calendário deslocado um dia, A36**; antes, v5.2: Contrato v2 aprovado; P2 = 13.0.3; deploy definitivo no sábado, A21; A15 corrigida) · **Substitui** a v5.1 (`historico/v5.1-27-10-antes-das-respostas/`), a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e `historico/Tutorial_Sprint3_Python_Kaue.md`.
+**Base:** `sprint-3-roteiro.md` (v5.3), o **contrato oficial** `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2; a proposta ficou congelada) e `sprint-3-decisoes-e-pendencias.md`.
 
 > **O que foi verificado (26/10).**
 > - **Produção** (`otimizador.py` v2), com **Python 3.14.0** e `gurobipy` **13.0.1 e 13.0.3** (licença de avaliação do `pip`):
@@ -28,14 +28,14 @@
 | Ordem | Entrega | Quando | Depende de | Libera |
 |---|---|---|---|---|
 | **1** | **Revisar o contrato oficial v2** (A10: aprovado em 27/10 e **já aplicado** a seu pedido; confira a seção 3 dele) e a P2 (**13.0.3**, decidida em 27/10) | **Ter 27** | — | **Lucas (Fase 3) e Leonardo (telas)** |
-| 2 | **PR da Fase P + Q:** módulos de produção e de reposição, testes e exemplos (`47 passed`) | Ter 27 – **Qua 28** | Item 1 (§1 e §1.6) | Lucas (Fase 4A); você (Fase 5) |
-| 3 | **Ensaio de deploy** (opcional, recomendado), numa conta pessoal, apagado no mesmo dia (A21) | Qua 28 ou Qui 29 | Fases 1–2 na `main` | Os problemas do Render aparecem antes do sábado |
-| 4 | Ambiente reproduzido numa **2ª máquina** | Qua 28 | Item 2 | — |
-| 5 | **Fase 4A em dupla** com o Lucas | Qui 29 | Lucas (Fase 3) | Tela 12 |
-| 6 | **PR da Fase 5:** Java da reposição (`ReposicaoTest` 8/8 e o Python real) | **Sex 30** | Fase 3; repositório do Diogo (consulta 9) | Tela 13 |
-| 7 | Plano de Testes: CT23, CT24, CT29, CTs de Python, **CT51–CT57** (reposição) e **CT67–CT70** (deploy) | Qui 29 – Sex 30 | — | Janela de testes |
-| 8 | **Deploy definitivo** (conta, banco e serviço criados **neste dia**; banco expira em 30/11) e CT67–CT70 no ambiente publicado | **Sáb 31**, à noite (A32) | Tudo na `main`; quem cria a conta (decisão do PO, qui 29) | Janela de testes |
-| 9 | Facilitação: Review, Retro, relatório, CT20, registro do Git, branch `sprint-3` | Ter 27 – Dom 01/11 | — | Encerramento |
+| 2 | **PR da Fase P + Q:** módulos de produção e de reposição, testes e exemplos (`47 passed`) | Qua 28 – **Qui 29** | Item 1 (contrato oficial §1 e §1.7) | Lucas (Fase 4A); você (Fase 5) |
+| 3 | **Ensaio de deploy** (opcional, recomendado), numa conta pessoal, apagado no mesmo dia (A21) | Qui 29 ou Sex 30 | Fases 1–2 na `main` | Os problemas do Render aparecem antes do sábado |
+| 4 | Ambiente reproduzido numa **2ª máquina** | Qui 29 | Item 2 | — |
+| 5 | **Fase 4A em dupla** com o Lucas | Sex 30 | Lucas (Fase 3) | Tela 12 |
+| 6 | **PR da Fase 5:** Java da reposição (`ReposicaoTest` 8/8 e o Python real) | **Sáb 31** | Fase 3; repositório do Diogo (consulta 9) | Tela 13 |
+| 7 | Plano de Testes: CT23, CT24, CT29, CTs de Python, **CT51–CT57** (reposição) e **CT67–CT70** e **CT72** (deploy e plano B1) | Sex 30 – Sáb 31 | — | Janela de testes |
+| 8 | **Deploy definitivo** (conta, banco e serviço criados **neste dia**; banco expira em 30/11) e CT67–CT70 e CT72 no ambiente publicado | **Sáb 31**, à noite (A32) | Tudo na `main`; quem cria a conta (decisão do PO, qui 29) | Janela de testes |
+| 9 | Facilitação: Review, Retro, relatório, CT20, registro do Git, branch `sprint-3` | Ter 27 – Seg 02/11 | — | Encerramento |
 
 **Pronto quando:**
 1. o contrato oficial tem a v2 e o registro no histórico de revisões;
@@ -57,21 +57,11 @@
 | Modo **eco** | Hello World da ponte Java ↔ Python, até a recomendação real ser validada |
 | Entrada lida com **`utf-8-sig`** (A8) | O pipe do PowerShell manda um BOM, e sem isso o módulo recusava a entrada (verificado) |
 
-## 2. Contrato v2 (primeira entrega: segunda e terça)
+## 2. Contrato v2 (**feito em 27/10**)
 
-1. Leia `docs/Sprint_3/sprint-3-contrato-v2-proposta.md`. Ele já traz:
-   - a §1 (Java ↔ Python), com as mensagens de erro que os módulos produzem, **inclusive a reposição (§1.6)**;
-   - a §2 (REST), com estoque, pedido, recomendação, **reposição, dashboard e marketing**.
-
-   Todos os formatos são **exatamente** os que o código de `referencia/` produz (conferido por teste).
-2. Marque **30 minutos** com o Lucas e o Leonardo e decida os itens **[decidir]**:
-   - quem calcula a `situacao` do estoque (frontend ou backend);
-   - aceitar entrada com validade vencida (o PO decide).
-3. Aplique a proposta ao contrato oficial `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md`:
-   - substitua a §1.1 a §1.3;
-   - acrescente à §2 as mensagens padrão, o `PATCH` no CORS e as rotas de estoque, pedido e recomendação;
-   - registre a linha na seção 3, "Histórico de revisões";
-   - mantenha a §1.5 (eco).
+1. **Já está pronto e na `main`:** o contrato oficial `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2) foi aprovado pela equipe e aplicado com a sua autorização (A10, PRs #34 e #35). Os dois itens que estavam em aberto foram adotados como propostos: a situação "abaixo do mínimo" é calculada pelo frontend, e a entrada com validade vencida é aceita.
+2. **O que resta para você:** ler a seção 3 do contrato (histórico) e conferir a §1 (Java ↔ Python: produção §1.1–§1.4, eco §1.5, licença §1.6, **reposição §1.7**). Se discordar de algo, registre como nova revisão na seção 3.
+3. A `sprint-3-contrato-v2-proposta.md` ficou **congelada**: não use para implementar.
 4. **A11 (Compute Server) não bloqueia mais:** o Compute Server não é necessário (A34); a sua WLS roda dentro do próprio processo Python. O **Diogo** registra na Arquitetura (§2.1, §3.3, §5) e no Plano de Testes (§4.2), no PR de documentos dele (tutorial do Diogo, §9.2), que desenvolvimento e testes usam a **licença restrita do `pip`**, que existe a **sua WLS acadêmica** (pessoal, até 25/09/2027) e que, no Render, o solver só roda com autorização escrita da Gurobi (A30, A34). Você revisa. Os módulos já leem `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` (§7).
 
 5. **P2 decidida em 27/10: `gurobipy` 13.0.3** (as duas versões passaram nos 47 testes). Fixe 13.0.3 no `requirements.txt` (já está) e no README; o Diogo atualiza a Arquitetura (§2.1).
@@ -207,7 +197,7 @@ Get-Content -Raw -Encoding utf8 optimization\exemplos\entrada_contrato.json | py
 4. **Segunda máquina:** peça a outro integrante que clone a branch, crie o próprio `venv`, rode `pip install -r optimization/requirements.txt` e `python -m pytest optimization/tests -q`. **Anote o resultado** (`47 passed`): é o que encerra a pendência "só funciona no PC do Kauê".
 5. **A sua WLS:** os módulos leem `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID`; o Java as repassa ao processo filho. **Nunca** no Git. A licença acadêmica permite 2 sessões simultâneas (token de 5 min): não rode a suíte inteira com essas variáveis; teste com poucos casos (`-k "contrato or didatico"`).
 
-## 8. Fase 4A, em dupla com o Lucas (quinta 29)
+## 8. Fase 4A, em dupla com o Lucas (sexta 30, A36)
 
 O seu papel é **o contrato e a prova**. O Java já está pronto em `referencia/` (tutorial do Lucas, §5); leia com ele o `ProcessoPython` e o `ProducaoService`.
 
@@ -226,13 +216,13 @@ O seu papel é **o contrato e a prova**. O Java já está pronto em `referencia/
 |---|---|---|---|
 | 1 | **Branch `sprint-3` e `.env.example` (A15, A29):** o merge do `sprint-3` na `main` foi feito em 27/10 (PR #25) e conferido: a correção do PR #24 continua. Agora a `main` tem **dois** arquivos de exemplo: `backend/.env.example` (5 variáveis) e `backend/env.example` (sem o ponto, com comentários e as variáveis da Sprint 3). Faça assim: (1) junte os dois no `backend/.env.example` e apague o `env.example`, num PR; (2) crie todo branch novo a partir da `main` atualizada. Os documentos da auditoria já chegaram à `main` (PR #27); o `sprint-3` pode ser apagado, se a equipe concordar | Ter 27 | PR do `.env.example` |
 | 2 | **Daily de 10 minutos** (seg a sáb): o que fiz, o que farei, o que me bloqueia. Bloqueio → resolver no mesmo dia (regra da equipe) | Diária | Notas curtas em `docs/Sprint_3/` |
-| 3 | **Acompanhar:** a resposta do professor à mensagem (P3, `sprint-3-mensagem-professor.md`; A16, A17 e A20 já aprovadas em 27/10) | Ter 27 – Qua 28 | `resposta-professor.md` |
-| 4 | **CT20:** um integrante sobe o projeto do zero **só** com o README; anote onde travou | Sáb 31 | Relato e PR no README |
+| 3 | **Resposta do professor recebida em 27/10** (`resposta-professor.md`). Ele também foi **avisado pessoalmente em 27/10** da sua WLS (A34) e do B1, e manteve a orientação: validar com a Gurobi antes do Render. Sua parte: enviar o pedido à Gurobi (`sprint-3-licenca-gurobi.md`, §3) | Ter 27 | Pedido enviado |
+| 4 | **CT20:** um integrante sobe o projeto do zero **só** com o README; anote onde travou | Dom 01/11 | Relato e PR no README |
 | 5 | **Registro da perda do histórico do Git:** meia página com a data (27/09; primeiro commit `9e02498`), o motivo (conflitos de estrutura) e o que foi preservado | Até 31/10 | `docs/Sprint_3/` |
 | 6 | **Retrospectiva da Sprint 2** (nunca realizada) e da Sprint 3, juntas em 30 min. Registre a contradição: as contribuições individuais da Sprint 2 marcam "Retrospectiva" como feita, mas o relatório diz que não houve | Dom 01/11 | Ata no padrão da `sprint-1-ata-retrospectiva.md` |
-| 7 | **Sprint Review com demonstração** (nunca houve nas Sprints 1 e 2): o fluxo do §1 do roteiro, com os dois perfis | Dom 01/11 | Ata e prints |
-| 8 | **Relatório da Sprint 3** em `docs/Sprint_3/`: planejado × entregue (use a matriz), evidências, riscos e decisões. Sem `[PREENCHER]` | Dom 01/11 | Arquivo |
-| 9 | **Janela de testes (01–06/11):** dividir a bateria por pessoa e perfil e priorizar os caminhos do Termo de Aceite **no ambiente publicado** (`sprint-3-casos-de-teste-propostos.md`, §3). Acordar o serviço do Render antes de cada sessão | Dom 01/11 | Planilha ou tabela de execução |
+| 7 | **Sprint Review com demonstração** (nunca houve nas Sprints 1 e 2): o fluxo do §1 do roteiro, com os dois perfis | Seg 02/11 | Ata e prints |
+| 8 | **Relatório da Sprint 3** em `docs/Sprint_3/`: planejado × entregue (use a matriz), evidências, riscos e decisões. Sem `[PREENCHER]` | Seg 02/11 | Arquivo |
+| 9 | **Janela de testes (02–06/11, A36; aceita pelo professor):** dividir a bateria por pessoa e perfil e priorizar os caminhos do Termo de Aceite **no ambiente publicado** (`sprint-3-casos-de-teste-propostos.md`, §3). Acordar o serviço do Render antes de cada sessão | Dom 01/11 | Planilha ou tabela de execução |
 
 ## 10. Entrega da Fase P (e da Q, no mesmo PR ou logo depois)
 
@@ -336,7 +326,7 @@ cmd /c "python optimization\app\reposicao.py < optimization\exemplos\entrada_rep
 
 **Você deve ver** `"orcamento_suficiente": true, "custo_total": 11.1` e o morango com `"quantidade_sugerida": 0.74`. O resto vem com 0.
 
-### 11.5 Fase 5 — o Java da reposição (sexta 30)
+### 11.5 Fase 5 — o Java da reposição (sábado 31, A36)
 
 **Copie** de `docs/Sprint_3/referencia/backend/`: `reposicao/ReposicaoRepository` (o SQL é a consulta 9 do Diogo), `reposicao/ReposicaoService`, `reposicao/ReposicaoController` e o teste `ReposicaoTest`. Branch: `feature/backend-reposicao`.
 
@@ -408,13 +398,13 @@ Invoke-RestMethod http://localhost:10000/api/saude
 
 Para limpar: `docker rm -f mf-app mf-db; docker network rm mf-rede`. **Não** use o `mente-fria-db` nesse teste.
 
-### 12.3 Criar no Render pelo *blueprint* (ensaio na quarta 28 ou quinta 29; definitivo no sábado 31)
+### 12.3 Criar no Render pelo *blueprint* (ensaio na quinta 29 ou sexta 30; definitivo no sábado 31 à noite)
 
 Pré-requisitos: as Fases 1–2 na `main` e o PR do §12.1 aprovado.
 
 **Por que duas vezes (A21, 27/10):** o banco gratuito expira **30 dias depois de criado**, e cada conta só pode ter **um** banco gratuito ativo (documentação do Render, lida em 27/10).
 - **Ensaio:** numa **conta pessoal** de um integrante, com as Fases 1–2. Faça os passos abaixo e o §12.5 (itens 1 a 3). **No mesmo dia, apague o banco e o serviço.**
-- **Definitivo:** na conta que o PO escolher (quinta 29), **no sábado 31 à noite**, com tudo na `main`. O banco vale até **30/11**, no mesmo horário em que foi criado; 30/11 é a data-limite dada pelo professor (A32). Logo depois do seed, faça o backup (§12.6). Não pode ser depois de 31/10: a janela de testes é no ambiente publicado.
+- **Definitivo:** na conta que o PO escolher (sexta 30, A36), **no sábado 31 à noite**, com tudo na `main`. O banco vale até **30/11**, no mesmo horário em que foi criado; 30/11 é a data-limite dada pelo professor (A32). Logo depois do seed, faça o backup (§12.6). Não pode ser depois de 31/10: a janela de testes é no ambiente publicado.
 
 1. Crie a conta no Render entrando **com o GitHub** e dê acesso ao repositório.
 2. No painel do Render: **New > Blueprint** → escolha o repositório. O Render encontra o `render.yaml` na raiz.
@@ -454,7 +444,7 @@ docker run --rm postgres:16 psql "$URL" -tA -c "SELECT nome, quantidade_estoque 
 | 4 | Recomendação com o seed de demonstração | **Plano B1 (A31), sem autorização da Gurobi:** `503` com "A recomendação está disponível só na demonstração local da equipe." **Com autorização** (variável em `true` e `GRB_*` criadas por você): 151/1/0 |
 | 5 | Logs do serviço no painel | Sem `ERROR`; sem senha ou token impressos |
 
-**Sábado 31:** com tudo na `main`, o fluxo inteiro do CT68 na URL publicada. Guarde prints com a URL visível em `docs/Sprint_3/evidencias/`.
+**Domingo 01/11** (A36): o fluxo inteiro do CT68 na URL publicada (o que entrar na `main` depois do deploy de sábado é publicado sozinho). Guarde prints com a URL visível em `docs/Sprint_3/evidencias/`.
 
 **Licença (A30, resposta do professor):** enquanto a Gurobi não autorizar por escrito, o solver **não** roda no Render. O item 4 da tabela acima vale só com a autorização; sem ela, vale o plano B (`sprint-3-licenca-gurobi.md`, §4).
 
@@ -500,7 +490,7 @@ Sem a autorização da Gurobi, **você** demonstra as Telas 12, 13 e 14 no seu c
 | Acentos viram `?` no eco | Codificação do pipe | Mesma solução; ou `cmd /c` com redirecionamento |
 | `JSONDecodeError` nos testes | Banner da licença no `stdout` (fallback do `gurobi.lic`) | `OutputFlag 0` antes de `start()`; preferir as variáveis WLS |
 | `too many sessions` / erro de licença WLS | Mais de 2 sessões | Não rode a suíte inteira com `GRB_*` (§7, passo 2) |
-| `Model too large for size-limited license` | Instância grande demais para a licença de avaliação | Não deve acontecer com os dados do projeto. Se acontecer, guarde a entrada e avise (A22) |
+| `Model too large for size-limited license` | Instância grande demais para a licença de avaliação | Não deve acontecer com os dados do projeto. Se acontecer, guarde a entrada e avise (A30, A34) |
 | `47 passed` vira `25 passed` | `reposicao.py` ou `test_reposicao.py` não copiados | §11.2 |
 | Reposição sempre com "não cobre nem os mínimos" | Orçamento menor que o custo dos mínimos (é o comportamento certo) | Confira o `valor_faltante` |
 | Deploy no Render falha no build | `mvnw` com fim de linha CRLF, ou arquivo fora do `.dockerignore` | O `backend/.gitattributes` já força LF no `mvnw`; confira o `.dockerignore` |
@@ -511,7 +501,7 @@ Sem a autorização da Gurobi, **você** demonstra as Telas 12, 13 e 14 no seu c
 
 ## Checklist final
 
-- [ ] Contrato v2 (aprovado em 27/10) aplicado ao oficial (com §1.6, §2.4 do descarte e §2.7–§2.9); `gurobipy` 13.0.3 (P2)
+- [x] Contrato v2 aplicado ao oficial e na `main` (27/10). Falta só conferir a §1 com o código; `gurobipy` 13.0.3 (P2)
 - [ ] `Modelo_Matematico_Producao.md` e o modelo da reposição escritos
 - [ ] Baseline `8 passed` → `47 passed` na sua máquina **e** em outra
 - [ ] Experimentos registrados (produção: 5 e 5 falhas; reposição: 2, 1 e 9)
@@ -519,7 +509,7 @@ Sem a autorização da Gurobi, **você** demonstra as Telas 12, 13 e 14 no seu c
 - [ ] `exemplos/` no repositório (inclusive os da reposição); eco com acentos pelo PowerShell
 - [ ] Fase 4A: 151/1/0 pelo Java; tempo confirmado
 - [ ] Fase 5: `ReposicaoTest` 8/8; `PythonRealTest` 3/3
-- [ ] Render: ensaio feito e apagado (opcional); deploy definitivo no sábado; schema carregado; URL e data de expiração do banco no README; CT67–CT70
+- [ ] Render: ensaio feito e apagado (opcional); deploy definitivo no sábado; schema carregado; URL e data de expiração do banco no README; CT67–CT70 e CT72; backup e restauração testados (§12.6)
 - [ ] `.env.example` com os comentários do `env.example`; branch `sprint-3` apagado (se a equipe concordar); CT20; registro do Git; Review e Retro; relatório da Sprint 3
 
 ## Fora da Sprint 3 (decisão A2b)

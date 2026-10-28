@@ -20,14 +20,14 @@
 >   - imagem Docker montada e rodada **com os limites do Render free** (512 MB, 0,1 CPU): sobe em 83 s; pico de 133 MiB; recomendação 151/1/0 com o Gurobi **dentro do container** em 3,1 s; fluxo completo sem falhas;
 >   - o comando que carrega o DDL no banco remoto foi testado (§12.4).
 > - **Defeito achado e corrigido (A8):** o PowerShell envia um BOM antes do JSON; os dois módulos leem com `utf-8-sig`.
-> - **Licença (corrigida em 27/10, A34):** você tem uma **WLS acadêmica**, válida até 25/09/2027, de uso **pessoal**. Desenvolvimento e testes rodam com a licença restrita do `pip`. **No Render, o solver só roda depois que a Gurobi autorizar por escrito** (A30): você envia a pergunta (`sprint-3-licenca-gurobi.md`, §3).
+> - **Licença (corrigida em 27/10, A34):** você tem uma **WLS acadêmica**, válida até 25/09/2027, de uso **pessoal**. Desenvolvimento e testes rodam com a licença restrita do `pip`. **Atualização de 28/10 (A38):** o suporte da Gurobi respondeu ao seu chamado: a WLS **não** pode ir para o Render (URL pública), mas a **licença restrita do `pip` pode**. No Render: `OTIMIZADOR_HABILITADO=true` e **nenhuma** `GRB_*`. Repasse o e-mail ao professor.
 > - **Não verificado:** a criação real do *blueprint* no Render (precisa da sua conta) e Python 3.14.7.
 
 ## 0. O que você entrega e em que ordem
 
 | Ordem | Entrega | Quando | Depende de | Libera |
 |---|---|---|---|---|
-| **1** | **Revisar o contrato oficial v2** (A10: aprovado em 27/10 e **já aplicado** a seu pedido; confira a seção 3 dele) e a P2 (**13.0.3**, decidida em 27/10) | **Ter 27** | — | **Lucas (Fase 3) e Leonardo (telas)** |
+| **1** | **Revisar o contrato oficial v2** (A10: aprovado em 27/10 e **já aplicado** a seu pedido; confira a seção 3 dele) e a P2 (**13.0.3**, decidida em 27/10) | **Qua 28** (A36; antes: ter 27) | — | **Lucas (Fase 3) e Leonardo (telas)** |
 | 2 | **PR da Fase P + Q:** módulos de produção e de reposição, testes e exemplos (`47 passed`) | Qua 28 – **Qui 29** | Item 1 (contrato oficial §1 e §1.7) | Lucas (Fase 4A); você (Fase 5) |
 | 3 | **Ensaio de deploy** (opcional, recomendado), numa conta pessoal, apagado no mesmo dia (A21) | Qui 29 ou Sex 30 | Fases 1–2 na `main` | Os problemas do Render aparecem antes do sábado |
 | 4 | Ambiente reproduzido numa **2ª máquina** | Qui 29 | Item 2 | — |
@@ -192,10 +192,10 @@ Get-Content -Raw -Encoding utf8 optimization\exemplos\entrada_contrato.json | py
 **Situação em 27/10 (A34, corrige a A22):** existe a **sua WLS acadêmica** (válida até 25/09/2027, só para você, trabalhos de disciplina). O `gurobipy` instalado pelo `pip` também vem com uma **licença restrita** que resolve problemas de tamanho limitado (página do `gurobipy` no PyPI). Os dois modelos do projeto cabem nela: 3 produtos e até 15 ingredientes, muito abaixo do limite. Todos os testes da auditoria, inclusive dentro do container de deploy, rodaram assim.
 
 1. **Desenvolvimento e testes:** nada a configurar. `pip install -r optimization/requirements.txt` e pronto.
-2. **Produção (Render):** **só com autorização escrita da Gurobi** (professor, 27/10; A30). Você responde ao e-mail de aprovação da sua licença com o texto de `sprint-3-licenca-gurobi.md` (§3). Com a autorização, cadastra no Render as variáveis do item 5; sem ela, vale o plano B (A31), e você faz a demonstração da otimização no seu computador, com a sua WLS.
+2. **Produção (Render):** **licença restrita do `pip`, autorizada por escrito pela Gurobi em 28/10** (A38). Não cadastre nenhuma variável do item 5 no Render: a sua WLS é proibida numa URL pública. O plano B1 (A31) fica como reserva. *(Texto de 27/10: "só com autorização escrita; com ela, cadastra no Render as variáveis do item 5".)*
 3. **Banner:** o `OutputFlag 0` antes de `start()` evita que mensagens de licença vazem para o `stdout`. O teste `test_stdout_contem_somente_o_json_em_utf8` é a guarda.
 4. **Segunda máquina:** peça a outro integrante que clone a branch, crie o próprio `venv`, rode `pip install -r optimization/requirements.txt` e `python -m pytest optimization/tests -q`. **Anote o resultado** (`47 passed`): é o que encerra a pendência "só funciona no PC do Kauê".
-5. **A sua WLS:** os módulos leem `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID`; o Java as repassa ao processo filho. **Nunca** no Git. A licença acadêmica permite 2 sessões simultâneas (token de 5 min): não rode a suíte inteira com essas variáveis; teste com poucos casos (`-k "contrato or didatico"`).
+5. **A sua WLS (só no seu computador, nunca no Render, A38):** os módulos leem `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID`; o Java as repassa ao processo filho. **Nunca** no Git. A licença acadêmica permite 2 sessões simultâneas (token de 5 min): não rode a suíte inteira com essas variáveis; teste com poucos casos (`-k "contrato or didatico"`).
 
 ## 8. Fase 4A, em dupla com o Lucas (sexta 30, A36)
 
@@ -214,9 +214,9 @@ O seu papel é **o contrato e a prova**. O Java já está pronto em `referencia/
 
 | # | Tarefa | Quando | Evidência |
 |---|---|---|---|
-| 1 | **Branch `sprint-3` e `.env.example` (A15, A29):** o merge do `sprint-3` na `main` foi feito em 27/10 (PR #25) e conferido: a correção do PR #24 continua. Agora a `main` tem **dois** arquivos de exemplo: `backend/.env.example` (5 variáveis) e `backend/env.example` (sem o ponto, com comentários e as variáveis da Sprint 3). Faça assim: (1) junte os dois no `backend/.env.example` e apague o `env.example`, num PR; (2) crie todo branch novo a partir da `main` atualizada. Os documentos da auditoria já chegaram à `main` (PR #27); o `sprint-3` pode ser apagado, se a equipe concordar | Ter 27 | PR do `.env.example` |
+| 1 | **Branch `sprint-3` e `.env.example` (A15, A29):** o merge do `sprint-3` na `main` foi feito em 27/10 (PR #25) e conferido: a correção do PR #24 continua. Agora a `main` tem **dois** arquivos de exemplo: `backend/.env.example` (5 variáveis) e `backend/env.example` (sem o ponto, com comentários e as variáveis da Sprint 3). Faça assim: (1) junte os dois no `backend/.env.example` e apague o `env.example`, num PR; (2) crie todo branch novo a partir da `main` atualizada. Os documentos da auditoria já chegaram à `main` (PR #27); o `sprint-3` pode ser apagado, se a equipe concordar | **Qua 28** (A36; antes: ter 27) | PR do `.env.example` |
 | 2 | **Daily de 10 minutos** (seg a sáb): o que fiz, o que farei, o que me bloqueia. Bloqueio → resolver no mesmo dia (regra da equipe) | Diária | Notas curtas em `docs/Sprint_3/` |
-| 3 | **Resposta do professor recebida em 27/10** (`resposta-professor.md`). Ele também foi **avisado pessoalmente em 27/10** da sua WLS (A34) e do B1, e manteve a orientação: validar com a Gurobi antes do Render. Sua parte: enviar o pedido à Gurobi (`sprint-3-licenca-gurobi.md`, §3) | Ter 27 | Pedido enviado |
+| 3 | **Resposta do professor recebida em 27/10** (`resposta-professor.md`). Ele também foi **avisado pessoalmente em 27/10** da sua WLS (A34) e do B1, e manteve a orientação: validar com a Gurobi antes do Render. Sua parte: enviar o pedido à Gurobi (`sprint-3-licenca-gurobi.md`, §3). **Feito: resposta escrita em 28/10 (A38)**; falta repassá-la ao professor | Ter 27 → Qua 28 | Pedido enviado; e-mail repassado ao professor |
 | 4 | **CT20:** um integrante sobe o projeto do zero **só** com o README; anote onde travou | Dom 01/11 | Relato e PR no README |
 | 5 | **Registro da perda do histórico do Git:** meia página com a data (27/09; primeiro commit `9e02498`), o motivo (conflitos de estrutura) e o que foi preservado | Até 31/10 | `docs/Sprint_3/` |
 | 6 | **Retrospectiva da Sprint 2** (nunca realizada) e da Sprint 3, juntas em 30 min. Registre a contradição: as contribuições individuais da Sprint 2 marcam "Retrospectiva" como feita, mas o relatório diz que não houve | Dom 01/11 | Ata no padrão da `sprint-1-ata-retrospectiva.md` |
@@ -367,7 +367,7 @@ Copie de `docs/Sprint_3/referencia/deploy/` para a **raiz** do repositório: `Do
 |---|---|
 | `Dockerfile` | Estágio 1: compila o backend com o Maven do projeto. Estágio 2: Python 3.14 + `gurobipy` 13.0.3 + o JRE 25 da imagem oficial Temurin; usuário sem privilégio; heap limitada para sobrar memória ao Python |
 | `.dockerignore` | Lista do que **pode** entrar (`backend/` e `optimization/app/`). `.env`, `docs/`, `.git` e `venv` ficam de fora |
-| `render.yaml` | O serviço web (Docker, *health check* em `/api/saude`) e o banco. `DB_*` vêm do banco; `JWT_SECRET` é gerado pelo Render; `CORS_ALLOWED_ORIGIN` é perguntado na criação. **Não há `GRB_*` no arquivo**: só você as cria no painel, e só com a autorização da Gurobi (A30, A34). **`OTIMIZADOR_HABILITADO=false`** (plano B1, A31): com a autorização, troque para `true` no painel |
+| `render.yaml` | O serviço web (Docker, *health check* em `/api/saude`) e o banco. `DB_*` vêm do banco; `JWT_SECRET` é gerado pelo Render; `CORS_ALLOWED_ORIGIN` é perguntado na criação. **Não há `GRB_*` no arquivo, nem no painel** (A38: a Gurobi autorizou a licença do `pip` e proibiu a WLS numa URL pública). **`OTIMIZADOR_HABILITADO=true`**; para ligar a reserva B1 (A31), troque para `false` no painel |
 
 ### 12.2 Testar a imagem na sua máquina antes (recomendado)
 
@@ -441,12 +441,12 @@ docker run --rm postgres:16 psql "$URL" -tA -c "SELECT nome, quantidade_estoque 
 | 1 | `https://<seu-servico>.onrender.com/api/saude` | `{"status":"ok","banco":"ok"}` (a primeira vez pode levar ~1 min) |
 | 2 | `https://<seu-servico>.onrender.com/api/teste/python` | `401` (o eco não existe em produção) |
 | 3 | No Pages: cadastro, login, ingredientes | Sem erro de CORS no F12 |
-| 4 | Recomendação com o seed de demonstração | **Plano B1 (A31), sem autorização da Gurobi:** `503` com "A recomendação está disponível só na demonstração local da equipe." **Com autorização** (variável em `true` e `GRB_*` criadas por você): 151/1/0 |
+| 4 | Recomendação com o seed de demonstração | **151/1/0** (A38: licença do `pip`, variável em `true`, sem `GRB_*`). Só com a reserva B1 ligada (`false`): `503` com "A recomendação está disponível só na demonstração local da equipe." |
 | 5 | Logs do serviço no painel | Sem `ERROR`; sem senha ou token impressos |
 
 **Domingo 01/11** (A36): o fluxo inteiro do CT68 na URL publicada (o que entrar na `main` depois do deploy de sábado é publicado sozinho). Guarde prints com a URL visível em `docs/Sprint_3/evidencias/`.
 
-**Licença (A30, resposta do professor):** enquanto a Gurobi não autorizar por escrito, o solver **não** roda no Render. O item 4 da tabela acima vale só com a autorização; sem ela, vale o plano B (`sprint-3-licenca-gurobi.md`, §4).
+**Licença (A38, 28/10):** autorizada por escrito a licença do `pip` no Render (`sprint-3-licenca-gurobi.md`, §0). Se o item 4 falhar por memória ou tempo esgotado, guarde o log, ligue a reserva B1 (`false` no painel) e avise o grupo. **Nunca** coloque a sua WLS no Render para "resolver".
 
 ### 12.6 Backup e restauração do banco (pedido do professor; A32)
 
@@ -478,9 +478,9 @@ docker rm -f mf-restore
 
 **O que já foi verificado (27/10, auditoria):** com containers locais PostgreSQL 16, a cópia (`pg_dump -Fc`) do banco com o DDL e o `seed_demo.sql` foi restaurada num banco novo, de **outro dono**, com `--no-owner --no-privileges`. Ficaram iguais: as contagens das 7 tabelas, a soma dos saldos, a regra do saldo (0 violações) e o texto `Açaí (polpa)`. Depois da restauração, um cadastro novo recebeu o id seguinte, sem colisão. **Contra o Render, não foi testado** (o `pg_dump` pela URL com `sslmode=require` depende da conta).
 
-### 12.7 Demonstração local da otimização (plano B1, A31)
+### 12.7 Demonstração local da otimização (só se a reserva B1 for ligada, A31)
 
-Sem a autorização da Gurobi, **você** demonstra as Telas 12, 13 e 14 no seu computador, com a sua WLS. O passo a passo está em `sprint-3-licenca-gurobi.md`, §5. Ensaie uma vez antes da apresentação.
+Desde a A38 (28/10), a otimização é mostrada **na URL publicada**. Esta seção só vale se a reserva B1 for ligada: aí **você** demonstra as Telas 12, 13 e 14 no seu computador. O passo a passo está em `sprint-3-licenca-gurobi.md`, §5. Ensaie uma vez antes da apresentação.
 
 ## Erros comuns
 
@@ -488,7 +488,7 @@ Sem a autorização da Gurobi, **você** demonstra as Telas 12, 13 e 14 no seu c
 |---|---|---|
 | `JSON de entrada inválido` no pipe do PowerShell | Módulo antigo, sem `utf-8-sig` (o PowerShell envia BOM) | Use o `otimizador.py` de `referencia/`, ou `cmd /c "… < arquivo.json"` |
 | Acentos viram `?` no eco | Codificação do pipe | Mesma solução; ou `cmd /c` com redirecionamento |
-| `JSONDecodeError` nos testes | Banner da licença no `stdout` (fallback do `gurobi.lic`) | `OutputFlag 0` antes de `start()`; preferir as variáveis WLS |
+| `JSONDecodeError` nos testes | Banner da licença no `stdout` (fallback do `gurobi.lic`) | `OutputFlag 0` antes de `start()` (a licença do `pip` também imprime um banner) |
 | `too many sessions` / erro de licença WLS | Mais de 2 sessões | Não rode a suíte inteira com `GRB_*` (§7, passo 2) |
 | `Model too large for size-limited license` | Instância grande demais para a licença de avaliação | Não deve acontecer com os dados do projeto. Se acontecer, guarde a entrada e avise (A30, A34) |
 | `47 passed` vira `25 passed` | `reposicao.py` ou `test_reposicao.py` não copiados | §11.2 |

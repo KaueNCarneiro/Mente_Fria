@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * Plano B da licença (A31 = B1, 27/10): liga e desliga o solver sem mudar código.
- * OTIMIZADOR_HABILITADO=false (Render, enquanto a Gurobi não autorizar): produção e reposição respondem 503,
- * sem chamar o Python. Localmente fica ligado (padrão true), para a demonstração com a WLS do Kauê.
+ * Plano B da licença (A31 = B1, 27/10), reserva desde 28/10 (A38): liga e desliga o solver sem mudar código.
+ * Padrão true, inclusive no Render (licença do pip autorizada pela Gurobi). Com OTIMIZADOR_HABILITADO=false,
+ * produção e reposição respondem 503 sem chamar o Python (usar só se o solver der problema no Render).
  */
 @Component
 public class ChaveOtimizador {

@@ -107,7 +107,8 @@ def validar_e_converter(entrada):
 def _criar_env():
     env = gp.Env(empty=True)
     env.setParam("OutputFlag", 0)          # nada de banner no stdout
-    # Licença WLS por variáveis de ambiente (produção, Alternativa C); sem elas, usa gurobi.lic.
+    # Com GRB_WLS* (só no computador do titular da WLS; nunca no Render, A38), usa a WLS; sem elas, o gurobi.lic
+    # da máquina ou, se não houver, a licença limitada do pip (a do Render e dos testes, A38).
     if os.environ.get("GRB_WLSACCESSID"):
         env.setParam("WLSACCESSID", os.environ["GRB_WLSACCESSID"])
         env.setParam("WLSSECRET", os.environ["GRB_WLSSECRET"])

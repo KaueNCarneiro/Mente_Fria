@@ -4,7 +4,7 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-**Última atualização:** 27/10/2026 (Sprint 3: Adendo nº 1 ao Termo de Aceite aprovado; decisões A1–A36 em `docs/Sprint_3/sprint-3-decisoes-e-pendencias.md`)
+**Última atualização:** 28/10/2026 (licença do Gurobi no Render, A38). Antes: 27/10/2026 (Sprint 3: Adendo nº 1 ao Termo de Aceite aprovado; decisões A1–A38 em `docs/Sprint_3/sprint-3-decisoes-e-pendencias.md`)
 
 > **Status:** decisões D1 a D5 validadas pela equipe em 18/09/2026 (D4 registrada com base na experiência declarada da equipe — ver seção 2). Itens marcados como **proposta** ainda não foram validados e devem ser confirmados na implementação. As pendências estão na seção 8.
 >
@@ -16,7 +16,7 @@
 > - **Objetivo do modelo: lucro estimado**, não receita (Adendo nº 1 ao Termo, aprovado em 27/10). Lucro por copo = preço de venda − custo dos ingredientes da composição.
 > - **Estoque por linhas de entrada**, com baixa pela validade mais próxima (FEFO); estoque vencido nunca é vendido (D10). O saldo válido é o que vai para o Python.
 > - **Dois módulos Python:** `otimizador.py` (produção) e `reposicao.py` (reposição com orçamento, US14). A D5 foi revista (abaixo).
-> - **Gurobi 13.0.3** (P2). **Não há Compute Server.** Licenças: a **WLS acadêmica do Kauê** (pessoal, válida até 25/09/2027; A34) e a licença restrita do `pip` no desenvolvimento e nos testes. **No Render, o solver só roda com autorização escrita da Gurobi** (A30); sem ela, `OTIMIZADOR_HABILITADO=false` e as rotas de otimização respondem `503` (plano B1, A31).
+> - **Gurobi 13.0.3** (P2). **Não há Compute Server.** Licenças: a **WLS acadêmica do Kauê** (pessoal, válida até 25/09/2027; A34) e a licença restrita do `pip` no desenvolvimento e nos testes. **No Render, o solver roda com a licença restrita do `pip`, autorizada por escrito pela Gurobi em 28/10/2026** (A38), sem nenhuma variável `GRB_*`; a WLS **não** pode ser usada numa URL pública. Reserva: com `OTIMIZADOR_HABILITADO=false`, as rotas de otimização respondem `503` (plano B1, A31).
 > - **Deploy:** backend em Docker no Render (plano free), PostgreSQL 16 no Render, frontend no GitHub Pages por Actions; banco criado no sábado 31/10 à noite, sistema no ar até 30/11/2026, com backup testado (A21, A32).
 > - **Datas e horas** vêm de um relógio em `America/Sao_Paulo` no Java (A9); `/api/teste/python` só no perfil `dev` (F4); **uma otimização por vez** (A27).
 > - O código da Sprint 3 está **escrito e testado** em `docs/Sprint_3/referencia/` e entra nas pastas reais pelos PRs de cada fase (roteiro da Sprint 3).
@@ -69,7 +69,7 @@ Confirmado pela equipe em 18/09/2026: o plano Free do Render aceita Docker (nece
 | Python | **3.14** | Testado com o **3.14.0** em 26/10/2026 (47 testes). O 3.14.7, citado antes, **não foi testado** (sem impacto conhecido). |
 | Gurobi | **13.0.3** — **definido em 27/10/2026 (P2)** | Antes 13.0.1 (08/10). As duas versões passaram nos 47 testes; o `optimization/requirements.txt` e o `Dockerfile` fixam `gurobipy==13.0.3`. |
 | Modelo matemático | **Programação Linear Inteira pura** — definido em 08/10/2026 | Termo a usar em documentos, apresentação e código. Resolve o item de terminologia antes em aberto. |
-| Licença do Gurobi | **Atualizada em 27/10/2026 (A34, A30):** desenvolvimento e testes usam a **licença restrita do `pip`** (pesquisa, desenvolvimento e avaliação; até 2.000 variáveis e 2.000 restrições). Existe uma **WLS acadêmica do Kauê**, de uso pessoal, válida até **25/09/2027**. **Não há Compute Server.** | No Render, o solver só roda com **autorização escrita da Gurobi**; até lá vale o plano B1 (A31). As decisões de 02/10 (Compute Server local) e 08/10 ("licença do Lucas", 90 dias) ficaram sem efeito. |
+| Licença do Gurobi | **Atualizada em 27/10/2026 (A34, A30):** desenvolvimento e testes usam a **licença restrita do `pip`** (pesquisa, desenvolvimento e avaliação; até 2.000 variáveis e 2.000 restrições). Existe uma **WLS acadêmica do Kauê**, de uso pessoal, válida até **25/09/2027**. **Não há Compute Server.** | **28/10/2026 (A38):** a Gurobi autorizou por escrito a licença do `pip` no Render e vetou a WLS numa URL pública. O plano B1 (A31) fica como reserva. As decisões de 02/10 (Compute Server local) e 08/10 ("licença do Lucas", 90 dias) ficaram sem efeito. |
 | Autenticação | **Spring Security + biblioteca de JWT** (ex.: `jjwt`) | |
 | Conversão de porções (item B1 do Contrato) | **O frontend converte**, usando a `porcao_padrao` de cada ingrediente | Fecha também o item B1 da seção 2.4 do Contrato de Comunicação |
 | Ingredientes vencidos na otimização | **Não contam** como estoque disponível | Desde a Sprint 3, o estoque é **por linha de entrada**: o Java soma só as linhas não vencidas (saldo válido) antes de montar o JSON (D10) |
@@ -119,7 +119,7 @@ O **Contrato de Comunicação** (mantido pelo Kauê; revisado e aprovado em 20/0
 
 1. O backend lê o estoque, os produtos ativos e as composições no banco e monta o JSON de entrada.
 2. Executa `python optimization/app/otimizador.py` (produção) ou `python optimization/app/reposicao.py` (reposição) com `ProcessBuilder` e envia o JSON pela entrada padrão, **uma execução por vez** (A27).
-3. **Dentro do módulo:** o modelo é resolvido no próprio processo, com a licença disponível na máquina: a restrita do `pip` (desenvolvimento e testes) ou a WLS por variáveis `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` (só com a autorização da Gurobi para o Render, A30). **Não há Compute Server.** Com `OTIMIZADOR_HABILITADO=false`, o Java responde `503` sem chamar o Python (plano B1, A31).
+3. **Dentro do módulo:** o modelo é resolvido no próprio processo, com a licença disponível na máquina: a restrita do `pip` (desenvolvimento e testes) (também no Render, autorizada pela Gurobi em 28/10, A38) ou a WLS por variáveis `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` (só no computador do Kauê; **nunca** no Render, A38). **Não há Compute Server.** Com `OTIMIZADOR_HABILITADO=false`, o Java responde `503` sem chamar o Python (plano B1, A31).
 4. O Java lê o JSON de saída na saída padrão, com **timeout de 10 s** (medido: 188 ms a 3,1 s).
 5. Devolve o resultado ao frontend em linguagem de negócio (sem termos de otimização — US11).
 
@@ -195,11 +195,11 @@ A requisição, a resposta e as regras estão no **Contrato de Comunicação** (
 | `PYTHON_CMD` | Backend | Comando para chamar o Python (`python`, `python3` ou `py`, conforme a máquina). **O valor é ajustado por cada integrante no próprio `.env`**; o nome da variável é o mesmo para todos | Planejada (README) |
 | `OTIMIZADOR_SCRIPT` | Backend | Caminho do script `otimizador.py`, relativo à pasta de onde o backend inicia (hoje `../optimization/app/otimizador.py`). Valor ajustado por integrante no `.env` | Usada pelo código da Sprint 3 |
 | `REPOSICAO_SCRIPT` | Backend | Caminho do `reposicao.py` (`../optimization/app/reposicao.py`) | Usada pelo código da Sprint 3 |
-| `OTIMIZADOR_HABILITADO` | Backend | `true` (padrão) chama o Python; `false` faz produção e reposição responderem `503` (plano B1, A31) | Usada pelo código da Sprint 3; **`false` no Render** até a Gurobi autorizar |
+| `OTIMIZADOR_HABILITADO` | Backend | `true` (padrão) chama o Python; `false` faz produção e reposição responderem `503` (plano B1, A31) | Usada pelo código da Sprint 3; **`true` no Render** desde a A38 (28/10); `false` só para ligar a reserva B1 |
 | `OTIMIZADOR_TIMEOUT_SEGUNDOS` | Backend | Tempo limite de cada execução do Python (padrão 10) | Usada pelo código da Sprint 3 |
 | `MF_PYTHON` | Testes do backend | Caminho do Python com `gurobipy`, para os testes que chamam o Python de verdade (opcional) | Só nos testes |
 | `GRB_COMPUTESERVER`, `GRB_SERVERPASSWORD` | — | Eram para o Compute Server | **Descartadas** em 27/10/2026 (A34: não há Compute Server) |
-| `GRB_WLSACCESSID`, `GRB_WLSSECRET`, `GRB_LICENSEID` | Módulos Python (repassadas pelo Java) | Credenciais da WLS acadêmica, **pessoal**, do Kauê (A34) | Só o Kauê as usa. No Render, **só com a autorização escrita da Gurobi** (A30); nunca no código nem no Git |
+| `GRB_WLSACCESSID`, `GRB_WLSSECRET`, `GRB_LICENSEID` | Módulos Python (repassadas pelo Java) | Credenciais da WLS acadêmica, **pessoal**, do Kauê (A34) | Só o Kauê as usa, no computador dele. **Nunca no Render** (a Gurobi vetou a WLS numa URL pública, A38), nem no código, nem no Git |
 
 O `.env` real nunca é versionado; o `.env.example` lista as variáveis sem valores.
 
@@ -235,6 +235,8 @@ O `.env` real nunca é versionado; o `.env.example` lista as variáveis sem valo
 
 ## 8. Pendências
 
+> **Nota de 28/10/2026:** esta seção é cronológica. As entradas de 27/09 a 08/10 sobre Compute Server, "licença do Lucas", 90 dias e WLS no container de produção foram **substituídas** pela A34 e pela A38. Situação atual: no Render, licença restrita do `pip` (autorizada por escrito pela Gurobi); a WLS do Kauê só no computador dele.
+
 **Decididas pelo grupo em 25/09/2026** (`docs/Sprint_3/historico/Pendencias_ARQUITETURA_para_o_grupo.md`) — ver a tabela da seção 2.1:
 - Versões de JDK, Spring Boot, build tool, Python e licença do Gurobi.
 - Autenticação (Spring Security + JWT).
@@ -258,7 +260,7 @@ O `.env` real nunca é versionado; o `.env.example` lista as variáveis sem valo
 - **Renovação da licença do Lucas:** só será necessária se a demonstração cair após o vencimento (90 dias a partir da geração). Uso previsto: exclusivamente acadêmico/demonstração (seção 3.3).
 - **Enquadramento nas regras da licença acadêmica:** uso acadêmico se enquadra; uso operacional contínuo pelo cliente depois da disciplina não (seção 3.3).
 
-**Decidida em 08/10/2026 — produção:** **Alternativa C** (licença WLS direta no container do backend, sem Compute Server). A Opção A foi descartada.
+**Decidida em 08/10/2026 — produção:** **Alternativa C** (licença WLS direta no container do backend, sem Compute Server). A Opção A foi descartada. **[Substituída em 28/10 pela A38: a Gurobi proibiu a WLS numa URL pública; o container usa a licença do `pip`.]**
 
 **Resolvidas em 26–27/10/2026 (Sprint 3):**
 - **Credenciais WLS por variáveis de ambiente:** os módulos já leem `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` (código de referência).
@@ -268,4 +270,4 @@ O `.env` real nunca é versionado; o `.env.example` lista as variáveis sem valo
 - **Versão do Gurobi:** 13.0.3 (P2).
 
 **Segue em aberto (27/10/2026):**
-- **Autorização da Gurobi** para rodar o solver no Render (A30). Até ela chegar, vale o plano B1 (A31).
+- ~~Autorização da Gurobi para rodar o solver no Render (A30)~~ **Recebida em 28/10 (A38)**: licença do `pip`. Falta conferir no Render real (CT68).

@@ -43,8 +43,8 @@
 | 6 | **Dashboard e marketing** (5 + 4 testes, mais 3 da otimização desligada) | **Sáb 31** | Fases 3 e 4A; repositório do dashboard (Diogo) | Telas 03 e 14 |
 | 8 | **Deploy** (A21): ensaio opcional numa conta pessoal; **definitivo no sábado** | Qui 29 ou Sex 30 (ensaio) e **Sáb 31, à noite** (definitivo) | Fases 1–2 na `main` (ensaio); tudo na `main` (definitivo) | Janela de testes |
 | — | Decidir **quem** cria a conta definitiva do Render (PO) | **Sex 30** | — | Deploy de sábado à noite |
-| — | **Gatilhos da A28** (PO): cortar o botão da A12? Sprint 4 relâmpago no domingo? Solver ou B1? | **Sáb 31, à tarde** | — | Deploy da noite |
-| — | Revisar o adendo e o pedido de prazo (02/11) antes de o Diogo enviar ao professor | **Qua 28** | — | Calendário (A36) |
+| — | **Gatilhos da A28** (PO): cortar o botão da A12? Sprint 4 relâmpago no domingo? Solver ligado no deploy (A38; B1 só se houver problema)? | **Sáb 31, à tarde** | — | Deploy da noite |
+| — | ~~Revisar o adendo e o pedido de prazo (02/11)~~ **Não é mais preciso:** o professor aprovou os dois pessoalmente em 27/10 | — | — | — |
 
 A **Fase 5 (reposição)** é do Kauê (tutorial dele, §11). Você revisa o PR.
 
@@ -429,8 +429,8 @@ O passo a passo do Render está no tutorial do **Kauê, §12**; o do GitHub Page
    - **No mesmo dia, apagar o banco e o serviço do ensaio.** Cada conta só pode ter um banco gratuito ativo.
    - Sem o ensaio, o primeiro contato com o Render é no sábado, dois dias antes do fim. Os problemas mais prováveis (memória, tempo de subida, CORS) já foram simulados na máquina, mas o Render real não.
 2. **Sexta 30:** como PO, decidir **quem** cria a conta definitiva.
-3. **Licença (A30, resposta do professor em 27/10):** o uso do solver no Render **não está autorizado** até a Gurobi confirmar por escrito. Quem envia o pedido à Gurobi é o **Kauê**, titular da licença (`sprint-3-licenca-gurobi.md`, §3). O plano B já foi decidido: **B1** (A31). Como PO, no sábado 31 à tarde (A36), confirme se o deploy da noite vai com o solver (só com a autorização escrita) ou com o B1. Se a Gurobi autorizar, **o Kauê** (titular da WLS, A34) cria as variáveis `GRB_*` no Render; sem autorização, não rode o solver lá.
-4. **Sábado 31, à noite: deploy definitivo** pelo *blueprint*, com tudo na `main` (o banco expira no mesmo horário de 30/11, a data-limite; A32). Anotar no README a **data de expiração do banco** (30/11). Depois, rodar no ambiente publicado o fluxo do CT68 e conferir CT69, CT70 e **CT72**. Com o B1, a recomendação, a reposição e o marketing mostram o aviso do `503` na URL, e são demonstrados localmente pelo Kauê.
+3. **Licença (A38, 28/10):** a Gurobi autorizou **por escrito** o uso da **licença restrita do `pip`** no Render; a WLS do Kauê **não** pode ir para uma URL pública. No Render: `OTIMIZADOR_HABILITADO=true` e **nenhuma** variável `GRB_*`. O plano B1 (A31) fica como **reserva**: se o solver der problema no Render (memória, tempo esgotado), troque a variável para `false` no painel. Como PO, no sábado 31 à tarde (A36), confirme que o deploy da noite vai com o solver ligado. *(Antes da A38: "não autorizado até a Gurobi confirmar"; resposta em `sprint-3-licenca-gurobi.md`, §0.)*
+4. **Sábado 31, à noite: deploy definitivo** pelo *blueprint*, com tudo na `main` (o banco expira no mesmo horário de 30/11, a data-limite; A32). Anotar no README a **data de expiração do banco** (30/11). Depois, rodar no ambiente publicado o fluxo do CT68 e conferir CT69, CT70 e **CT72**. Com a A38, a recomendação (151/1/0 com o seed), a reposição e o marketing **funcionam na URL**. O CT72 confere a reserva: com a variável em `false`, eles mostram o aviso do `503` (opcional no Render; depois, volte para `true`).
 
 **O que a simulação local mostrou** (container com 512 MB e 0,1 CPU):
 
@@ -449,7 +449,7 @@ O plano free **dorme após 15 min**: antes de uma demonstração, abra a URL uns
 
 1. Um PR por fase, com Conventional Commits, revisão de um colega e a saída do `mvnw test` daquela fase.
 2. **README:**
-   - `JWT_SECRET`, `CORS_ALLOWED_ORIGIN`, `PYTHON_CMD`, `OTIMIZADOR_SCRIPT` e `REPOSICAO_SCRIPT` passam para "obrigatórias"; acrescentar `OTIMIZADOR_HABILITADO` (padrão `true`; `false` no Render com o B1, A31) e `OTIMIZADOR_TIMEOUT_SEGUNDOS` (padrão 10);
+   - `JWT_SECRET`, `CORS_ALLOWED_ORIGIN`, `PYTHON_CMD`, `OTIMIZADOR_SCRIPT` e `REPOSICAO_SCRIPT` passam para "obrigatórias"; acrescentar `OTIMIZADOR_HABILITADO` (padrão `true`; `true` também no Render desde a A38; `false` só para ligar a reserva B1, A31) e `OTIMIZADOR_TIMEOUT_SEGUNDOS` (padrão 10);
    - o perfil `dev`;
    - como rodar `mvnw test` (Docker ligado; `MF_PYTHON` opcional);
    - o `.env` sem BOM;

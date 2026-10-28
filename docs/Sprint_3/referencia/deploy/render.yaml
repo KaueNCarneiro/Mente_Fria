@@ -26,12 +26,13 @@ services:
         generateValue: true            # 256 bits aleatórios em base64 (44 caracteres; o JwtService exige 32+)
       - key: CORS_ALLOWED_ORIGIN
         sync: false                    # o Render pergunta na criação. Ex.: https://kauencarneiro.github.io (sem barra no fim)
-      # Plano B da licença (A31): o solver fica DESLIGADO no Render até a Gurobi autorizar por escrito (A30).
-      # Desligado, produção e reposição respondem 503 com mensagem; o resto do sistema funciona.
+      # Licença (A38, 28/10/2026): a Gurobi autorizou por escrito a licença limitada do pip neste serviço.
+      # Por isso o solver fica LIGADO e NÃO existe nenhuma variável GRB_* aqui: sem elas, o gurobipy usa a
+      # licença do pip, que vem na imagem. A WLS do Kauê NÃO pode ser usada em URL pública (resposta da Gurobi).
+      # Reserva (plano B1, A31): se o solver der problema no Render, trocar para "false" no painel;
+      # produção e reposição passam a responder 503 com mensagem e o resto do sistema continua funcionando.
       - key: OTIMIZADOR_HABILITADO
-        value: "false"
-      # Com a autorização: o Kauê (titular da WLS acadêmica, A34) cria no painel GRB_WLSACCESSID, GRB_WLSSECRET
-      # e GRB_LICENSEID e troca OTIMIZADOR_HABILITADO para true. Nunca no Git.
+        value: "true"
 
 databases:
   - name: mente-fria-db

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.context.TestPropertySource;
 
 /**
- * Plano B da licença (A31 = B1, CT72): com OTIMIZADOR_HABILITADO=false, como no Render enquanto a Gurobi não autorizar,
+ * Plano B da licença (A31 = B1, CT72; reserva desde a A38): com OTIMIZADOR_HABILITADO=false, a chave de reserva do Render,
  * nada chama o Python. Produção e reposição respondem 503 com mensagem tratada; o resto do sistema segue normal.
  */
 @TestPropertySource(properties = "app.otimizador.habilitado=false")

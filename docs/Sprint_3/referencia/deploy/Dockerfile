@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1
 # Mente Fria — backend Java + módulos Python (Gurobi) num único container (Arquitetura: Alternativa C).
 # Contexto do build = RAIZ do repositório:   docker build -t mente-fria-backend .
-# Nenhum segredo entra na imagem: banco, JWT_SECRET e licença chegam por variáveis de ambiente do Render.
+# Nenhum segredo entra na imagem: banco e JWT_SECRET chegam por variáveis de ambiente do Render.
+# Licença do Gurobi: a limitada do pip, que vem com o gurobipy instalado abaixo (autorizada pela Gurobi, A38); sem GRB_*.
 
 # ---- 1. Compilar o backend (JDK 25 + Maven wrapper do projeto)
 FROM eclipse-temurin:25-jdk-noble AS build

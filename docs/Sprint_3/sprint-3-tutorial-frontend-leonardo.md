@@ -22,8 +22,8 @@
 
 | Ordem | Entrega | Quando | Depende de |
 |---|---|---|---|
-| 1 | Baseline (22 OK) e retrato das telas | **Seg 26** | Nada |
-| 2 | `app.js` dividido em módulos (PR) | Seg 26 – Qua 28 | Nada (**não espera o backend**) |
+| 1 | Baseline (22 OK) e retrato das telas | **Qua 28** (A36; antes: seg 26) | Nada |
+| 2 | `app.js` dividido em módulos (PR) | **Qua 28** | Nada (**não espera o backend**) |
 | 3 | Guarda de rotas por lista (PR) | Qua 28 | Item 2 |
 | 4 | **`config.js` de produção e *workflow* do Pages** (§9), com o Kauê | **Qui 29** | Nada (a URL definitiva do Render só sai no sábado à noite) |
 | 5 | Telas de Estoque e Pedido contra o Contrato v2, com API simulada | Qui 29 | Contrato v2 (A10, **aprovado em 27/10**) |
@@ -33,7 +33,7 @@
 | 9 | **Telas 13 (Reposição) e 14 (Marketing)**. A 14 pode ficar com o Lucas, se apertar | Dom 01/11 | Fases 5 e 6 |
 | 10 | Investigar o Playwright instável (A13) | Até Dom 01/11 | — |
 | 11 | **Botão "Descartar"** no detalhe das linhas (A12, **opcional**) | Sáb 31 | Lucas (Fase 3). **É o primeiro a sair** se a conferência de sábado à tarde mostrar atraso (A28) |
-| 12 | Aceite **na URL publicada** (com o B1, as Telas 12, 13 e 14 mostram o aviso do `503`) | Seg 02/11 | Deploy final |
+| 12 | Aceite **na URL publicada**, com a otimização funcionando (A38; só com a reserva B1 as Telas 12, 13 e 14 mostrariam o aviso do `503`) | Seg 02/11 | Deploy final |
 
 **Pronto quando:**
 1. `app.js` dividido, com `IGUAIS` e 22 OK;
@@ -301,7 +301,7 @@ const payloadPedido = (clienteId, itens) => ({cliente_id: clienteId ? Number(cli
 
 **Bloqueada até a Fase 4A** (o Contrato v2 já está aprovado e na `main`).
 
-**Plano B1 da licença (A31), vale para as Telas 12, 13 e 14:** no Render, a otimização fica desligada até a Gurobi autorizar. Aí `POST /api/producao/recomendacao` e `POST /api/reposicao/recomendacao` respondem **`503`** com `{"mensagem":"A recomendação está disponível só na demonstração local da equipe."}`. Mostre essa `mensagem` como **aviso informativo** (não como erro em vermelho) e mantenha a tela utilizável. No marketing, a mensagem já vem pronta no campo `mensagem`. Nos testes de navegador, simule também um `503`.
+**Plano B1 da licença (A31), vale para as Telas 12, 13 e 14:** desde 28/10 (A38) a Gurobi autorizou a otimização no Render, então o B1 é só **reserva**. Mas as telas precisam continuar preparadas: se a reserva for ligada, `POST /api/producao/recomendacao` e `POST /api/reposicao/recomendacao` respondem **`503`** com `{"mensagem":"A recomendação está disponível só na demonstração local da equipe."}`. Mostre essa `mensagem` como **aviso informativo** (não como erro em vermelho) e mantenha a tela utilizável. No marketing, a mensagem já vem pronta no campo `mensagem`. Nos testes de navegador, simule também um `503`.
 
 - Botão **"Gerar recomendação"** → `request('/api/producao/recomendacao', {method:'POST'})`, com "Calculando…". O `REQUEST_TIMEOUT_MS` (15 s) é maior que os 10 s do backend.
 - Mostre "Quanto produzir" (produto, quantidade, lucro por copo) e dois destaques: **"Lucro potencial"** (`margem_estimada`) e **"Receita estimada"**.
@@ -464,7 +464,7 @@ O *workflow* e o `config.js` **não foram executados no GitHub** na auditoria: d
 - [ ] Baseline (22 OK, registrando quantas rodadas) e `retrato_antes.json`
 - [ ] `app.js` dividido; `node --check`; **`IGUAIS`**; 22 OK
 - [ ] Guarda por lista (tabela da §4)
-- [ ] `config.js` de produção e *workflow* do Pages; `testar_apoio_telas.mjs` com 15/15; Telas 12, 13 e 14 com a mensagem do `503` (A31)
+- [ ] `config.js` de produção e *workflow* do Pages; `testar_apoio_telas.mjs` com 15/15; Telas 12, 13 e 14 com a mensagem do `503` (reserva B1, A31) testada com a API simulada
 - [ ] Aceite real da Fase 2 com 16 evidências
 - [ ] Estoque, Pedido, Produção, **Dashboard, Reposição e Marketing** com testes e **sem termo técnico**
 - [ ] A13 investigada e registrada

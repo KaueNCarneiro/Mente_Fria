@@ -4,7 +4,7 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-**Revisão:** **27/10/2026 — versão 2 (Sprint 3)**, aprovada pela equipe e autorizada pelo Kauê (histórico na seção 3). Versões anteriores: 20/09/2026 (revisão de consistência, aprovada pelo Kauê) e 08/10/2026 (itens B3, B5, B6 e D3 confirmados).
+**Revisão:** **27/10/2026 — versão 2 (Sprint 3)**, aprovada pela equipe e autorizada pelo Kauê (histórico na seção 3). **28/10/2026:** nota de licença atualizada (A38); nenhum formato mudou. Versões anteriores: 20/09/2026 (revisão de consistência, aprovada pelo Kauê) e 08/10/2026 (itens B3, B5, B6 e D3 confirmados).
 
 > **Fonte de verdade.** Este documento prevalece sobre a `docs/Apoio/Arquitetura.md` e sobre os roteiros nos **nomes de campo, nos valores de `status` e no formato de erro**.
 >
@@ -154,9 +154,9 @@ O endpoint temporário `GET /api/teste/python` (o Java lê o nome do primeiro in
 
 ### 1.6 Licença do Gurobi e execução
 
-- **Licenças disponíveis** (A34, 27/10/2026): uma **WLS acadêmica** do Kauê, válida até 25/09/2027, de uso **pessoal** ("uma única pessoa específica"), para trabalhos de disciplina; e a **licença restrita** que vem com o `gurobipy` 13.0.3 instalado pelo `pip` (decisão P2), usada no desenvolvimento e nos testes. Não há Gurobi Compute Server: ele não é necessário, porque a WLS roda dentro do próprio processo Python.
-- **No sistema publicado (Render), o solver só roda com autorização expressa da Gurobi** (orientação do professor em 27/10/2026; decisão A30), com qualquer das duas licenças. Sem ela, vale o **plano B1** (A31, decidido em 27/10): no Render, `OTIMIZADOR_HABILITADO=false`, e as rotas de produção e de reposição respondem `503 {"mensagem":"A recomendação está disponível só na demonstração local da equipe."}` **sem chamar o Python**. A otimização é demonstrada pelo Kauê, no computador dele, com a WLS dele. Localmente, a variável fica ligada (padrão `true`).
-- O Java repassa ao processo filho as variáveis `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` **se existirem**. Com a autorização da Gurobi, o titular (Kauê) cria essas variáveis no Render: **o contrato JSON não muda**. Os valores nunca vão para o Git.
+- **Licenças disponíveis** (A34, 27/10/2026): uma **WLS acadêmica** do Kauê, válida até 25/09/2027, de uso **pessoal** ("uma única pessoa específica"), para trabalhos de disciplina; e a **licença restrita** que vem com o `gurobipy` 13.0.3 instalado pelo `pip` (decisão P2), usada no desenvolvimento, nos testes e, com autorização escrita da Gurobi (A38, 28/10/2026), no Render. Não há Gurobi Compute Server: ele não é necessário, porque a WLS roda dentro do próprio processo Python.
+- **No sistema publicado (Render), o solver roda com a licença restrita do `pip`**, autorizada por escrito pela Gurobi em 28/10/2026 (decisão A38; o professor tinha exigido a autorização, A30). A WLS **não** pode ser usada numa URL pública. No Render, `OTIMIZADOR_HABILITADO=true`. **Reserva (plano B1, A31):** com `OTIMIZADOR_HABILITADO=false`, as rotas de produção e de reposição respondem `503 {"mensagem":"A recomendação está disponível só na demonstração local da equipe."}` **sem chamar o Python**, e a otimização passa a ser demonstrada pelo Kauê, no computador dele. Localmente, a variável fica ligada (padrão `true`).
+- O Java repassa ao processo filho as variáveis `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` **se existirem**. Elas existem só no computador do Kauê (WLS pessoal); **no Render não são criadas** (A38), e sem elas o `gurobipy` usa a licença do `pip`. **O contrato JSON não muda.** Os valores nunca vão para o Git.
 - *Histórico:* as notas de 28/09, 02/10 e 08/10/2026 sobre Compute Server local e "Alternativa C" (WLS do Lucas no container) foram revistas: não há Compute Server; a WLS acadêmica que existe é a do Kauê (A34), e o uso dela no Render depende da Gurobi (A30); ver a seção 3.
 
 ### 1.7 Reposição (UC14/US14) — `optimization/app/reposicao.py`
@@ -582,6 +582,7 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 
 | Data | Alteração | Itens |
 |---|---|---|
+| 28/10/2026 | **Licença (A38):** a Gurobi autorizou por escrito a licença do `pip` no Render; `OTIMIZADOR_HABILITADO=true` no Render, sem `GRB_*`; o plano B1 (`503`) fica como reserva. Nenhum formato JSON mudou | A38 |
 | 27/10/2026 (noite, 2) | **Plano B1 da licença (A31):** `OTIMIZADOR_HABILITADO`; código `503` nas rotas de produção e reposição; `otimizador_habilitado` no dashboard; mensagem própria no marketing | A31 |
 | 27/10/2026 (noite) | **§1.6:** solver no Render só com autorização expressa da Gurobi (resposta do professor; A30, A31); licenças corrigidas: existe a WLS acadêmica do Kauê, válida até 25/09/2027, de uso pessoal (A34). **§2:** disponibilidade até 30/11/2026, com backup (A32) | A30–A32, A34 |
 | 27/10/2026 | **Versão 2 (Sprint 3)**, aprovada pela equipe; aplicada a pedido do grupo, com autorização do Kauê. **§1:** modelo por **lucro** (`custo_unitario` na entrada; `margem_estimada` e `consumo` na saída); saldo **válido** por linha; tabela de mensagens de erro; BOM aceito; uma execução por vez; eco só no perfil `dev`; **§1.6** licença de avaliação do Gurobi 13.0.3 (sem WLS nem Compute Server: as notas de 28/09, 02/10 e 08/10 ficam sem efeito); **§1.7** módulo de reposição. **§2:** validade do token (2 h); `PATCH` no CORS; snake_case global; fuso de São Paulo; códigos `405` e `422` do Python; mensagens padrão de `400`, `401`, `404`, `405` e `500`; formatos completos de ingredientes, produtos, usuários e login; rotas da Sprint 3 e lista do que fica fora; **§2.4** estoque por linhas e descarte por linha (A12); **§2.5** pedidos com baixa e `GET`; **§2.6** recomendação; **§2.7** reposição passa a `POST`; **§2.8** dashboard; **§2.9** marketing. **§0:** caminhos atualizados (`docs/Apoio/`, `bd/`) | A8, A9, A12, A16–A23, A27, D3, F4, F9, P2 |

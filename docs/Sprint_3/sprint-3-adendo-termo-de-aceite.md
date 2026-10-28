@@ -1,7 +1,7 @@
-# Adendo nº 1 ao Termo de Aceite — Mente Fria (RASCUNHO para revisão da equipe)
+# Adendo nº 1 ao Termo de Aceite — Mente Fria (APROVADO)
 
-**Status:** rascunho de 27/10/2026, preparado a partir da resposta do professor (`resposta-professor.md`, item 1). **Não enviar antes** de a equipe revisar e decidir os pontos marcados **[decidir]**.
-**Como enviar:** o Lucas (PO) revisa e o Diogo envia ao professor. Depois da aprovação, gerar a versão final (`.docx` ou PDF) e anexar ao Termo **sem alterar o Termo original** de 28/08/2026. Só então atualizar o Backlog, a Visão e os demais documentos (tutorial do Diogo, §9.2).
+**Status:** **aprovado e assinado em 27/10/2026** pelo professor, pelo Product Owner e pela equipe (tabela no fim). O texto abaixo da linha é a versão aprovada: **não alterar**. Mudanças futuras viram um novo adendo, datado.
+**Uso:** anexar ao Termo de Aceite de 28/08/2026, **sem alterar o Termo original**. Os documentos relacionados (Backlog, Visão, Arquitetura, DER, UML, mapas, Plano de Testes e README) foram atualizados a partir dele em 27/10 (decisão A33).
 
 ---
 
@@ -9,7 +9,7 @@
 
 **Equipe:** Leonardo Fagundes Oliveira (RA 2840482421009), Diogo Pereira Miranda (RA 2840482423006), Lucas Gabriel Valadares Bassi (RA 2840482423008), Kauê Nogueira Carneiro (RA 2840482423039)
 **Termo original:** 28/08/2026 (preservado sem alterações).
-**Data deste adendo:** [data do envio]. **Vigência:** a partir da aprovação do professor.
+**Data deste adendo:** 27/10/2026. **Vigência:** a partir da aprovação do professor.
 
 Este adendo registra os ajustes de escopo da Sprint 3. Para cada ajuste: o texto original, o novo texto, a justificativa, os critérios de aceitação e a rastreabilidade (histórias do Backlog, casos de teste do Plano de Testes e seções do Contrato de Comunicação v2). O restante do Termo continua valendo como está.
 
@@ -34,7 +34,7 @@ Este adendo registra os ajustes de escopo da Sprint 3. Para cada ajuste: o texto
 - **Custos não considerados:** mão de obra, aluguel, energia, impostos, taxas de cartão e de aplicativos de entrega, frete, e perdas por vencimento ou descarte. Por isso o valor se chama "lucro **estimado**": é a margem sobre os ingredientes, não o lucro contábil da loja.
 - **Estoque usado:** só as linhas de estoque **não vencidas** (estoque válido).
 - **Produto com lucro por copo ≤ 0** não é recomendado (fica em 0, e a tela mostra "Sem lucro").
-- **Empate:** entre planos com o mesmo lucro máximo, o sistema escolhe o que produz mais copos, priorizando os produtos na ordem de cadastro.
+- **Empate:** se mais de um plano dá o mesmo lucro máximo, o sistema mantém esse lucro e decide produto por produto, na ordem de cadastro: primeiro produz o máximo possível do produto cadastrado primeiro, depois o máximo do segundo, e assim por diante.
 - Os valores são recalculados no backend com precisão decimal (`BigDecimal`).
 - **"Receita máxima estimada"** (citada no escopo do dashboard) passa a significar **a receita do plano de maior lucro**.
 
@@ -78,7 +78,7 @@ Este adendo registra os ajustes de escopo da Sprint 3. Para cada ajuste: o texto
 
 **Rastreabilidade:** US17 · CT58–CT63 · Contrato v2 §2.8.
 
-## 4. Alertas de reposição e de validade (US15, US16) — [decidir]
+## 4. Alertas de reposição e de validade (US15, US16) — decidido pela equipe em 27/10: opção (a)
 
 **Texto original:** escopo, "Alerta de validade: identificação de ingredientes próximos do vencimento"; critério de pronto, "Alertas e recomendações são gerados corretamente, incluindo ingredientes próximos do vencimento e necessidades de reposição".
 
@@ -92,9 +92,9 @@ Este adendo registra os ajustes de escopo da Sprint 3. Para cada ajuste: o texto
 | US16: destacar itens vencidos separadamente | Atendido: situação "Vencida", quantidade vencida separada e contagem no dashboard |
 | US16: considerar a data atual do servidor | Atendido (data de São Paulo) |
 
-**[decidir] Proposta da equipe**, escolher uma:
-- **(a)** registrar neste adendo que os alertas são atendidos pelas telas de estoque e pelo dashboard como na tabela, com o prazo de vencimento fixo em 7 dias; ou
-- **(b)** fazer o prazo parametrizável (um campo "avisar com X dias de antecedência" na tela de estoque). É uma mudança pequena, mas entra no escopo da sprint.
+**Proposta da equipe:** os alertas deste semestre são atendidos pelas telas de estoque e pelo dashboard, como na tabela acima, com o aviso de vencimento **fixo em 7 dias**. As histórias dedicadas (US15 e US16, com o prazo ajustável) ficam para depois. A equipe escolheu assim para manter o escopo controlado, como o professor orientou.
+
+**Critérios de aceitação:** um ingrediente com estoque válido igual ou abaixo do mínimo aparece com o selo "Abaixo do mínimo" na tela de estoque e entra na contagem do dashboard; uma linha que vence em até 7 dias aparece como "Vence em breve"; uma linha vencida aparece como "Vencida", separada, e entra na contagem do dashboard.
 
 **Rastreabilidade:** US15, US16 · CT61 (situação do estoque), CT30–CT36 (estoque por linhas) · Contrato v2 §2.4.
 
@@ -105,7 +105,7 @@ Este adendo registra os ajustes de escopo da Sprint 3. Para cada ajuste: o texto
 **Novo texto:** mantém o texto e acrescenta:
 - o sistema fica disponível pela URL publicada **até 30/11/2026**, data-limite indicada pelo professor;
 - o banco do plano gratuito do Render expira 30 dias depois de criado. A equipe faz **backup** do banco e já **testou a restauração** (procedimento no tutorial do Kauê, §12.6);
-- o solver de otimização só roda no sistema publicado com **licença autorizada pela Gurobi** para esse uso. Sem essa autorização, vale o plano alternativo da equipe (decisão A31): no sistema publicado, as telas de produção, reposição e marketing informam que a recomendação está disponível só na demonstração local; a otimização é demonstrada pelo titular da licença acadêmica, no computador dele, como a licença permite. O restante do sistema funciona normalmente na URL publicada. **[atualizar depois da resposta da Gurobi]**
+- o solver de otimização só roda no sistema publicado com **licença autorizada pela Gurobi** para esse uso. Sem essa autorização, vale o plano alternativo da equipe (decisão A31): no sistema publicado, as telas de produção, reposição e marketing **e o bloco "Plano de produção" do dashboard** (onde ficam a "receita máxima estimada" e os "produtos prioritários" que este Termo cita) informam que a recomendação está disponível só na demonstração local. **Por isso, enquanto valer esse plano, a recomendação de produção, a reposição e as sugestões de campanha não são demonstradas pela URL publicada, e sim na demonstração local**; a otimização é demonstrada pelo titular da licença acadêmica, no computador dele, como a licença permite. O restante do sistema funciona normalmente na URL publicada. **[atualizar depois da resposta da Gurobi]**
 
 **Critérios de aceitação:** CT67–CT70 (imagem dentro dos limites; fluxo do Termo pela URL publicada; CORS; primeira chamada depois de o serviço "dormir") e um teste de restauração do backup registrado em evidência.
 
@@ -123,6 +123,6 @@ Este adendo registra os ajustes de escopo da Sprint 3. Para cada ajuste: o texto
 
 | Papel | Nome | Data | Assinatura |
 |---|---|---|---|
-| Professor | | | |
-| Product Owner | Lucas Gabriel Valadares Bassi | | |
-| Equipe | Diogo, Kauê, Leonardo | | |
+| Professor | Lucas Baggio Figueira | 27/10/2026 | Lucas Professor |
+| Product Owner | Lucas Gabriel Valadares Bassi | 27/10/2026 | Lucas PO |
+| Equipe | Diogo, Kauê, Leonardo | 27/10/2026 | Equipe Mente Fria |

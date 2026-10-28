@@ -1,4 +1,6 @@
-# Contrato de Comunicação v2 — PROPOSTA para aprovação (Sprint 3)
+# Contrato de Comunicação v2 — PROPOSTA (Sprint 3) — CONGELADA
+
+> **Arquivo congelado em 27/10/2026. Não use para implementar.** A fonte de verdade é o contrato oficial, `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md`, que já contém tudo o que está aqui e mais: o plano B1 (`503`, `otimizador_habilitado`), as licenças (A34) e a numeração nova das seções (reposição Java ↔ Python = §1.7). Os itens `[decidir]` abaixo foram decididos na aprovação de 27/10. Este arquivo fica só como registro de como a proposta chegou ao grupo.
 
 **Status:** proposta da auditoria de 26/10/2026, **aprovada pela equipe e aplicada ao contrato oficial em 27/10** (A10, com autorização do Kauê). A partir de agora, a fonte de verdade é o oficial; este arquivo fica como registro. **Não substitui** o contrato oficial (`docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md`, mantido pelo Kauê).
 **Para virar oficial:** Kauê, Lucas e Leonardo revisam (pendência A10, prazo **27/10**) e o Kauê aplica no contrato oficial, registrando na seção 3 dele ("Histórico de revisões").

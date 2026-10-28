@@ -1,8 +1,8 @@
 # Relatório de auditoria — materiais da Sprint 3 — Mente Fria
 
-**Data:** 26/10/2026 (tarde: v5; noite: v5.1) e **27/10/2026 (v5.2: respostas da equipe, §A.0)**. Versões anteriores em `historico/v5-26-10-antes-das-4-historias/` e `historico/v5.1-27-10-antes-das-respostas/`.
+**Data:** 26/10/2026 (tarde: v5; noite: v5.1) e **27/10/2026 (v5.2: respostas da equipe, §A.0; v5.3, noite: resposta do professor, plano B1 e diagnóstico geral, §A.00)**. Versões anteriores em `historico/v5-26-10-antes-das-4-historias/` e `historico/v5.1-27-10-antes-das-respostas/`.
 
-**Pedido:** auditar o roteiro da Sprint 3 (v4.6) e os cerca de 49 artefatos produzidos em 14/10, corrigi-los e entregar roteiro, tutoriais, matriz e lista priorizada.
+**Pedido:** auditar o roteiro da Sprint 3 (v4.6) e os artefatos produzidos em 14/10 (53 arquivos, contados no inventário da §B), corrigi-los e entregar roteiro, tutoriais, matriz e lista priorizada.
 
 **Pedidos da noite** (respostas do usuário ao relatório da tarde):
 1. **Incluir US14, US17, US18 e US20 na Sprint 3**, no mesmo modelo das outras.
@@ -21,11 +21,22 @@
 
 ## A. Resumo executivo
 
+### A.00 Diagnóstico geral de 27/10, noite (decisão A35)
+
+Leitura do repositório inteiro e da documentação, sem alterar nada, seguida de uma rodada de correção **só de documentos**, autorizada pelo grupo.
+
+- **O código real da `main` ainda está na Sprint 2:** backend com 2 rotas e sem segurança, DDL da Sprint 1, otimizador por receita, telas da Sprint 1, sem arquivos de deploy. Os testes da `main` (8 do Python e 1 do backend) passam. **Toda a Sprint 3 existe só em `referencia/`.** Risco principal: prazo.
+- **Plano B1 × critérios de pronto:** com o B1, a URL publicada não demonstra a otimização nem a "receita máxima estimada". O roteiro (§1, §8, §10), o CT68, a §3 dos casos de teste e o adendo (item 5) foram ajustados para dizer isso.
+- **Erros corrigidos:** a A26 **não** é a causa do BD01 (o BD01 é "Virtualization support not detected"); o contrato oficial dizia "92 testes" (são 95); a proposta do contrato ficou **congelada**; o desempate do adendo foi reescrito como o código faz (produto por produto, em ordem de cadastro); a mensagem ao professor recebeu a nota de que a WLS existe.
+- **Ponto novo:** a US27 **não existe** no Backlog; é história nova.
+- **Decisões levantadas para o grupo:** G1 a G9 (decisão A35).
+- **Calendário deslocado um dia (A36, 27/10, noite):** fim da Sprint 3 em 02/11 (aceito pelo professor em 27/10), deploy definitivo mantido no sábado 31 à noite. **Onde as §F e §G deste relatório citam dias da semana, vale o calendário do roteiro, §7.**
+
 ### A.0 Respostas da equipe em 27/10 e o que foi feito
 
 | Pendência | Resposta da equipe | O que foi feito |
 |---|---|---|
-| A10 — Contrato v2 | Aprovado | Marcado como aprovado; o descarte por linha entrou no §2.4. Falta o Kauê aplicar ao oficial |
+| A10 — Contrato v2 | Aprovado | Marcado como aprovado; o descarte por linha entrou no §2.4. *(Depois: aplicado ao oficial e na `main`, PRs #34 e #35.)* |
 | P3 — professor | "Faça uma mensagem" | `sprint-3-mensagem-professor.md`, pronta para copiar e colar: mudanças, três perguntas (adendo, licença, data da avaliação) e uma extra (sprint curta) |
 | A16 | Aprovada | Registrada |
 | A17 | Dúvida: copo é produto, não ingrediente | Explicado: no banco, o copo é o ingrediente 7 (tem estoque e custo). Pelo custo ele fica em 4º; por quantidade, passaria o açaí. A equipe manteve a ordenação por R$ |
@@ -43,7 +54,7 @@
 |---|---|---|
 | Adendo | Aceito; descrever alterações, justificativas e critérios; explicitar o cálculo do lucro | Rascunho em `sprint-3-adendo-termo-de-aceite.md` (A33), com a fórmula do lucro e os custos considerados e não considerados, conferidos no código |
 | Reposição e dashboard | Obrigatórios primeiro | Lista de cortes refeita: saem antes o botão da A12, os filtros e o ranking; **não** saem o bloco da receita máxima estimada nem o detalhe por linha |
-| Licença | Não considerar autorizada sem confirmação expressa da Gurobi; planejar alternativa | Documentação oficial lida; pedido à Gurobi pronto; plano B a decidir (`sprint-3-licenca-gurobi.md`; A30, A31). **Risco elevado para Alto** |
+| Licença | Não considerar autorizada sem confirmação expressa da Gurobi; planejar alternativa | Documentação oficial lida; pedido à Gurobi pronto; plano B a decidir (`sprint-3-licenca-gurobi.md`; A30, A31). *(Depois: decidido B1 e implementado.)* **Risco elevado para Alto** |
 | Datas | 30/11 é a data-limite; backup e restauração testados | Backup e restauração **validados** em containers locais (validação 39); procedimento no Kauê §12.6; banco definitivo no sábado **à noite** (A32) |
 | Sprint extra | Pode, se não prejudicar a qualidade | Gatilho da A28 endurecido: só com o obrigatório testado e estável |
 | Licença (complemento) | — | O e-mail de aprovação da Gurobi ao Kauê mostra uma **WLS acadêmica válida até 25/09/2027** (A34), o que corrige a A22. A cláusula "para uma única pessoa (não um processo que roda em nome de usuários diferentes)" mantém a dúvida sobre o Render: a pergunta à Gurobi passou a ser sobre essa licença, enviada pelo Kauê. O Compute Server não é necessário |
@@ -54,7 +65,7 @@
 
 | Pendência | Resposta da equipe | O que foi feito |
 |---|---|---|
-| A10 | "O Kauê confirmou que você pode alterar o contrato oficial" | **Aplicado** em `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (revisão de 27/10 na seção 3). Formatos conferidos contra o código e os exemplos testados; caminhos antigos do §0 corrigidos. Não commitado |
+| A10 | "O Kauê confirmou que você pode alterar o contrato oficial" | **Aplicado** em `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (revisão de 27/10 na seção 3). Formatos conferidos contra o código e os exemplos testados; caminhos antigos do §0 corrigidos. *(Depois: na `main`, PRs #34 e #35.)* |
 | A15 | "Dei merge; está certo?" | **Conferido (A29):** o PR #25 está certo e manteve a correção do `.env`. O PR #26 levou os documentos para o `sprint-3`, e o PR #27 os levou para a `main`, que manteve a correção do `.env`. Nenhuma senha real subiu. Um `git reset --hard` às 17:19 apagou as alterações não commitadas (contrato e 7 documentos); foram refeitas a partir desta conversa |
 | A11 | Fica com o Diogo | Registrado |
 | A20 | A "A18" era a A20 | Registrado |
@@ -80,7 +91,7 @@ O trabalho da equipe até 01/11 passa a ser:
 **Os maiores riscos agora:**
 1. **A carga do Leonardo:** seis telas em cinco dias.
 2. **O tempo** para fazer chegar ao GitHub, com PR revisado, o que está pronto fora dele.
-3. **Duas confirmações com o professor:** o uso da licença de avaliação do Gurobi no servidor (A22) e a data da avaliação diante do banco free que expira em 30 dias (A21). A mensagem está pronta (27/10).
+3. **Licença e professor:** o uso do Gurobi no Render depende de autorização escrita da Gurobi (A30); sem ela, vale o B1 (A31), e a URL publicada não demonstra a otimização. O professor respondeu em 27/10 (data-limite 30/11, backup testado); ele foi **avisado pessoalmente em 27/10** da WLS do Kauê (A34) e do efeito do B1, e manteve a orientação: validar com a Gurobi antes do Render (G2).
 4. **Render só no sábado** (A21, 27/10): sem o ensaio na quarta ou quinta, os problemas do ambiente real aparecem um dia antes do fim.
 
 ### A.2 Respostas aos comentários da noite
@@ -164,7 +175,7 @@ Os materiais de 14/10 tinham conteúdo técnico majoritariamente correto, mas n�
 
 | # | Problema | Fonte | Evidência | Gravidade | Correção |
 |---|---|---|---|---|---|
-| 23 | **BD01: o Docker Desktop trava ao iniciar** | Esta máquina | *"rename …\Docker\run\sailor-ingest.sock … The file cannot be accessed by the system"*; depois o mesmo em `docker-secrets-engine`. Os arquivos não podem ser apagados (nem pelo `cmd`); a pasta pode ser renomeada | Alta (sem Docker, não há Testcontainers) | A26: contorno verificado (motor respondeu em 5 s); **"Reset to factory defaults" apagaria o `mente-fria-db`** |
+| 23 | **Docker Desktop trava ao iniciar (A26).** *Correção de 27/10, noite: não é o BD01 da Sprint 2, que é outro erro (virtualização)* | Esta máquina | *"rename …\Docker\run\sailor-ingest.sock … The file cannot be accessed by the system"*; depois o mesmo em `docker-secrets-engine`. Os arquivos não podem ser apagados (nem pelo `cmd`); a pasta pode ser renomeada | Alta (sem Docker, não há Testcontainers) | A26: contorno verificado (motor respondeu em 5 s); **"Reset to factory defaults" apagaria o `mente-fria-db`** |
 | 24 | As rotas simuladas do teste da Fase 1 derrubariam os testes de integração | `RotasDeTesteController` × controllers reais | "Mapeamento ambíguo" no `@SpringBootTest` | Alta (a suíte não subiria na Fase 2) | A24: perfil `teste-seguranca` |
 | 25 | Testes de integração com nome `*IT` não rodariam | Surefire padrão | Só roda `*Test`, `*Tests`, `Test*` | Média | A25 |
 | 26 | **A ordem de cópia por fase não fechava:** a base dos testes de integração usa classes das Fases 4A e 6 | `IntegracaoBase` | Não compilaria na Fase 2 | Média | Quatro arquivos de infraestrutura copiados já na Fase 2 (tutorial do Lucas, §3.1). **Verificado fase por fase** |
@@ -186,10 +197,10 @@ Os materiais de 14/10 tinham conteúdo técnico majoritariamente correto, mas n�
 |---|---|---|
 | `sprint-3-roteiro.md` | **v5.2** | Escopo A2b; Fases Q/5, 6, 7 e Front 3; deploy definitivo no sábado (A21) e gatilhos da A28; riscos e critérios de pronto com a URL publicada |
 | `sprint-3-tutorial-backend-lucas.md` | **Reescrito** | Fases 1–4A, 6 e deploy com **código validado para copiar por fase**; o que ler em cada classe; o teste que prova cada regra |
-| `sprint-3-tutorial-banco-diogo.md` | Atualizado | Docker validado; contorno do BD01; consultas 9–13 com os números do seed; repositórios prontos; mensagem nova ao professor |
+| `sprint-3-tutorial-banco-diogo.md` | Atualizado | Docker validado; contorno do problema de Docker A26 (não é o BD01); consultas 9–13 com os números do seed; repositórios prontos; mensagem nova ao professor |
 | `sprint-3-tutorial-python-kaue.md` | Atualizado | **§11** Fase Q e Fase 5 (modelo, exemplo à mão, testes, experimentos, Java); **§12** publicação no Render; licença (A22) |
 | `sprint-3-tutorial-frontend-leonardo.md` | Atualizado | **§6.4–§6.6** Telas 03, 13 e 14 com as funções de apoio; **§9** GitHub Pages |
-| `sprint-3-decisoes-e-pendencias.md` | Atualizado | A2b; A3 encerrada; **A16–A27**; pendências abertas |
+| `sprint-3-decisoes-e-pendencias.md` | Atualizado | A2b; A3 encerrada; **A16–A35** (até 27/10, noite); pendências abertas |
 | `sprint-3-contrato-v2-proposta.md` | Atualizado | §1.5–§1.6 (licença, reposição Java↔Python), §2.7–§2.9 (reposição, dashboard, marketing), mensagens de erro novas. **Igual ao código** |
 | `sprint-3-casos-de-teste-propostos.md` | Atualizado | **CT51–CT72**; coluna "Validado em 26/10" com o teste que prova cada caso |
 | `sprint-3-matriz-rastreabilidade.md` | Atualizado | US14, US17, US18 e US20; estados comprovados da noite |
@@ -200,7 +211,7 @@ Os materiais de 14/10 tinham conteúdo técnico majoritariamente correto, mas n�
 | `referencia/frontend/` | Acrescentado | `js/apoio_telas_novas.js`, `ferramentas/testar_apoio_telas.mjs` |
 | `historico/v5-26-10-antes-das-4-historias/` | Novo | Os 10 documentos da tarde, intactos |
 
-**Não alterado:** `bd/`, `backend/`, `frontend/`, `optimization/`, os documentos oficiais e os originais em Downloads. Fora do repositório, só no Docker Desktop desta máquina: as pastas `run` e `docker-secrets-engine` foram **renomeadas** (não apagadas) para contornar o BD01.
+**Não alterado:** `bd/`, `backend/`, `frontend/`, `optimization/` e os originais em Downloads. **Documento oficial alterado** (com autorização): `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2, 27/10). Fora do repositório, só no Docker Desktop desta máquina: as pastas `run` e `docker-secrets-engine` foram **renomeadas** (não apagadas) para contornar o problema A26.
 
 ---
 
@@ -237,7 +248,7 @@ Todas em cópias no diretório temporário da sessão, fora do repositório.
 | **25** | Consultas 9–13 no Docker sobre o seed de demonstração | Mês atual 326,40; anterior 271,50; mais vendidos e ranking conferidos; consumo de 60 dias igual ao exemplo do Python | **Aprovado** |
 | **26** | **Imagem de deploy** (`docker build`) e simulação do Render free (512 MB, 0,1 CPU, rede com PostgreSQL 16) | Build em 74 s (587 MB); sobe em **83 s**; **14/14** verificações do fluxo; pico **133 MiB** (`memory.peak`); sem OOM; sem `ERROR` no log; usuário sem privilégio; `/api/teste/python` → `401`; CORS do Pages ok | **Aprovado** |
 | **27** | Carregar o DDL num banco remoto com `psql` em container | Exit 0; acentos preservados (`Açaí (polpa)`) | **Aprovado** (contra PostgreSQL local pela rede; no Render, não) |
-| **28** | Frontend: funções de apoio e `config.js` de produção (Node) | **14/14** | **Aprovado** |
+| **28** | Frontend: funções de apoio e `config.js` de produção (Node) | **14/14** em 26/10 (15/15 em 27/10: validação 43) | **Aprovado** |
 | **29** | `render.yaml` e *workflow* do Pages | Sintaxe ok; região e banco coerentes; *actions* nas últimas majors | **Aprovado com ressalva** (não executados no Render nem no GitHub) |
 | 30 | Licença WLS | Indisponível | **Bloqueado**: substituída pela licença de avaliação (A22) |
 | 31 | Python 3.14.7 | Não testado | **Não validado** |
@@ -275,14 +286,15 @@ Todas em cópias no diretório temporário da sessão, fora do repositório.
 
 | # | Pendência | Responsável | Próxima ação | Prazo |
 |---|---|---|---|---|
-| A10 | Contrato v2 (**aprovado em 27/10**) | Kauê | Aplicar ao oficial | **Ter 27/10** |
-| P3 | Aviso ao professor | Diogo (envia) + Lucas (revisa) | Enviar `sprint-3-mensagem-professor.md`; guardar a resposta | **Ter 27/10** |
+| A10 | Contrato v2 | — | **Feito** (na `main`, PRs #34 e #35) | — |
+| P3 | Aviso ao professor | Diogo + Lucas | **Feito:** respondido por escrito e avisado pessoalmente da WLS e do B1 em 27/10 | — |
+| A35 | Decisões do diagnóstico (G1–G9) | Grupo | **G1 = (a) e G2 resolvidas em 27/10.** Faltam G3–G9 | G4 até Qui 29; G9 Sex 30 |
 | A21 | Render: quem cria a conta definitiva; ensaio | Lucas (PO) decide; Kauê executa | Ensaio opcional (qua/qui); **definitivo no sáb 31** | Quem: **Qui 29/10** |
 | A28 | Gatilhos de corte (A12) e de Sprint 4 relâmpago | Lucas (PO) | Conferir | **Sex 30/10, à noite** |
 | P2 | Versão do Gurobi (**13.0.3**, 27/10) | Kauê + Diogo | Aplicar nos arquivos | Ter 27/10 |
 | A13 | Playwright instável | Leonardo | §7.1 do tutorial dele | Sáb 31/10 |
 | A15 | Branch `sprint-3` | Kauê | Levar os comentários do `env.example`; apagar o branch | Ter 27/10 |
-| A26 | BD01 | Diogo | Registrar a causa e o contorno nas evidências | Sex 30/10 |
+| A26 | Incidente novo de Docker (não é o BD01) | Diogo | Registrar como incidente novo nas evidências da Sprint 3; o BD01 segue sem causa registrada | Sex 30/10 |
 | — | Executar os tutoriais e registrar evidências | Todos | Um PR por fase, no dia | Até Dom 01/11 |
 
 ---
@@ -304,7 +316,7 @@ Ordem: primeiro o que **destrava os outros**.
 2. **PR do banco** (DDL + 41 testes), **terça**: a Fase 2 depende dele.
 3. Enviar a mensagem ao professor (`sprint-3-mensagem-professor.md`), terça.
 4. Repositórios (terça e quarta), inclusive **reposição** e **dashboard**; `seed_demo.sql`; `sql_repositorios_sprint3.md` com as consultas 1–13.
-5. Documentos e CTs do banco e do dashboard no Plano de Testes (até sábado); BD01 nas evidências.
+5. Documentos e CTs do banco e do dashboard no Plano de Testes (até sábado); A26 nas evidências, como incidente novo.
 
 **Kauê**
 1. Aplicar o Contrato v2 (aprovado) ao oficial e a P2 (13.0.3), terça.
@@ -312,7 +324,7 @@ Ordem: primeiro o que **destrava os outros**.
 3. **PR da Fase P + Q** (47 testes; 2ª máquina) — **quarta**.
 4. Ensaio de deploy numa conta pessoal, apagado no mesmo dia (quarta ou quinta, opcional).
 5. Fase 4A com o Lucas (quinta); **Fase 5** (Java da reposição), sexta.
-6. CTs de Python, reposição e deploy no Plano (até sexta); **deploy definitivo** e CT67–CT70 (sábado de manhã).
+6. CTs de Python, reposição e deploy no Plano (até sexta); **deploy definitivo** e CT67–CT70 e CT72 (sábado à noite, A32).
 7. CT20, registro do Git, Review, Retro e relatório (sábado e domingo).
 
 **Leonardo**
@@ -325,5 +337,5 @@ Ordem: primeiro o que **destrava os outros**.
 **Bloqueios que precisam ser resolvidos para os quatro avançarem juntos:**
 1. **A10** (Contrato v2), terça;
 2. **PR do banco** e **Fase 1** na `main`, terça;
-3. **Deploy definitivo**, sábado 31 de manhã: sem ele, a janela de testes começa sem ambiente publicado (o ensaio da quarta ou quinta reduz o risco);
+3. **Deploy definitivo**, sábado 31 à noite (A32): sem ele, a janela de testes começa sem ambiente publicado (o ensaio da quarta ou quinta reduz o risco);
 4. **Docker funcionando** em quem roda os testes de integração (A26).

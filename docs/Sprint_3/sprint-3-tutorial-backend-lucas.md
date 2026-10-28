@@ -1,7 +1,7 @@
 # Tutorial — Sprint 3 (Backend) — Lucas
 
-**Para:** Lucas Gabriel Valadares Bassi · **Papel:** PO e backend · **Revisão:** 27/10/2026 (v5.2: respostas da equipe; descarte por linha, A12; deploy definitivo no sábado, A21) · **Substitui** a v5.1 (`historico/v5.1-27-10-antes-das-respostas/`), a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e `historico/Tutorial_Sprint3_Backend_Lucas.md`.
-**Base:** `sprint-3-roteiro.md` (v5.1), `sprint-3-contrato-v2-proposta.md`, `sprint-3-decisoes-e-pendencias.md`.
+**Para:** Lucas Gabriel Valadares Bassi · **Papel:** PO e backend · **Revisão:** 27/10/2026, noite (v5.3: **calendário deslocado um dia, A36**; antes, v5.2: respostas da equipe; descarte por linha, A12; deploy definitivo no sábado, A21) · **Substitui** a v5.1 (`historico/v5.1-27-10-antes-das-respostas/`), a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e `historico/Tutorial_Sprint3_Backend_Lucas.md`.
+**Base:** `sprint-3-roteiro.md` (v5.3), o **contrato oficial** `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2; a proposta ficou congelada) e `sprint-3-decisoes-e-pendencias.md`.
 
 > **Leia primeiro: o que foi verificado.**
 >
@@ -31,19 +31,20 @@
 | `.env` | **Feito** (PR #24): rode sempre **de dentro de `backend/`** |
 | Backend na `main` | Só `GET /api/saude` e `GET /api/ingredientes` (3 campos) |
 | Backend em `referencia/` | **Completo e testado** (95 testes) |
-| Banco novo | O Diogo abre o PR do DDL na **terça 27**. A Fase 2 **depende dele**: os testes esperam o seed com estoque 0 |
+| Banco novo | O Diogo abre o PR do DDL na **quarta 28** (A36). A Fase 2 **depende dele**: os testes esperam o seed com estoque 0 |
 | Docker | Necessário para os testes de integração. Se o Docker Desktop travar ao abrir, veja o **A26** (§7) |
 
 | Fase | Entrega | Quando | Depende de | Libera |
 |---|---|---|---|---|
-| 1 | Segurança, JWT, CORS, erros (18 testes) | **Ter 27** | Nada | Todos |
-| 2 | Auth, usuários, unidades, ingredientes, produtos, preço (15 + 13 testes) | **Qua 28** | Fase 1; PR do banco (Diogo) | Gate do Leonardo; ensaio de deploy (opcional, A21) |
-| 3 | Estoque por linhas e pedido (15 testes) | **Qui 29** | Fase 2; Contrato v2 (A10) | Telas do Leonardo; reposição do Kauê |
-| 4A | Ponte com o Python e recomendação (7 testes + Python real), **em dupla com o Kauê** | **Qui 29 – Sex 30** | Fase P do Kauê; Fase 3 | Tela 12; marketing; dashboard |
-| 6 | **Dashboard e marketing** (5 + 4 testes, mais 3 da otimização desligada) | **Sex 30** | Fases 3 e 4A; repositório do dashboard (Diogo) | Telas 03 e 14 |
-| 8 | **Deploy** (A21): ensaio opcional numa conta pessoal; **definitivo no sábado** | Qua 28 ou Qui 29 (ensaio) e **Sáb 31** (definitivo) | Fases 1–2 na `main` (ensaio); tudo na `main` (definitivo) | Janela de testes |
-| — | Decidir **quem** cria a conta definitiva do Render (PO) | **Qui 29** | — | Deploy de sábado |
-| — | **Gatilhos da A28** (PO): cortar o botão da A12? Sprint 4 relâmpago no sábado? | **Sex 30, à noite** | — | Sábado 31 |
+| 1 | Segurança, JWT, CORS, erros (18 testes) | **Qua 28** | Nada | Todos |
+| 2 | Auth, usuários, unidades, ingredientes, produtos, preço (15 + 13 testes) | **Qui 29** | Fase 1; PR do banco (Diogo) | Gate do Leonardo; ensaio de deploy (opcional, A21) |
+| 3 | Estoque por linhas e pedido (15 testes) | **Sex 30** | Fase 2; Contrato v2 (A10) | Telas do Leonardo; reposição do Kauê |
+| 4A | Ponte com o Python e recomendação (7 testes + Python real), **em dupla com o Kauê** | **Sex 30 – Sáb 31** | Fase P do Kauê; Fase 3 | Tela 12; marketing; dashboard |
+| 6 | **Dashboard e marketing** (5 + 4 testes, mais 3 da otimização desligada) | **Sáb 31** | Fases 3 e 4A; repositório do dashboard (Diogo) | Telas 03 e 14 |
+| 8 | **Deploy** (A21): ensaio opcional numa conta pessoal; **definitivo no sábado** | Qui 29 ou Sex 30 (ensaio) e **Sáb 31, à noite** (definitivo) | Fases 1–2 na `main` (ensaio); tudo na `main` (definitivo) | Janela de testes |
+| — | Decidir **quem** cria a conta definitiva do Render (PO) | **Sex 30** | — | Deploy de sábado à noite |
+| — | **Gatilhos da A28** (PO): cortar o botão da A12? Sprint 4 relâmpago no domingo? Solver ou B1? | **Sáb 31, à tarde** | — | Deploy da noite |
+| — | Revisar o adendo e o pedido de prazo (02/11) antes de o Diogo enviar ao professor | **Qua 28** | — | Calendário (A36) |
 
 A **Fase 5 (reposição)** é do Kauê (tutorial dele, §11). Você revisa o PR.
 
@@ -343,7 +344,7 @@ Com dublê (sem Python): `.\mvnw test "-Dtest=Fase4ProducaoTest"` → **7 testes
 - a entrada tem o mesmo conteúdo de `optimization/exemplos/entrada_demo.json`;
 - `422`/`500` e Funcionário `403`.
 
-Com o **Python real** (o do `venv` do Kauê, com `gurobipy`):
+Com o **Python real**, use o **seu próprio** `venv` em `optimization`, com o `gurobipy` instalado por `pip install -r optimization/requirements.txt`. A licença restrita que vem com o `pip` basta para estes testes, porque eles são uso de desenvolvimento e os modelos são pequenos. Não peça licença à Gurobi e **não** use as credenciais da WLS do Kauê, que são pessoais (A34):
 
 ```powershell
 $env:MF_PYTHON = "C:\caminho\Mente_Fria\optimization\.venv\Scripts\python.exe"
@@ -420,16 +421,16 @@ Os testes terminam em `Test`, e não em `IT`, porque o Surefire padrão ignora `
 
 O passo a passo do Render está no tutorial do **Kauê, §12**; o do GitHub Pages, no do **Leonardo, §9**. Você é a segunda pessoa no Render e o PO. Sua parte:
 
-**Por que o deploy definitivo ficou para sábado (A21, 27/10):** o banco gratuito do Render expira **30 dias depois de criado**. Criado no sábado 31, vale até **30/11**. Não dá para deixar para depois de 31/10, porque a janela de testes (01–06/11) é no ambiente publicado.
+**Por que o deploy definitivo ficou para sábado (A21, 27/10):** o banco gratuito do Render expira **30 dias depois de criado**. Criado no sábado 31, vale até **30/11**. Não dá para deixar para depois de 31/10, porque a janela de testes (02–06/11, A36) é no ambiente publicado.
 
-1. **Ensaio (opcional, recomendado), quarta 28 ou quinta 29:** numa **conta pessoal** do Render de um integrante (não a definitiva), criar pelo *blueprint* com as Fases 1–2 na `main`.
+1. **Ensaio (opcional, recomendado), quinta 29 ou sexta 30:** numa **conta pessoal** do Render de um integrante (não a definitiva), criar pelo *blueprint* com as Fases 1–2 na `main`.
    - Conferir as variáveis no painel do Render: `DB_*` vêm do banco; `JWT_SECRET` é gerado; `CORS_ALLOWED_ORIGIN` = a origem do Pages, **sem barra no fim**.
    - Repetir a validação da Fase 2 **na URL do Render** (troque `http://localhost:8080` pela URL).
    - **No mesmo dia, apagar o banco e o serviço do ensaio.** Cada conta só pode ter um banco gratuito ativo.
-   - Sem o ensaio, o primeiro contato com o Render é no sábado, um dia antes do fim. Os problemas mais prováveis (memória, tempo de subida, CORS) já foram simulados na máquina, mas o Render real não.
-2. **Quinta 29:** como PO, decidir **quem** cria a conta definitiva.
-3. **Licença (A30, resposta do professor em 27/10):** o uso do solver no Render **não está autorizado** até a Gurobi confirmar por escrito. Como PO: envie o pedido de `sprint-3-licenca-gurobi.md` (§3) até quarta, decida o plano B (A31) e, na sexta à noite, confirme se o deploy vai com o solver ou com o plano B. Se a Gurobi autorizar, **o Kauê** (titular da WLS, A34) cria as variáveis `GRB_*` no Render; sem autorização, não rode o solver lá.
-4. **Sábado 31, à noite: deploy definitivo** pelo *blueprint*, com tudo na `main` (o banco expira no mesmo horário de 30/11, a data-limite; A32). Anotar no README a **data de expiração do banco** (30/11). Depois, rodar no ambiente publicado o fluxo do CT68 e conferir CT69 e CT70.
+   - Sem o ensaio, o primeiro contato com o Render é no sábado, dois dias antes do fim. Os problemas mais prováveis (memória, tempo de subida, CORS) já foram simulados na máquina, mas o Render real não.
+2. **Sexta 30:** como PO, decidir **quem** cria a conta definitiva.
+3. **Licença (A30, resposta do professor em 27/10):** o uso do solver no Render **não está autorizado** até a Gurobi confirmar por escrito. Quem envia o pedido à Gurobi é o **Kauê**, titular da licença (`sprint-3-licenca-gurobi.md`, §3). O plano B já foi decidido: **B1** (A31). Como PO, no sábado 31 à tarde (A36), confirme se o deploy da noite vai com o solver (só com a autorização escrita) ou com o B1. Se a Gurobi autorizar, **o Kauê** (titular da WLS, A34) cria as variáveis `GRB_*` no Render; sem autorização, não rode o solver lá.
+4. **Sábado 31, à noite: deploy definitivo** pelo *blueprint*, com tudo na `main` (o banco expira no mesmo horário de 30/11, a data-limite; A32). Anotar no README a **data de expiração do banco** (30/11). Depois, rodar no ambiente publicado o fluxo do CT68 e conferir CT69, CT70 e **CT72**. Com o B1, a recomendação, a reposição e o marketing mostram o aviso do `503` na URL, e são demonstrados localmente pelo Kauê.
 
 **O que a simulação local mostrou** (container com 512 MB e 0,1 CPU):
 
@@ -448,13 +449,13 @@ O plano free **dorme após 15 min**: antes de uma demonstração, abra a URL uns
 
 1. Um PR por fase, com Conventional Commits, revisão de um colega e a saída do `mvnw test` daquela fase.
 2. **README:**
-   - `JWT_SECRET`, `CORS_ALLOWED_ORIGIN`, `PYTHON_CMD`, `OTIMIZADOR_SCRIPT` e `REPOSICAO_SCRIPT` passam para "obrigatórias";
+   - `JWT_SECRET`, `CORS_ALLOWED_ORIGIN`, `PYTHON_CMD`, `OTIMIZADOR_SCRIPT` e `REPOSICAO_SCRIPT` passam para "obrigatórias"; acrescentar `OTIMIZADOR_HABILITADO` (padrão `true`; `false` no Render com o B1, A31) e `OTIMIZADOR_TIMEOUT_SEGUNDOS` (padrão 10);
    - o perfil `dev`;
    - como rodar `mvnw test` (Docker ligado; `MF_PYTHON` opcional);
    - o `.env` sem BOM;
    - **a URL publicada e a data de expiração do banco** (A21);
    - apagar o "Estado atual (corte da Sprint 2)".
-3. **Contrato v2:** depois de aprovado (A10), confira que nada mudou em relação ao código.
+3. **Contrato v2:** já aprovado e na `main` (A10); confira que nada mudou em relação ao código que você copiou.
 4. **Evidências** em `docs/Sprint_3/evidencias/`.
 
 ## Erros comuns
@@ -484,7 +485,7 @@ O plano free **dorme após 15 min**: antes de uma demonstração, abra a URL uns
 - [ ] Fase 4A: **7/7**; com `MF_PYTHON`, eco e 151/1/0 com o Python real
 - [ ] Fase 6: **5/5** e **4/4**; A16, A17 e A20 confirmadas
 - [ ] Revisei o PR da Fase 5 do Kauê; a suíte completa dá **95**
-- [ ] Deploy: validação da Fase 2 na URL do Render; CT68–CT70 no sábado
+- [ ] Deploy: validação da Fase 2 na URL do Render; CT68–CT72 no domingo 01/11
 - [ ] README (URL e expiração do banco), Contrato v2 conferido, evidências
 
 ## Fora da Sprint 3

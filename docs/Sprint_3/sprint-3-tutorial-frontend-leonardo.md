@@ -1,7 +1,7 @@
 # Tutorial — Sprint 3 (Frontend) — Leonardo
 
-**Para:** Leonardo Fagundes Oliveira · **Papel:** frontend (HTML, CSS, JavaScript) e publicação no GitHub Pages · **Revisão:** 27/10/2026 (v5.2: Contrato v2 aprovado; botão "Descartar" por linha, A12; Render definitivo no sábado, A21) · **Substitui** a v5.1 (`historico/v5.1-27-10-antes-das-respostas/`), a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e `historico/Tutorial_Sprint3_Frontend_Leonardo.md`.
-**Base:** `sprint-3-roteiro.md` (v5.1), `sprint-3-contrato-v2-proposta.md`, `sprint-3-decisoes-e-pendencias.md`.
+**Para:** Leonardo Fagundes Oliveira · **Papel:** frontend (HTML, CSS, JavaScript) e publicação no GitHub Pages · **Revisão:** 27/10/2026, noite (v5.3: **calendário deslocado um dia, A36**; antes, v5.2: Contrato v2 aprovado; botão "Descartar" por linha, A12; Render definitivo no sábado, A21) · **Substitui** a v5.1 (`historico/v5.1-27-10-antes-das-respostas/`), a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e `historico/Tutorial_Sprint3_Frontend_Leonardo.md`.
+**Base:** `sprint-3-roteiro.md` (v5.3), o **contrato oficial** `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2; a proposta ficou congelada) e `sprint-3-decisoes-e-pendencias.md`.
 
 > **O que foi verificado e o que não foi (26/10).** Tudo foi executado numa **cópia** do `frontend/` da `main`:
 > - **Divisão do `app.js`:** 25 telas e estados idênticos antes e depois (`IGUAIS`); `node --check` ok em todos os módulos.
@@ -23,17 +23,17 @@
 | Ordem | Entrega | Quando | Depende de |
 |---|---|---|---|
 | 1 | Baseline (22 OK) e retrato das telas | **Seg 26** | Nada |
-| 2 | `app.js` dividido em módulos (PR) | Seg 26 – Ter 27 | Nada (**não espera o backend**) |
-| 3 | Guarda de rotas por lista (PR) | Ter 27 | Item 2 |
-| 4 | **`config.js` de produção e *workflow* do Pages** (§9), com o Kauê | **Qua 28** | Nada (a URL definitiva do Render só sai no sábado) |
-| 5 | Telas de Estoque e Pedido contra o Contrato v2, com API simulada | Qua 28 | Contrato v2 (A10, **aprovado em 27/10**) |
-| 6 | **Gate da Fase 2**: aceite real com 16 evidências | Qui 29 (manhã) | Lucas (Fases 1 e 2) |
-| 7 | Telas de Estoque e Pedido com o backend real | Qui 29 – Sex 30 | Lucas (Fase 3) |
-| 8 | Tela 12 (Produção) e **Tela 03 (Dashboard)** | Sex 30 | Fase 4A; Fase 6 |
-| 9 | **Telas 13 (Reposição) e 14 (Marketing)**. A 14 pode ficar com o Lucas, se apertar | Sáb 31 | Fases 5 e 6 |
-| 10 | Investigar o Playwright instável (A13) | Até Sáb 31 | — |
-| 11 | **Botão "Descartar"** no detalhe das linhas (A12, **opcional**) | Sex 30 | Lucas (Fase 3). **É o primeiro a sair** se a conferência de sexta à noite mostrar atraso (A28) |
-| 11 | Aceite **na URL publicada** | Dom 01/11 | Deploy final |
+| 2 | `app.js` dividido em módulos (PR) | Seg 26 – Qua 28 | Nada (**não espera o backend**) |
+| 3 | Guarda de rotas por lista (PR) | Qua 28 | Item 2 |
+| 4 | **`config.js` de produção e *workflow* do Pages** (§9), com o Kauê | **Qui 29** | Nada (a URL definitiva do Render só sai no sábado à noite) |
+| 5 | Telas de Estoque e Pedido contra o Contrato v2, com API simulada | Qui 29 | Contrato v2 (A10, **aprovado em 27/10**) |
+| 6 | **Gate da Fase 2**: aceite real com 16 evidências | Sex 30 (manhã) | Lucas (Fases 1 e 2) |
+| 7 | Telas de Estoque e Pedido com o backend real | Sex 30 – Sáb 31 | Lucas (Fase 3) |
+| 8 | Tela 12 (Produção) e **Tela 03 (Dashboard)** | Sáb 31 | Fase 4A; Fase 6 |
+| 9 | **Telas 13 (Reposição) e 14 (Marketing)**. A 14 pode ficar com o Lucas, se apertar | Dom 01/11 | Fases 5 e 6 |
+| 10 | Investigar o Playwright instável (A13) | Até Dom 01/11 | — |
+| 11 | **Botão "Descartar"** no detalhe das linhas (A12, **opcional**) | Sáb 31 | Lucas (Fase 3). **É o primeiro a sair** se a conferência de sábado à tarde mostrar atraso (A28) |
+| 12 | Aceite **na URL publicada** (com o B1, as Telas 12, 13 e 14 mostram o aviso do `503`) | Seg 02/11 | Deploy final |
 
 **Pronto quando:**
 1. `app.js` dividido, com `IGUAIS` e 22 OK;
@@ -177,7 +177,7 @@ Rode também o `comparar_retratos` entre o `retrato_depois.json` e um retrato no
 
 > **Lembre:** isso é experiência de uso. **A segurança é o `403` do backend** (CT05, CT08), já testado na Fase 1 do Lucas.
 
-## 5. Gate da Fase 2: aceite com o backend **real** (quinta 29)
+## 5. Gate da Fase 2: aceite com o backend **real** (sexta 30, A36)
 
 Comece **só quando o Lucas avisar** que os 10 itens da Fase 2 passaram.
 
@@ -299,7 +299,7 @@ const payloadPedido = (clienteId, itens) => ({cliente_id: clienteId ? Number(cli
 
 ### 6.3 Produção (Tela 12)
 
-**Bloqueada até o Contrato v2 e a Fase 4A.**
+**Bloqueada até a Fase 4A** (o Contrato v2 já está aprovado e na `main`).
 
 **Plano B1 da licença (A31), vale para as Telas 12, 13 e 14:** no Render, a otimização fica desligada até a Gurobi autorizar. Aí `POST /api/producao/recomendacao` e `POST /api/reposicao/recomendacao` respondem **`503`** com `{"mensagem":"A recomendação está disponível só na demonstração local da equipe."}`. Mostre essa `mensagem` como **aviso informativo** (não como erro em vermelho) e mantenha a tela utilizável. No marketing, a mensagem já vem pronta no campo `mensagem`. Nos testes de navegador, simule também um `503`.
 
@@ -379,7 +379,7 @@ O `config.js` novo (§9) continua apontando para `http://localhost:8080` quando 
 | Guarda | Funcionário: `pedidos/novo` e `estoque` liberados; `funcionarios`, `produtos/novo`, `dashboard` e `producao` bloqueados **sem chamadas à API** |
 | Estoque | Validade desabilitada na saída; descarte desabilitado sem vencido; `422` como mensagem geral; payload exato; botão "Descartar" só em linha vencida com saldo, com confirmação, e **uma** chamada por clique (A12, CT71) |
 | Pedido | Sem itens bloqueia; produto repetido não duplica; payload exato; `422` mantém o pedido; total 44,70 |
-| Produção | "Calculando"; tabela; "Falta ingrediente" × "Sem lucro"; **nenhum termo técnico** em `page.content()` |
+| Produção | "Calculando"; tabela; "Falta ingrediente" × "Sem lucro"; **nenhum termo técnico** em `page.content()`; resposta `503` (B1) vira aviso informativo, sem tela de erro (CT72) |
 | Dashboard | Mês padrão; filtros viram a URL certa (`produto_id` repetido); bloco "Plano de produção" com `null`; Funcionário bloqueado |
 | Reposição | Erros por campo; resumo nos 4 casos; ordem da tabela; nenhum termo técnico |
 | Marketing | Até 3 cartões; aviso sem cálculo com link; sem botão de publicar |
@@ -409,7 +409,7 @@ O `config.js` novo (§9) continua apontando para `http://localhost:8080` quando 
 1. **`frontend/README.md`:** reescreva "Situação do backend deste checkout" (datada de 27/09) com o estado real, a estrutura de módulos, o aceite real e as ferramentas de retrato.
 2. Um PR por etapa (divisão, guarda, cada tela, Pages), com Conventional Commits, revisão de um colega e evidências.
 
-## 9. Publicação no GitHub Pages (US20) — preparar na quarta 28; URL definitiva no sábado 31
+## 9. Publicação no GitHub Pages (US20) — preparar na quinta 29; URL definitiva no sábado 31 à noite
 
 O backend vai para o Render (tutorial do Kauê, §12). O frontend vai para o **GitHub Pages**, publicado por **GitHub Actions**. O Pages "por branch" só publica a raiz ou a pasta `/docs`, e o nosso frontend está em `frontend/`.
 
@@ -419,7 +419,7 @@ Troque o `frontend\js\config.js` pelo de `docs\Sprint_3\referencia\deploy\config
 - no **`github.io`**, ele usa a URL do Render e um tempo limite de **90 s**;
 - em qualquer outro endereço (Live Server, `http.server`, testes), continua com `http://localhost:8080` e **15 s**.
 
-**Troque a constante `PRODUCAO`** pela URL do serviço **definitivo** do Render, que só existe a partir do **sábado 31** (A21: o banco gratuito expira 30 dias depois de criado, por isso a criação ficou para o último dia possível). Se houver ensaio na quarta ou quinta, use a URL do ensaio **só para testar**, sem comitar.
+**Troque a constante `PRODUCAO`** pela URL do serviço **definitivo** do Render, que só existe a partir do **sábado 31** (A21: o banco gratuito expira 30 dias depois de criado, por isso a criação ficou para o último dia possível). Se houver ensaio na quinta 29 ou na sexta 30 (A36), use a URL do ensaio **só para testar**, sem comitar.
 
 **Por que 90 s:** o plano free do Render **dorme** após 15 min sem uso e leva ~1 min para acordar (documentação do Render, 26/10). Com 15 s, a primeira chamada do dia mostraria "O servidor demorou para responder" (CT70).
 

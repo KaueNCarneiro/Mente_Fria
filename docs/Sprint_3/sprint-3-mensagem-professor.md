@@ -1,6 +1,10 @@
 # Mensagem ao professor — Sprint 3 (P3)
 
-**Para enviar:** Diogo, em nome do grupo (o Lucas, como PO, revisa antes). **Quando:** terça, 27/10.
+**ENVIADA em 27/10/2026.** Resposta em `resposta-professor.md`.
+
+**Correção posterior (27/10, noite):** a dúvida 2 dizia que não havia a licença acadêmica do Gurobi para servidor (WLS). Ela existe: é a do Kauê, válida até 25/09/2027 e de uso pessoal (decisão A34). **Professor avisado pessoalmente em 27/10** da WLS e de que, com o plano B1 (A31), a URL publicada não mostra a otimização. Orientação mantida: contatar a Gurobi e validar antes do Render.
+
+**Para enviar (original):** Diogo, em nome do grupo (o Lucas, como PO, revisa antes). **Quando:** terça, 27/10.
 **Depois:** guardar a resposta do professor nesta pasta (`docs/Sprint_3/resposta-professor.md`) e avisar a equipe. Só então editar o Termo, a Visão e o Backlog (tutorial do Diogo, §9.2).
 
 O texto abaixo é para copiar e colar. Os trechos entre colchetes são para conferir antes de enviar.
@@ -52,5 +56,5 @@ Diogo — grupo Mente Fria [conferir: assinar também pelos outros integrantes?]
 | Sprint curta extra | P7 e A28 (gatilho de sexta, 30/10) |
 
 **Se a resposta mudar algo:**
-- **Licença recusada:** avisar o Kauê e o Lucas no mesmo dia. A saída é o professor indicar a licença aceita. O código não muda: só a variável de ambiente da licença no Render.
+- **Licença recusada:** avisar o Kauê e o Lucas no mesmo dia. A saída é o professor indicar a licença aceita. O código não muda: só a variável de ambiente da licença no Render. *(Superado em 27/10: vale o plano B1, A31.)*
 - **Avaliação depois de 30/11:** recriar o banco em data mais próxima, ou passar para o plano pago. Antes de decidir, confirmar as regras na documentação do Render. A página de 26–27/10 diz que só pode haver **um banco gratuito ativo por conta** e **não diz** se é possível criar outro depois que um expira.

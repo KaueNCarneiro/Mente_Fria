@@ -4,11 +4,11 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-**Última atualização:** 19/09/2026
+**Última atualização:** 19/09/2026 (conteúdo da Sprint 1). **Nota de 27/10/2026:** os SQLs da Sprint 3 (estoque por linhas, pedido com baixa, reposição, dashboard) estão na seção 6 abaixo.
 
 > **Status:** todos os SQLs abaixo foram executados no PostgreSQL 16, sobre o `Script_DDL.sql` entregue, com parâmetros reais (37 verificações, incluindo os erros esperados conferidos por SQLSTATE e nome de constraint). A regra do açaí foi testada em Java 21 (15 casos). **Os trechos de código Spring (seção "Padrões de código") ainda não foram executados** — a equipe valida ao implementar. Itens marcados como **proposta** dependem de confirmação.
 
-Este documento é o contrato entre quem cuida dos dados e quem escreve os `Repository` em Java: cada método abaixo é um SQL pronto, com o que devolve e com o que pode falhar. Convenção de nomes: a mesma do `Roteiro_Sprint1_Detalhado_PostgreSQL_v3.md`.
+Este documento é o contrato entre quem cuida dos dados e quem escreve os `Repository` em Java: cada método abaixo é um SQL pronto, com o que devolve e com o que pode falhar. Convenção de nomes: a mesma do `Roteiro_Sprint1_Detalhado_PostgreSQL_v3.md` (roteiro da Sprint 1, que não está no repositório).
 
 ---
 
@@ -353,7 +353,7 @@ static boolean composicaoTemAcai(List<String> nomesDosIngredientes) {
 3. `composicaoTemAcai(nomes)` é falso → `400`, campo `composicao`: *"O produto precisa ter o açaí entre os ingredientes."* (CT15)
 4. Só então, dentro da transação: `ProdutoRepository.inserir` + `inserirComposicao`.
 
-**Casos para o teste unitário do método** (todos passaram em Java 21):
+**Casos para o teste unitário do método** (todos passaram em Java 21, em 19/09; na Sprint 3, com JDK 25, o `RegraAcaiTest` de `docs/Sprint_3/referencia/` tem 13 casos e passa):
 
 | Nome | Resultado esperado |
 |---|---|
@@ -400,6 +400,12 @@ Consequências aceitas: (1) se o dono renomear o ingrediente para um nome sem "a
 
 ---
 
-## 6. Fora deste documento (Sprint 2 em diante)
+## 6. SQL da Sprint 3 (atualizado em 27/10/2026)
 
-SQL de `cliente` (US13), `pedido`/`pedido_produto` (US12), `movimentacao_estoque` e ajuste de `quantidade_estoque` (US9), consultas do dashboard (US17) e as consultas de reposição e validade (US14–US16). Índices adicionais ficam para a Sprint 3, com o dashboard e dados reais.
+Os SQLs de `pedido`/`pedido_produto` (US12), `movimentacao_estoque` por linhas e ajuste de `quantidade_estoque` (US9), recomendação de produção (US10), reposição (US14) e dashboard (US17) estão **escritos e executados** no PostgreSQL 16:
+
+- `docs/Sprint_3/referencia/bd/consultas_sprint3.sql`: as **consultas 1 a 13**, com `:hoje` e `:agora` vindos do Java (São Paulo, A9);
+- os repositórios Java correspondentes em `docs/Sprint_3/referencia/backend/` (`MovimentacaoRepository`, `PedidoRepository`, `ReposicaoRepository`, `DashboardRepository` e outros), com `NamedParameterJdbcTemplate`;
+- o índice parcial `ix_movimentacao_linhas` no `Script_DDL.sql` de referência.
+
+Pelo tutorial do Diogo (§6), esses SQLs vão para `docs/Apoio/sql_repositorios_sprint3.md` junto com o PR do banco. Continuam **fora** do projeto nesta etapa: o SQL de `cliente` (US13) e as consultas dedicadas de alertas (US15/US16), que o Adendo nº 1 trata pela tela de estoque e pelo dashboard.

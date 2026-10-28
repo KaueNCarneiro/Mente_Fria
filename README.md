@@ -1,14 +1,14 @@
 # Mente Fria
 
-Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: uma açaiteria), que centraliza o controle de estoque, produtos, ingredientes, pedidos e clientes. Seu diferencial é calcular, via Programação Linear Inteira, a quantidade ideal de produção de cada produto para maximizar a receita com os recursos disponíveis.
+Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: uma açaiteria), que centraliza o controle de estoque, produtos, ingredientes, pedidos e clientes. Seu diferencial é calcular, via Programação Linear Inteira, a quantidade ideal de produção de cada produto para maximizar o **lucro estimado** (preço de venda menos o custo dos ingredientes) com o estoque válido disponível, conforme o Adendo nº 1 ao Termo de Aceite (27/10/2026).
 
-**Deploy:** ainda não publicado — previsto para a Sprint 4 (Backlog Priorizado, US20). Plataformas definidas: GitHub Pages (frontend) e Render (backend + banco). O link entra aqui assim que existir, mesmo que instável.
+**Deploy:** ainda não publicado — previsto para a **Sprint 3** (US20): banco e serviço criados no Render em 31/10/2026, sistema no ar até **30/11/2026** (o banco gratuito expira 30 dias depois de criado; data de expiração: _[preencher no deploy]_). Plataformas: GitHub Pages (frontend) e Render (backend + banco). O link entra aqui assim que existir, mesmo que instável.
 **Equipe:** Leonardo Fagundes Oliveira (RA 2840482421009) — Diogo Pereira Miranda (RA 2840482423006) — Lucas Gabriel Valadares Bassi (RA 2840482423008) — Kauê Nogueira Carneiro (RA 2840482423039) · Laboratório de Engenharia de Software · ADS Fatec Ribeirão Preto
 
 ## Stack
 - Frontend: JavaScript (ES modules), HTML e CSS, sem build — deploy no GitHub Pages
 - Backend: Java 25 + Spring Boot 4.0.8 (Spring JDBC, sem JPA), build com Maven 3.9 (via Maven Wrapper)
-- Otimização: Python 3.14 + Gurobi 13.0.1 — módulo de Programação Linear Inteira (recomendação de produção), chamado pelo backend como subprocesso (JSON via stdin/stdout)
+- Otimização: Python 3.14 + Gurobi 13.0.3 — módulos de Programação Linear Inteira (recomendação de produção por lucro e, na Sprint 3, reposição com orçamento), chamados pelo backend como subprocesso (JSON via stdin/stdout)
 - Banco de dados: PostgreSQL 16 — deploy no Render
 
 ## Como rodar localmente
@@ -16,8 +16,8 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 - Git 2.30 ou superior
 - JDK 25 (o Maven não precisa ser instalado: use o `mvnw` da pasta `backend`)
 - Docker 24 ou superior (PostgreSQL 16 em container; também previsto para os testes de integração)
-- Python 3.14 ou superior + pip (o Gurobi 13.0.1 é a primeira versão compatível com o Python 3.14)
-- Licença Gurobi acadêmica (WLS) — a configuração para todos os integrantes ainda está pendente
+- Python 3.14 ou superior + pip (testado com o 3.14.0 e o Gurobi 13.0.3)
+- Licença Gurobi: **não é preciso configurar**. O `gurobipy` instalado pelo `pip` traz uma licença restrita (desenvolvimento e avaliação; até 2.000 variáveis e 2.000 restrições), suficiente para rodar e testar o projeto. A WLS acadêmica do projeto é **pessoal** (do Kauê) e não deve ser compartilhada
 - Node.js 20 ou superior + Google Chrome (opcional: só para os testes de navegador do frontend)
 
 ### Passo a passo
@@ -38,7 +38,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
    | `DB_USER` | Usuário do PostgreSQL |
    | `DB_PASSWORD` | Senha do PostgreSQL (a mesma do `POSTGRES_PASSWORD` do passo 4) |
 
-   Planejadas (ainda não lidas pelo código; entram com login, CORS e chamada ao Python):
+   Planejadas (ainda não lidas pelo código da `main`; o código da Sprint 3, em `docs/Sprint_3/referencia/`, já as usa e elas passam a valer à medida que as fases entram na `main`):
 
    | Variável | Descrição |
    |---|---|
@@ -46,6 +46,10 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
    | `CORS_ALLOWED_ORIGIN` | Origens do frontend liberadas na API (desenvolvimento: `http://127.0.0.1:5500,http://localhost:5500`) |
    | `PYTHON_CMD` | Comando do Python na máquina (`python`, `python3` ou `py`) |
    | `OTIMIZADOR_SCRIPT` | Caminho do script, relativo à pasta de onde o backend inicia (`../optimization/app/otimizador.py`) |
+   | `REPOSICAO_SCRIPT` | Caminho do módulo de reposição (`../optimization/app/reposicao.py`) |
+   | `OTIMIZADOR_HABILITADO` | `true` (padrão) chama o Python; `false` faz produção e reposição responderem `503` (usado no Render enquanto a Gurobi não autorizar a licença lá) |
+   | `OTIMIZADOR_TIMEOUT_SEGUNDOS` | Tempo limite de cada chamada ao Python (padrão `10`) |
+   | `MF_PYTHON` | Só para os testes do backend: caminho do Python com `gurobipy`, para os testes que chamam o Python de verdade (opcional) |
 
    Exemplo de `.env.example` (sem valores secretos):
    ```
@@ -59,7 +63,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
    PYTHON_CMD=python
    OTIMIZADOR_SCRIPT=../optimization/app/otimizador.py
    ```
-   As credenciais da licença Gurobi WLS (`GRB_WLSACCESSID`, `GRB_WLSSECRET`, `GRB_LICENSEID`) são segredo tanto quanto `DB_PASSWORD`: **nunca** commitar o `.lic` nem os valores. O backend lê o `.env` pelo caminho definido em `backend/src/main/resources/application.properties` (relativo à pasta de onde o Java é iniciado); se aparecer `Could not resolve placeholder 'DB_USER'`, defina as variáveis no terminal ou no IntelliJ.
+   As credenciais da licença Gurobi WLS (`GRB_WLSACCESSID`, `GRB_WLSSECRET`, `GRB_LICENSEID`) são segredo tanto quanto `DB_PASSWORD`: **nunca** commitar o `.lic` nem os valores. A WLS é pessoal: só o titular a usa, e no Render só com autorização escrita da Gurobi. O backend lê o `.env` pelo caminho definido em `backend/src/main/resources/application.properties` (relativo à pasta de onde o Java é iniciado); se aparecer `Could not resolve placeholder 'DB_USER'`, defina as variáveis no terminal ou no IntelliJ.
 4. Crie o banco e rode o schema:
    ```bash
    docker run --name mente-fria-db -e POSTGRES_PASSWORD=SUA_SENHA_LOCAL -e POSTGRES_DB=mente_fria -p 5432:5432 -d postgres:16
@@ -84,6 +88,8 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 7. Acesse o frontend em `http://127.0.0.1:5500/index.html` (API em `http://localhost:8080`, configurada em `frontend/js/config.js`). Teste do backend: `GET http://localhost:8080/api/saude` → `{"status":"ok","banco":"ok"}` e `GET http://localhost:8080/api/ingredientes` → 7 itens.
 
 > **Estado atual (corte da Sprint 2, 02/10/2026):** o backend só tem `GET /api/saude` e `GET /api/ingredientes`; login/JWT, CORS e endpoints de escrita ainda não existem. O frontend foi verificado apenas com respostas simuladas. Detalhes em `docs/Sprint_2/`. Documentação do projeto (DER, UML, Arquitetura, Contrato de Comunicação, Plano de Testes): pasta `docs/`.
+>
+> **Sprint 3 (26/10 a 02/11/2026, em andamento):** o código de todas as histórias da sprint está escrito e testado em `docs/Sprint_3/referencia/` e entra na `main` fase a fase, por PR. Roteiro, decisões e tutoriais: `docs/Sprint_3/`. Mudanças de escopo aprovadas pelo professor: `docs/Sprint_3/sprint-3-adendo-termo-de-aceite.md`.
 
 ## Estrutura do repositório
 ```
@@ -102,7 +108,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 
 ## Testes
 Como rodar:
-- Otimização (Python, 8 testes): `python -m pytest optimization/tests` (exige a licença Gurobi configurada)
+- Otimização (Python, 8 testes na `main`; 47 no código da Sprint 3): `python -m pytest optimization/tests` (basta a licença que vem com o `gurobipy` do `pip`)
 - Banco (32 testes de constraints; use um banco descartável, pois os contadores de ID avançam):
   ```bash
   docker exec mente-fria-db psql -U postgres -c "CREATE DATABASE mente_fria_teste;"
@@ -113,7 +119,7 @@ Como rodar:
 - Frontend (Playwright, com API simulada; servidor do frontend na porta 5500): em `/frontend`, `npm install` e `npm test`
 - Backend (hoje só o teste de contexto, exige o PostgreSQL no ar): em `/backend`, `./mvnw test`
 
-Testes de integração com Testcontainers e CI (GitHub Actions) estão planejados em `docs/Plano_de_Testes_Mente_Fria.md`, mas ainda não existem.
+Testes de integração com Testcontainers estão no código da Sprint 3 (`docs/Sprint_3/referencia/backend/`, 95 testes) e entram na `main` com as fases. Não há CI configurado.
 
 ## Licença / Uso acadêmico
-Projeto desenvolvido para a disciplina de Laboratório de Engenharia de Software — ADS, Fatec Ribeirão Preto, 2026. A licença Gurobi usada é a acadêmica (WLS), restrita a uso não comercial: o sistema serve à demonstração acadêmica e não deve ser usado em operação comercial sem outra licença.
+Projeto desenvolvido para a disciplina de Laboratório de Engenharia de Software — ADS, Fatec Ribeirão Preto, 2026. O Gurobi é usado com a licença restrita do `pip` (desenvolvimento e avaliação) e com a WLS acadêmica pessoal do Kauê, ambas só para uso não comercial. O uso do solver no sistema publicado depende de autorização escrita da Gurobi; sem ela, a otimização é demonstrada localmente. O sistema serve à demonstração acadêmica e não deve ser usado em operação comercial.

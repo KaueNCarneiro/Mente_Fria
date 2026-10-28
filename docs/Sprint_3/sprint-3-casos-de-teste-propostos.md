@@ -1,6 +1,6 @@
 # Casos de teste propostos — Sprint 3 — Mente Fria
 
-**Status:** PROPOSTA (auditoria de 26/10/2026; v5.2, 27/10: CT71 do descarte por linha, A12). **Destino:** `docs/Plano_de_Testes_Mente_Fria.md`, seção 3, nova subseção "Sprint 3". O Diogo e o Kauê incorporam **até 31/10** (a janela de testes de 01–06/11 executa o Plano).
+**Status:** PROPOSTA (auditoria de 26/10/2026; v5.2, 27/10: CT71 do descarte por linha, A12; v5.3, 27/10 noite: CT72 do plano B1 e CT68 ajustado ao B1). **Destino:** `docs/Plano_de_Testes_Mente_Fria.md`, seção 3, nova subseção "Sprint 3". O Diogo e o Kauê incorporam **até 01/11** (A36; a janela de testes de 02–06/11, aceita pelo professor em 27/10, executa o Plano).
 **Numeração:** continua a oficial (CT01–CT29).
 - CT30–CT37 têm os mesmos números que o tutorial do banco de 14/10 já usava.
 - **CT51–CT70 são novos** (US14, US17, US18 e US20, que entraram na Sprint 3 pela decisão A2b).
@@ -72,7 +72,7 @@ Cenário de referência (conta à mão): estoque válido açaí 20, leite conden
 | CT54 | Período e quantidade de ingredientes | Cenário de referência; 12 ingredientes extras consumidos | Admin | 7 dias → só o pedido de 28/10 (copo 7); 30 dias → até **8** ingredientes; 31 dias → até **15**; pedido **cancelado** continua contando | INT | **Sim** (`ReposicaoTest`) |
 | CT55 | Sem pedidos no período | Banco sem pedidos | Admin | `200`; `itens = []`; mensagem "Não houve pedidos no período…"; o Python **não** é chamado | INT | **Sim** |
 | CT56 | Validação e permissão | — | Admin / Funcionário | `periodo_dias = 0` e `orcamento = −5` → `400` com os dois campos; orçamento com 3 casas → `400`; Funcionário → `403` | INT | **Sim** |
-| CT57 | Tela 13 | Cenário de referência | Admin | Campos período (dias) e orçamento (R$); tabela do maior para o menor custo; frase de resumo; **nenhum termo técnico** ("cobertura", "otimização"…) | E2E | Não (frontend; funções de apoio: `testar_apoio_telas.mjs`, 14/14) |
+| CT57 | Tela 13 | Cenário de referência | Admin | Campos período (dias) e orçamento (R$); tabela do maior para o menor custo; frase de resumo; **nenhum termo técnico** ("cobertura", "otimização"…) | E2E | Não (frontend; funções de apoio: `testar_apoio_telas.mjs`, 15/15) |
 
 ### US17 — Dashboard (novo na Sprint 3)
 
@@ -100,7 +100,7 @@ Cenário de referência (conta à mão): 15/09 Dono 2× Tradicional; 05/10 Func 
 | ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado em 26/10 |
 |---|---|---|---|---|---|---|
 | CT67 | A imagem sobe dentro dos limites do plano free | `docker build` da raiz; banco com o DDL | — | Container com 512 MB e 0,1 CPU → `GET /api/saude` `200` em até ~2 min; sem `OOMKilled`; `/api/teste/python` → `401` | DEP (local) | **Sim** (simulação: 83 s; pico 133 MiB) |
-| CT68 | Fluxo do Termo no ambiente publicado | Deploy no Render + Pages | Admin e Funcionário | Pela URL HTTPS do Pages: cadastro → login → entrada de estoque → recomendação → pedido → baixa; reposição; dashboard; marketing | DEP, E2E | Não (depende do deploy real); **o mesmo fluxo passou no container local** |
+| CT68 | Fluxo do Termo no ambiente publicado | Deploy no Render + Pages | Admin e Funcionário | Pela URL HTTPS do Pages: cadastro → login → entrada de estoque → recomendação → pedido → baixa; reposição; dashboard; marketing. **Com o plano B1 (A31):** recomendação, reposição e marketing mostram o aviso do `503` (CT72) e são demonstrados localmente pelo Kauê; o resto do fluxo, na URL | DEP, E2E | Não (depende do deploy real); **o mesmo fluxo passou no container local** |
 | CT69 | CORS do GitHub Pages | Idem | — | `OPTIONS` com a origem do Pages → `200` com `Access-Control-Allow-Origin`; outra origem → `403` | DEP | Sim no container local; no Render, não |
 | CT70 | Primeira chamada depois de o serviço "dormir" | Serviço sem uso por 15 min | Admin | A tela espera (até 90 s) e funciona; **não** aparece "O servidor demorou para responder" | DEP, E2E | Não (`config.js` conferido: 90 s no Pages, 15 s local) |
 | CT72 | Otimização desligada no servidor (plano B1 da licença, A31) | `OTIMIZADOR_HABILITADO=false` (como no Render sem autorização da Gurobi) | Admin e Funcionário | Produção → `503` "A recomendação está disponível só na demonstração local da equipe.", sem chamar o Python (Funcionário continua `403`); reposição: campo inválido → `400`, sem pedidos → `200`, com pedidos → `503`; marketing → mensagem própria; dashboard → `200` com `otimizador_habilitado: false`; as Telas 03, 12, 13 e 14 mostram a mensagem como aviso | INT, DEP, E2E | **Sim** (`OtimizadorDesligadoTest`, 3 testes; tirar a chave de propósito derruba o teste). No Render e nas telas, não |
@@ -117,9 +117,9 @@ Cenário de referência (conta à mão): 15/09 Dono 2× Tradicional; 05/10 Func 
 
 ---
 
-## 3. Execução na janela de testes (01–06/11)
+## 3. Execução na janela de testes (02–06/11, A36; aceita pelo professor)
 
-- Ordem sugerida: primeiro os caminhos do Termo de Aceite **no ambiente publicado** (CT68, CT06, CT12, CT30, CT38, CT42, CT51, CT58, CT64), depois os casos de erro.
+- Ordem sugerida: primeiro os caminhos do Termo de Aceite **no ambiente publicado** (CT68, CT06, CT12, CT30, CT38, CT58, CT72), depois os casos de erro. **Com o plano B1 (A31):** CT42, CT51 e CT64 rodam **na demonstração local** (Kauê, com a WLS dele); no Render, só se a Gurobi autorizar.
 - Divisão por perfil: dois integrantes testam como Administrador e dois como Funcionário.
 - Cada defeito segue o fluxo: registrar → caso que reproduz → `fix/...` → PR → retestar (roteiro v4.6, §4.4, item 5).
 - Para defeitos difíceis, usar a skill `diagnosing-bugs`.

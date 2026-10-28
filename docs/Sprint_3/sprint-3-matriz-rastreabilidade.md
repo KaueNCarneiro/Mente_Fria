@@ -1,10 +1,10 @@
 # Matriz de rastreabilidade — Sprint 3 — Mente Fria
 
-**Revisão:** 27/10/2026 (v5.2: respostas da equipe; descarte por linha A12 e CT71; deploy definitivo no sábado, A21). Antes: 26/10, noite (v5.1: entram US14, US17, US18 e US20, decisão A2b). Versão da tarde em `historico/v5-26-10-antes-das-4-historias/`.
+**Revisão:** 27/10/2026, noite (v5.3: resposta do professor, B1, CT72, A26 separada do BD01, A35). Antes: 27/10 (v5.2: respostas da equipe; descarte por linha A12 e CT71; deploy definitivo no sábado, A21). Antes: 26/10, noite (v5.1: entram US14, US17, US18 e US20, decisão A2b). Versão da tarde em `historico/v5-26-10-antes-das-4-historias/`.
 
 **Identificadores:**
 - Oficiais do projeto: US (Backlog), UC (`Diagramas_UML.md`), CT (Plano de Testes), D, F e P (roteiro v4.6 e registro de 14/10).
-- **A1–A27:** criados na auditoria (`sprint-3-decisoes-e-pendencias.md`).
+- **A1–A35:** criados na auditoria (`sprint-3-decisoes-e-pendencias.md`).
 - **CT30–CT72:** **propostos** (`sprint-3-casos-de-teste-propostos.md`); viram oficiais quando entrarem no Plano de Testes.
 
 **Estado comprovado em 26/10:**
@@ -14,7 +14,7 @@
 
 **Prioridade:** **P0** = bloqueia outras pessoas ou a entrega; **P1** = Must do núcleo; **P2** = Must da extensão ou qualidade obrigatória; **P3** = complementar.
 
-**Testes de `referencia/` citados:** backend 95 (PostgreSQL 16 real e Python real), Python 47, banco 32 + 41, frontend 14 (funções de apoio) e retratos `IGUAIS`.
+**Testes de `referencia/` citados:** backend 95 (PostgreSQL 16 real e Python real), Python 47, banco 32 + 41, frontend 15 (funções de apoio) e retratos `IGUAIS`.
 
 ## 1. Histórias de usuário
 
@@ -35,7 +35,7 @@
 | **US14** / UC14 — reposição (**Must**) | Backlog; redesenhada em 14/10 | **Pronto fora:** `reposicao.py` (22 testes + oráculo) e Java (8 testes + Python real); Tela 13 pendente | Fase Q (Python); `POST /api/reposicao/recomendacao`; Tela 13 | **Kauê** (Python e Java), Diogo (SQL 9), Leonardo (tela) | Kauê §11; Diogo §6–§7; Leonardo §6.5 | Fase P; Fase 3 (pedidos); A10 | CT51–CT57 | P1 |
 | **US17** / UC17 — dashboard (**Must**) | Backlog; Tela 03 | **Pronto fora:** SQL 10–13 (Docker e seed) e Java (5 testes); Tela 03 pendente. F12 resolvida (A18); conteúdo do Termo mantido (A16) | `GET /api/dashboard`; Tela 03 | **Diogo** (repositório), Lucas (serviço), Leonardo (tela) | Diogo §6–§7; Lucas §6; Leonardo §6.4 | Fase 3; Fase 4A (último plano) | CT58–CT63 | P1 |
 | **US18** / UC18 — marketing (**Must**) | Backlog; Apêndice B do v4.6 | **Pronto fora** (4 testes); Tela 14 pendente | `GET /api/marketing/sugestoes`; Tela 14 | Lucas, Leonardo | Lucas §6; Leonardo §6.6 | Fase 4A | CT64–CT66 | P1 |
-| **US20** — deploy (**Must**) | Backlog; Termo (critério de pronto) | **Pronto fora:** `Dockerfile` e `render.yaml` (imagem testada com 512 MB e 0,1 CPU, fluxo completo sem falhas), *workflow* do Pages e `config.js` (14/14). Deploy real **pendente**: ensaio opcional na qua/qui; **definitivo no sáb 31** (A21) | Render (backend + Postgres) e GitHub Pages | **Kauê** e Lucas (Render), Leonardo (Pages) | Kauê §12; Leonardo §9; Lucas §8 | Fases 1–2 no `main`; A21; A22 | CT67–CT70, CT72 (B1); URL pública (R6) | **P0** (a janela de testes depende) |
+| **US20** — deploy (**Must**) | Backlog; Termo (critério de pronto) | **Pronto fora:** `Dockerfile` e `render.yaml` (imagem testada com 512 MB e 0,1 CPU, fluxo completo sem falhas), *workflow* do Pages e `config.js` (15/15). Deploy real **pendente**: ensaio opcional na qui 29 ou sex 30; **definitivo no sáb 31 à noite** (A21, A36) | Render (backend + Postgres) e GitHub Pages | **Kauê** e Lucas (Render), Leonardo (Pages) | Kauê §12; Leonardo §9; Lucas §8 | Fases 1–2 no `main`; A21; A30, A31, A34 (com o B1, a otimização não roda na URL) | CT67–CT70, CT72 (B1); URL pública (R6) | **P0** (a janela de testes depende) |
 | **US13** (Could), **US15/US16** (Should), **US19**, **US26**, **US27** (Could) | Backlog / v4.6 | US13 e US27: schema pronto fora; resto não iniciado | **Fora da Sprint 3** (A2b) | — | — | — | — | — |
 
 ## 2. Pendências herdadas e decisões técnicas
@@ -44,23 +44,23 @@
 |---|---|---|---|---|---|---|---|---|
 | Hello World Java → Python | Sprint 1 | **Pronto fora** (eco real no perfil `dev`) | Copiar | Kauê, Lucas | Kauê §6, §8; Lucas §5.1 | Fase P | CT50 | P2 |
 | Python em outra máquina | Sprint 2 | **Pendente** | Rodar os 47 testes numa 2ª máquina | Kauê | Kauê §7 | Fase P | `47 passed` em 2 máquinas | P1 |
-| Contrato v2 (A10) | v4.6, Fase 0 | **Proposta pronta** (igual ao código) | Aprovar e aplicar | Kauê | Kauê §2 | — | Commit do contrato oficial | **P0** |
-| A3 — Must fora da sprint | Auditoria | **Encerrada** (A2b) | Avisar o professor das mudanças de conteúdo (P3) | Diogo, Lucas | Diogo §9.1 | — | Resposta guardada | P1 |
+| Contrato v2 (A10) | v4.6, Fase 0 | **Feito:** aprovado, aplicado e na `main` (PRs #34 e #35); a proposta ficou congelada | — | Kauê | Contrato oficial | — | Contrato oficial na `main` | Feito |
+| A3 — Must fora da sprint | Auditoria | **Encerrada** (A2b); P3 respondida em 27/10 (`resposta-professor.md`) | Feito: professor avisado pessoalmente em 27/10 (WLS e B1); enviar o adendo a ele | Diogo, Lucas | Adendo | — | Adendo enviado | P1 |
 | A4, A5, A7 — compilar, subir, 400 | Auditoria | **Corrigidos fora** | Copiar a Fase 1 | Lucas | Lucas §2 | — | 18/18 | **P0** |
 | A8 — BOM no Python | Auditoria | **Corrigido fora** (produção e reposição) | Copiar | Kauê | Kauê §5 | — | Testes de BOM | P1 |
 | A9 — data e hora | Auditoria | **Pronto fora** (validado no Java) | Copiar | Lucas, Diogo | Lucas §4 | Fase 3 | CT39 | P1 |
 | A16, A17, A20 — conteúdo do dashboard e do marketing | Auditoria | **Aprovadas em 27/10**, implementadas (A20 com 18 ideias) | Reler as ideias com o cliente | Lucas (PO) | Decisões | — | Registro da decisão | P3 |
 | A12 — botão "Descartar" por linha | v4.6 Fase 3; equipe em 27/10 | **Entrou**; backend pronto fora (CT71) | Copiar com a Fase 3; botão na Tela 10 | Lucas, Leonardo | Lucas §4; Leonardo §6.1 | Fase 3 | CT71 | P3 (primeiro corte, A28) |
 | A28 — gatilhos de corte e de Sprint 4 relâmpago | Equipe em 27/10 | Definido | Conferir na sex 30 à noite | Lucas (PO) | Decisões; roteiro §7 | Todas as fases | Decisão registrada | P2 |
-| A21 — limites do Render free | Documentação do Render | Simulado localmente. **Adiada em 27/10:** definitivo no sáb 31 (expira 30/11) | Ensaio opcional numa conta pessoal (qua/qui); decidir quem cria a conta (qui 29); criar no sábado; anotar a expiração | Kauê, Lucas | Kauê §12 | — | URL no README | **P0** |
-| A22/A30/A31 — licença do Gurobi no servidor | Usuário (sem WLS) + PyPI + professor (27/10) | **Não autorizada** até a Gurobi confirmar | Kauê pergunta à Gurobi sobre a WLS dele (A34); plano B | Kauê, Lucas (PO) | `sprint-3-licenca-gurobi.md` | US10, US11, US14, US18 no Render | Resposta da Gurobi guardada; plano B pronto | **P0** |
+| A21 — limites do Render free | Documentação do Render | Simulado localmente. **Adiada em 27/10:** definitivo no sáb 31 (expira 30/11) | Ensaio opcional numa conta pessoal (qui 29 ou sex 30); decidir quem cria a conta (sex 30, A36); criar no sábado à noite; anotar a expiração | Kauê, Lucas | Kauê §12 | — | URL no README | **P0** |
+| A22/A30/A31/A34 — licença do Gurobi no servidor | WLS do Kauê (A34) + PyPI + professor (27/10) | **Não autorizada** até a Gurobi confirmar | Kauê pergunta à Gurobi sobre a WLS dele (A34); plano B | Kauê, Lucas (PO) | `sprint-3-licenca-gurobi.md` | US10, US11, US14, US18 no Render | Resposta da Gurobi guardada; plano B pronto | **P0** |
 | A32 — backup e restauração | Professor (27/10) | **Validado localmente** | Backup no Render e restauração testada | Kauê | Kauê §12.6 | US20 | Evidência da restauração | P1 |
 | A33 — adendo ao Termo | Professor (27/10) | Rascunho pronto | Revisar, decidir o item 4 e enviar | Lucas, Diogo | `sprint-3-adendo-termo-de-aceite.md` | Edição dos documentos oficiais | Adendo aprovado | P1 |
-| A26 — BD01 (Docker desta máquina) | Evidências da Sprint 2 | **Causa encontrada e contorno verificado** | Registrar no relatório de evidências | Diogo | Diogo §2 | — | Evidência do BD01 preenchida | P2 |
+| A26 — incidente novo de Docker (26/10), **não é o BD01** | Auditoria | **Contorno verificado**; o BD01 (virtualização, Sprint 2) segue sem causa registrada | Registrar a A26 como incidente novo nas evidências da Sprint 3 | Diogo | Diogo §2 | — | Evidência registrada | P3 |
 | P2 — versão do Gurobi | Registro de 14/10 | **Decidida em 27/10: 13.0.3** (as duas passam nos 47 testes) | Fixar 13.0.3 nos 3 arquivos | Kauê, Diogo | Kauê §3 | — | `requirements.txt` UTF-8 | P2 |
 | A13 — Playwright instável | Auditoria | **Aberto** (original e dividido) | Diagnosticar e corrigir o teste | Leonardo | Leonardo §7.1 | — | 10 de 10 rodadas verdes | P2 |
 | A15 — branch `sprint-3` desatualizado | Auditoria (corrigida em 27/10: o merge não desfaz o PR #24) | Risco baixo | Levar os comentários do `env.example` para o `.env.example`; branches novos a partir da `main`; apagar o `sprint-3` | Kauê | Kauê §9 | — | PR do `.env.example` | P3 |
-| Documentos (receita → lucro, US9, US14, US17, US27, DER, mapa, Plano de Testes, Arquitetura, UML, Backlog "Sprint alvo") | v4.6 §10.1; auditoria | **Pendente** | Editar depois de avisar o professor | Diogo | Diogo §9 | P3 | PRs de documentação | P2 |
-| Plano de Testes (CT23, CT24, CT29; CT30–CT72) | v4.6 §4.4 | **Proposta pronta** | Incorporar **até 31/10** | Diogo, Kauê | Casos propostos | — | Plano atualizado | P2 |
+| Documentos (receita → lucro, US9, US14, US17, US27, DER, mapa, Plano de Testes, Arquitetura, UML, Backlog "Sprint alvo") | v4.6 §10.1; auditoria | **Feito em 27/10** (A37), depois da aprovação do adendo; US27 registrada como história **nova** no Backlog | `.docx` conferidos no Word em 27/10 | Diogo (revisão) | Diogo §9 | A33 | Documentos na `main` | P2 |
+| Plano de Testes (CT23, CT24, CT29; CT30–CT72) | v4.6 §4.4 | **Proposta pronta** | Incorporar **até 01/11** (A36) | Diogo, Kauê | Casos propostos | — | Plano atualizado | P2 |
 | `[PREENCHER]` da Sprint 2, BE03, retrospectivas, perda do Git | Sprints 1 e 2 | Pendentes | Ver tutorial do Kauê | Kauê, Lucas | Kauê §9 | — | Atas e evidências | P3 |
 | CI (GitHub Actions para os testes) | Plano de Testes §1 | Inexistente | **Opcional** (o *workflow* do Pages não roda testes) | — | — | — | — | — |

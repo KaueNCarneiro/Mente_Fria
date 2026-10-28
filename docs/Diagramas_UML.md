@@ -4,6 +4,8 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
+> **Revisão de 27/10/2026 (Sprint 3, Adendo nº 1 ao Termo de Aceite aprovado):** a recomendação de produção maximiza o **lucro estimado** (`Produto.calcularLucroPorCopo()`); a reposição recebe período **e orçamento**; o estoque é controlado **por linha de entrada** (`MovimentacaoEstoque.quantidadeRestante` e `motivo`); o pedido ganhou `status` e os dados de cancelamento para a nova US27 (fora da Sprint 3). O diagrama de casos de uso ainda não tem o caso de uso da US27.
+
 ---
 
 ## 1. Diagrama de Casos de Uso
@@ -99,7 +101,7 @@ Proprietário))
         -quantidadeEstoque: decimal
         -quantidadeMinima: decimal
         +precisaReposicao() boolean
-        +calcularQuantidadeRecomendadaCompra(periodoDias) decimal
+        +calcularQuantidadeRecomendadaCompra(periodoDias, orcamento) decimal
     }
 
     class Produto {
@@ -108,6 +110,7 @@ Proprietário))
         -precoVenda: decimal
         -ativo: boolean
         +calcularCustoProducao() decimal
+        +calcularLucroPorCopo() decimal
         +calcularQuantidadeOtimaProducao() int
         +gerarSugestaoMarketing() string
     }
@@ -120,6 +123,9 @@ Proprietário))
         -id: int
         -dataPedido: datetime
         -valorTotal: decimal
+        -status: StatusPedido
+        -dataCancelamento: datetime
+        +cancelar(usuario)
     }
 
     class ItemPedido {
@@ -134,8 +140,14 @@ Proprietário))
         -dataMovimentacao: datetime
         -observacao: string
         -dataValidade: date
+        -quantidadeRestante: decimal
+        -motivo: MotivoSaida
         +estaProximoDoVencimento boolean
+        +estaVencida boolean
     }
+    %% Sprint 3: cada ENTRADA é uma linha de estoque; quantidadeRestante diminui a cada baixa (só na ENTRADA).
+    %% motivo só existe na SAIDA: PEDIDO, CONVENCIONAL ou DESCARTE_VENCIDO. Linha vencida nunca é vendida.
+    %% StatusPedido: ATIVO ou CANCELADO. cancelar() é a US27 (fora da Sprint 3) e NÃO devolve estoque.
     %% dataValidade só é preenchida quando tipo = ENTRADA (equivalente conceitual da
     %% CHECK chk_movimentacao_data_validade no DER); em SAIDA permanece null.
     %% estaProximoDoVencimento só se aplica a instâncias com tipo = ENTRADA e dataValidade != null.
@@ -143,7 +155,8 @@ Proprietário))
     %% Os cálculos de recomendação de produção, reposição e sugestão de marketing (UC10, UC11, UC14, UC18)
     %% passaram a ser feitos sob demanda pelos métodos de Ingrediente e Produto acima — sem persistir
     %% histórico de cálculo, por isso não existem mais como classes/tabelas próprias.
-    %% calcularQuantidadeOtimaProducao() resolve um problema de otimização via Programação Linear Inteira pura
+    %% calcularQuantidadeOtimaProducao() maximiza o LUCRO estimado (Adendo nº 1): lucro por copo = preço de venda
+    %% menos o custo dos ingredientes da composição (calcularLucroPorCopo). Resolve via Programação Linear Inteira pura
     %% (Python, biblioteca Gurobi): as variáveis de decisão — quantidade de copos de cada produto — são todas
     %% inteiras, com função objetivo e restrições lineares. O resultado fica em memória (RAM) do processo,
     %% sem histórico salvo.
@@ -156,6 +169,7 @@ Proprietário))
     %% Relações
 
     Usuario "1" -- "N" Pedido : registra
+    Usuario "0..1" -- "N" Pedido : cancela
     Usuario "1" -- "N" MovimentacaoEstoque : registra
 
     UnidadeMedidaPorcaoPadrao "1" --> "N" Ingrediente : sugere padrão para
@@ -174,7 +188,7 @@ Proprietário))
 
 As funcionalidades de recomendação de produção (UC10, UC11), recomendação de reposição (UC14) e sugestão de marketing (UC18) continuam no sistema, mas passaram a ser calculadas sob demanda — via `Produto.calcularQuantidadeOtimaProducao()`, `Produto.gerarSugestaoMarketing()` e `Ingrediente.calcularQuantidadeRecomendadaCompra(periodoDias)` — sem persistir o histórico de cálculo. Por isso `RecomendacaoProducao`, `ItemRecomendacaoProducao`, `RecomendacaoReposicao`, `ItemRecomendacaoReposicao` e `SugestaoMarketing` saíram do diagrama e não têm mais tabela correspondente no DER (`docs/DER.md`).
 
-O atributo `dataValidade`, antes em `Ingrediente`, passou para `MovimentacaoEstoque`, pois cada `ENTRADA` de estoque pode corresponder a um lote com validade diferente das entradas anteriores do mesmo ingrediente. Por isso `dataValidade` só é preenchida quando `tipo = ENTRADA`; em uma `SAIDA` ela permanece nula, já que a saída apenas consome estoque já existente. Essa regra é garantida no nível físico pela constraint `chk_movimentacao_data_validade` do DER (`docs/DER.md`). Consequentemente, `estaProximoDoVencimento` e os UC16/US16 (alerta de vencimento) devem consultar apenas movimentações do tipo `ENTRADA` com `dataValidade` preenchida.
+O atributo `dataValidade`, antes em `Ingrediente`, passou para `MovimentacaoEstoque`, pois cada `ENTRADA` de estoque pode ter uma validade diferente das entradas anteriores do mesmo ingrediente. **Desde a Sprint 3, cada `ENTRADA` é uma linha de estoque**, com `quantidadeRestante`; as baixas consomem as linhas válidas da validade mais próxima para a mais distante, e uma linha vencida nunca é vendida. Por isso `dataValidade` só é preenchida quando `tipo = ENTRADA`; em uma `SAIDA` ela permanece nula, já que a saída apenas consome estoque já existente. Essa regra é garantida no nível físico pela constraint `chk_movimentacao_data_validade` do DER (`docs/DER.md`). Consequentemente, `estaProximoDoVencimento` e os UC16/US16 (alerta de vencimento) devem consultar apenas movimentações do tipo `ENTRADA` com `dataValidade` preenchida.
 
 `UnidadeMedidaPorcaoPadrao` (nova nesta revisão, US26/UC20) mantém um valor de `porcaoPadrao` por `unidadeMedida`, usado somente como **sugestão de pré-preenchimento** ao cadastrar um novo `Ingrediente` daquela unidade. O valor efetivo, usado em todos os cálculos de negócio (`calcularQuantidadeRecomendadaCompra`, composição de produto etc.), é sempre `Ingrediente.porcaoPadrao` — que pode divergir do padrão da unidade (ex.: Açaí com porção diferente dos demais ingredientes em `kg`). No DER, essa relação é implementada como uma FK obrigatória de `ingrediente.unidade_medida` para `unidade_medida_porcao_padrao.unidade_medida`.
 
@@ -202,4 +216,5 @@ O atributo `dataValidade`, antes em `Ingrediente`, passou para `MovimentacaoEsto
 | UC17 — Visualizar dashboard gerencial | US17 |
 | UC18 — Gerar sugestões de marketing | US18 |
 | UC19 — Exportar dashboard em CSV | US19 |
-| UC20 — Definir porção padrão por unidade de medida | US26 *(item 26 do `Backlog_Priorizado` — Could, Sprint 3)* |
+| UC20 — Definir porção padrão por unidade de medida | US26 *(item 26 do `Backlog_Priorizado` — Could; fora da Sprint 3, Adendo nº 1)* |
+| UC21 — Cancelar pedido *(ainda não desenhado no diagrama de casos de uso)* | US27 *(história nova do Adendo nº 1 — Could, fora da Sprint 3)* |

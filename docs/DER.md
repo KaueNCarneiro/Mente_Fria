@@ -4,6 +4,8 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
+> **Nota de revisão (27/10/2026, Sprint 3):** o modelo ganhou o **estoque por linhas de entrada** (`movimentacao_estoque.quantidade_restante` e `motivo`) e o **status do pedido** (`pedido.status`, `data_cancelamento`, `usuario_cancelamento_id`, para a US27, fora da Sprint 3). O seed oficial passa a ter **estoque 0** (os ingredientes recebem estoque só por movimentação); os dados de demonstração ficam em `seed_demo.sql`. A otimização passa a maximizar o **lucro estimado** (Adendo nº 1 ao Termo de Aceite, aprovado em 27/10). Essas mudanças estão no `Script_DDL.sql` de referência (`docs/Sprint_3/referencia/bd/`, validado com 32 + 41 testes no PostgreSQL 16) e entram em `bd/Script_DDL.sql` pelo PR do banco da Sprint 3; até esse PR, o `bd/` da `main` ainda é o da Sprint 1.
+
 > **Nota de revisão (16/09/2026):** o banco de dados oficial do projeto passou de **MySQL** para **PostgreSQL**, motivado pela ferramenta de deploy escolhida (Render) — ver justificativa completa e as decisões de sintaxe (tipos, auto-incremento) na nota ao final deste documento. O Termo de Aceite e o `Script_DDL.sql` foram atualizados na mesma revisão.
 
 ---
@@ -62,6 +64,9 @@ erDiagram
         int usuario_id FK
         timestamp data_pedido
         decimal valor_total
+        varchar status
+        timestamp data_cancelamento
+        int usuario_cancelamento_id FK
     }
 
     PEDIDO_PRODUTO {
@@ -80,6 +85,8 @@ erDiagram
         timestamp data_movimentacao
         varchar observacao
         date data_validade
+        decimal quantidade_restante
+        varchar motivo
     }
 
     %% RECOMENDACAO_PRODUCAO, ITEM_RECOMENDACAO_PRODUCAO, RECOMENDACAO_REPOSICAO,
@@ -88,6 +95,7 @@ erDiagram
     %% demanda pela aplicação, sem persistir histórico.
 
     USUARIO ||--o{ PEDIDO : registra
+    USUARIO |o--o{ PEDIDO : cancela
     USUARIO ||--o{ MOVIMENTACAO_ESTOQUE : registra
     CLIENTE |o--o{ PEDIDO : realiza
 
@@ -166,8 +174,11 @@ Tabela associativa que resolve o relacionamento N:N entre `produto` e `ingredien
 | id | INT | PK, GENERATED ALWAYS AS IDENTITY | Identificador do pedido |
 | cliente_id | INT | FK → cliente(id), NULL | Cliente associado (opcional) |
 | usuario_id | INT | NOT NULL, FK → usuario(id) | Usuário (Administrador/Funcionário) que registrou o pedido |
-| data_pedido | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Data e hora do pedido |
+| data_pedido | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Data e hora do pedido. Na Sprint 3, o backend grava a hora de São Paulo (`:agora` vindo do Java, A9); o `DEFAULT` só vale para inserções diretas no banco |
 | valor_total | DECIMAL(10,2) | NOT NULL, DEFAULT 0, CHECK (valor_total >= 0) | Valor total do pedido (mantido a partir dos itens) |
+| status | VARCHAR(10) | NOT NULL, DEFAULT 'ATIVO', CHECK (status IN ('ATIVO','CANCELADO')) | Situação do pedido (Sprint 3). Pedido cancelado não entra no faturamento, nos mais vendidos nem no ranking do dashboard, mas continua contando no consumo da reposição (A18) |
+| data_cancelamento | TIMESTAMP | NULL; `chk_pedido_cancelamento` | Quando foi cancelado. Preenchida **se e somente se** `status = 'CANCELADO'` |
+| usuario_cancelamento_id | INT | NULL, FK → usuario(id); `chk_pedido_cancelamento` | Quem cancelou. Preenchido **se e somente se** `status = 'CANCELADO'`. O cancelamento (US27) **não devolve** ingredientes ao estoque |
 
 ### Tabela: `pedido_produto`
 Tabela associativa que resolve o relacionamento N:N entre `pedido` e `produto` (equivalente física da classe associativa `ItemPedido`).
@@ -189,13 +200,15 @@ Tabela associativa que resolve o relacionamento N:N entre `pedido` e `produto` (
 | quantidade | DECIMAL(10,3) | NOT NULL, CHECK (quantidade > 0) | Quantidade movimentada |
 | data_movimentacao | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Data e hora da movimentação |
 | observacao | VARCHAR(255) | NULL | Observação livre sobre a movimentação |
-| data_validade | DATE | NULL, CHECK (tipo = 'ENTRADA' OR data_validade IS NULL) | Data de validade do lote recebido nessa movimentação; preenchida somente em movimentações do tipo `ENTRADA`. Em movimentações do tipo `SAIDA` é sempre `NULL` (a constraint `chk_movimentacao_data_validade` impede preenchê-la nesse caso) |
+| data_validade | DATE | NULL, CHECK (tipo = 'ENTRADA' OR data_validade IS NULL) | Data de validade da linha de estoque criada por essa entrada; preenchida somente em movimentações do tipo `ENTRADA`. Em movimentações do tipo `SAIDA` é sempre `NULL` (a constraint `chk_movimentacao_data_validade` impede preenchê-la nesse caso) |
+| quantidade_restante | DECIMAL(10,3) | `chk_movimentacao_restante`: na `ENTRADA`, NOT NULL e entre 0 e `quantidade`; na `SAIDA`, NULL | **Sprint 3.** Quanto ainda resta da linha de estoque criada por essa entrada. Nasce igual a `quantidade` e diminui a cada baixa |
+| motivo | VARCHAR(20) | `chk_movimentacao_motivo`: na `SAIDA`, NOT NULL e IN ('PEDIDO','CONVENCIONAL','DESCARTE_VENCIDO'); na `ENTRADA`, NULL | **Sprint 3.** Por que o estoque saiu. `PEDIDO` só o backend grava (baixa automática do pedido) |
 
-> **Nota:** a `data_validade` é registrada por movimentação (não mais em `ingrediente`) porque cada `ENTRADA` de estoque pode representar um lote com validade diferente das entradas anteriores. Por isso o campo só faz sentido para `ENTRADA` — uma `SAIDA` apenas consome estoque já existente e não introduz uma validade nova. O UC16/US16 (alerta de vencimento) e o método `estaProximoDoVencimento` (ver `Diagramas_UML.md`) devem considerar apenas movimentações com `tipo = 'ENTRADA'` e `data_validade IS NOT NULL`.
+> **Nota:** a `data_validade` é registrada por movimentação (não mais em `ingrediente`) porque cada `ENTRADA` de estoque pode ter uma validade diferente das entradas anteriores. Desde a Sprint 3, cada `ENTRADA` é uma **linha de estoque**, com `quantidade_restante`. Por isso o campo só faz sentido para `ENTRADA` — uma `SAIDA` apenas consome estoque já existente e não introduz uma validade nova. O UC16/US16 (alerta de vencimento) e o método `estaProximoDoVencimento` (ver `Diagramas_UML.md`) devem considerar apenas movimentações com `tipo = 'ENTRADA'` e `data_validade IS NOT NULL`.
 
-> **Nota:** as tabelas `recomendacao_producao`, `item_recomendacao_producao`, `recomendacao_reposicao`, `item_recomendacao_reposicao` e `sugestao_marketing` saíram deste DER. As funcionalidades de recomendação de produção (UC10, UC11), recomendação de reposição (UC14) e sugestão de marketing (UC18) continuam no sistema, mas passaram a ser calculadas sob demanda pela aplicação — sem persistir o histórico de cálculo — por isso não têm mais tabela própria. A otimização de produção (UC10) é resolvida via Programação Linear (Python, biblioteca Gurobi); o resultado é mantido em memória (RAM) do processo, não em banco de dados.
+> **Nota:** as tabelas `recomendacao_producao`, `item_recomendacao_producao`, `recomendacao_reposicao`, `item_recomendacao_reposicao` e `sugestao_marketing` saíram deste DER. As funcionalidades de recomendação de produção (UC10, UC11), recomendação de reposição (UC14) e sugestão de marketing (UC18) continuam no sistema, mas passaram a ser calculadas sob demanda pela aplicação — sem persistir o histórico de cálculo — por isso não têm mais tabela própria. A otimização de produção (UC10) e, desde a Sprint 3, a recomendação de reposição com orçamento (UC14) são resolvidas por **Programação Linear Inteira** (Python, biblioteca Gurobi); a produção maximiza o **lucro estimado** (Adendo nº 1). O resultado da produção é mantido em memória (RAM) do processo, não em banco de dados.
 
-> **Nota:** o saldo agregado em `ingrediente.quantidade_estoque` continua sendo a fonte única de disponibilidade do ingrediente (não há tabela de lotes). Quando um pedido é registrado (UC12) e o estoque é baixado automaticamente, a aplicação seleciona, entre as movimentações de `ENTRADA` do ingrediente, aquela(s) com a menor `data_validade` ainda não totalmente consumida para orientar essa baixa (lógica FEFO — *First Expire, First Out*), reduzindo o risco de perdas por vencimento. Essa seleção é apenas um critério de negócio aplicado no momento da baixa; o saldo consolidado do ingrediente permanece único em `ingrediente.quantidade_estoque`, e a baixa gera uma nova movimentação de `SAIDA` (sem `data_validade` própria).
+> **Nota (revista na Sprint 3, D10):** o estoque é controlado **por linha de entrada**. Cada `ENTRADA` cria uma linha com `quantidade_restante`. Toda baixa (pedido, saída convencional) consome as linhas **válidas** da menor `data_validade` para a maior, deixando as sem validade por último (FEFO — *First Expire, First Out*); **estoque vencido nunca é vendido**. O descarte (`DESCARTE_VENCIDO`) consome só linhas vencidas. Cada baixa grava uma `SAIDA` com o `motivo`, sem `data_validade` própria. **Invariante:** `ingrediente.quantidade_estoque` = soma de `quantidade_restante` das `ENTRADA` daquele ingrediente; o "saldo válido" (o que vai para a otimização) é a soma só das linhas não vencidas. Um índice parcial (`ix_movimentacao_linhas`) acelera a busca das linhas com saldo. Datas de validade são comparadas com o dia de São Paulo informado pelo Java (`:hoje`, A9).
 
 > **Nota (US26/UC20 — porção padrão por unidade, adicionada nesta revisão):** `unidade_medida_porcao_padrao.porcao_padrao` é apenas o valor **sugerido** para pré-preencher o formulário de cadastro de um novo ingrediente daquela unidade. O valor efetivo usado nos cálculos de negócio (`Ingrediente.calcularQuantidadeRecomendadaCompra`, composição de produto, etc.) é sempre `ingrediente.porcao_padrao`, que pode divergir livremente do padrão da unidade — por exemplo, o Açaí pode ter uma porção diferente dos demais ingredientes medidos em `kg`. Alterar o padrão de uma unidade **não** recalcula retroativamente ingredientes já cadastrados; o novo valor só é usado como sugestão em cadastros futuros.
 
@@ -206,4 +219,6 @@ Tabela associativa que resolve o relacionamento N:N entre `pedido` e `produto` (
 > 2. **Colunas ENUM:** PostgreSQL não tem o `ENUM(...)` inline do MySQL — um tipo enumerado nativo exigiria `CREATE TYPE ... AS ENUM (...)` à parte, o que é mais rígido para alterar depois (exige `ALTER TYPE`, não pode ser feito dentro de uma transação em versões mais antigas). Optamos por `VARCHAR` + `CHECK (coluna IN (...))`, que tem o mesmo efeito de restringir os valores aceitos, mas é mais simples de alterar no futuro (basta um `ALTER TABLE ... DROP/ADD CONSTRAINT`). Afetou `usuario.perfil` e `movimentacao_estoque.tipo`.
 > 3. **Datas com hora:** `DATETIME` (MySQL) vira `TIMESTAMP` em PostgreSQL — mapeamento direto, sem mudança de comportamento (nenhum dos dois grava fuso horário). Afetou `pedido.data_pedido` e `movimentacao_estoque.data_movimentacao`.
 >
-> Nenhuma dessas três é uma mudança de modelo — apenas de sintaxe física — mas fica registrada aqui porque `AUTO_INCREMENT`/`ENUM` apareciam explicitamente na coluna "Restrições" deste dicionário. **Pendências para a equipe:** (a) confirmar a versão do PostgreSQL a fixar localmente e no Testcontainers, alinhada à oferecida pelo Render no momento da criação do banco (17 ou 18 conforme documentação do Render em 2026); (b) cada integrante precisa trocar o PostgreSQL local (em vez do MySQL) no ambiente de desenvolvimento — ver seção de ambiente no README quando ele existir.
+> Nenhuma dessas três é uma mudança de modelo — apenas de sintaxe física — mas fica registrada aqui porque `AUTO_INCREMENT`/`ENUM` apareciam explicitamente na coluna "Restrições" deste dicionário. **Pendências para a equipe:** (a) ~~confirmar a versão do PostgreSQL~~ **resolvida na Sprint 3: PostgreSQL 16** em todo lugar (Docker local, Testcontainers e `render.yaml`); (b) cada integrante precisa trocar o PostgreSQL local (em vez do MySQL) no ambiente de desenvolvimento — ver seção de ambiente no README.
+>
+> **Atualização (27/10/2026):** o banco gratuito do Render **expira 30 dias depois de criado** (e não "a cada 30 dias"), com 14 dias para migrar a um plano pago. Ele será criado em 31/10 à noite e valerá até 30/11/2026, data-limite da avaliação, com backup e restauração testados (A21, A32).

@@ -22,9 +22,9 @@ Fontes: o e-mail de aprovação da Gurobi ao Kauê (guardado com ele; o número 
 
 | # | Ação | Quem | Quando |
 |---|---|---|---|
-| 1 | **Responder ao e-mail de aprovação da licença** (para `license@gurobi.com`), do e-mail institucional do Kauê, com o texto da §3. A Gurobi diz que, para licenças acadêmicas gratuitas, o suporte cobre justamente "perguntas de licenciamento". Guardar a resposta em `docs/Sprint_3/resposta-gurobi.md`, sem o número da licença | **Kauê** (titular) | **Ter 27 ou qua 28** |
-| 2 | Preparar o **plano B** (§4) | Lucas e Kauê | Até **sex 30** |
-| 3 | **Sexta 30, à noite:** com autorização escrita da Gurobi, o deploy de sábado usa a WLS do Kauê. Sem ela, vai com o plano B | Lucas (PO) | Sex 30 |
+| 1 | **Responder ao e-mail de aprovação da licença** (para `license@gurobi.com`), do e-mail institucional do Kauê, com o texto da §3. A Gurobi diz que, para licenças acadêmicas gratuitas, o suporte cobre justamente "perguntas de licenciamento". Guardar a resposta em `docs/Sprint_3/resposta-gurobi.md`, sem o número da licença | **Kauê** (titular) | **Ter 27, à noite** |
+| 2 | Preparar o **plano B** (§4) | Lucas e Kauê | **Feito** (B1 implementado em `referencia/`) |
+| 3 | **Sábado 31, à tarde** (A36; antes: sexta à noite): com autorização escrita da Gurobi, o deploy da noite usa a WLS do Kauê. Sem ela, vai com o plano B1 | Lucas (PO) | Sáb 31 |
 | 4 | Avisar o professor da resposta da Gurobi e de qual caminho foi seguido | Diogo | Quando chegar |
 
 **Se a Gurobi autorizar:** o **Kauê**, como titular, cadastra no painel do Render as variáveis `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` (os valores estão no portal da Gurobi, na licença dele). O backend já as repassa ao Python (Contrato v2, §1.6). **Nunca** coloque esses valores no Git, no README ou em mensagens do grupo. As licenças acadêmicas limitam as execuções simultâneas; o backend já faz um cálculo por vez (A27).
@@ -64,7 +64,7 @@ Fontes: o e-mail de aprovação da Gurobi ao Kauê (guardado com ele; o número 
 | **B1 — Publicado sem solver; otimização demonstrada no computador do Kauê** (recomendada) | No Render, uma variável `OTIMIZADOR_HABILITADO=false` faz as rotas de produção e de reposição responderem `503` com "A recomendação está disponível só na demonstração local da equipe." As Telas 12, 13 e 14 mostram essa mensagem. Na avaliação, US10, US11, US14 e US18 são demonstradas **pelo Kauê, no computador dele, com a WLS acadêmica dele**: uma pessoa, trabalho de disciplina, exatamente o uso que o e-mail da Gurobi descreve | Uma variável, uma verificação em 2 serviços, 2 ou 3 testes; uma mensagem nas 3 telas | Pouco trabalho; nada roda no servidor sem autorização; a demonstração local fica **dentro** dos termos da licença; o resto do sistema continua publicado | O dashboard publicado mostra "Gere a recomendação" no bloco do plano; a demonstração da otimização depende do Kauê e do computador dele |
 | **B2 — Solver aberto no servidor** | No Render, os mesmos modelos rodam com um solver de código aberto (HiGHS, que vem no SciPy), com o mesmo contrato JSON; localmente, continua o Gurobi | Novos módulos Python (os oráculos de força bruta já existem para conferir); `requirements` e `Dockerfile` | Sistema completo na URL | O Termo cita "Python + Gurobi": **precisa da aprovação do professor**; mais trabalho e risco a 4 dias do fim |
 
-**Recomendação:** preparar a **B1** até sexta 30. Se a Gurobi autorizar a WLS no Render antes disso, a B1 fica desligada e o Kauê cadastra a licença no Render (§2). A B2 só vale a pena se o professor exigir a otimização **na URL publicada** e a Gurobi negar.
+**Recomendação:** preparar a **B1** (feito em 27/10). Se a Gurobi autorizar a WLS no Render antes disso, a B1 fica desligada e o Kauê cadastra a licença no Render (§2). A B2 só vale a pena se o professor exigir a otimização **na URL publicada** e a Gurobi negar.
 
 ## 5. Como a B1 funciona (implementada em 27/10)
 

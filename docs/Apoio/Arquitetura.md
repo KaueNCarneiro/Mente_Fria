@@ -17,7 +17,7 @@
 > - **Estoque por linhas de entrada**, com baixa pela validade mais próxima (FEFO); estoque vencido nunca é vendido (D10). O saldo válido é o que vai para o Python.
 > - **Dois módulos Python:** `otimizador.py` (produção) e `reposicao.py` (reposição com orçamento, US14). A D5 foi revista (abaixo).
 > - **Gurobi 13.0.3** (P2). **Não há Compute Server.** Licenças: a **WLS acadêmica do Kauê** (pessoal, válida até 25/09/2027; A34) e a licença restrita do `pip` no desenvolvimento e nos testes. **No Render, o solver roda com a licença restrita do `pip`, autorizada por escrito pela Gurobi em 28/10/2026** (A38), sem nenhuma variável `GRB_*`; a WLS **não** pode ser usada numa URL pública. Reserva: com `OTIMIZADOR_HABILITADO=false`, as rotas de otimização respondem `503` (plano B1, A31).
-> - **Deploy:** backend em Docker no Render (plano free), PostgreSQL 16 no Render, frontend no GitHub Pages por Actions; banco criado no sábado 31/10 à noite, sistema no ar até 30/11/2026, com backup testado (A21, A32).
+> - **Deploy:** backend em Docker no Render (plano free), PostgreSQL 16 no Render, frontend no GitHub Pages por Actions; banco criado na seg 02/11/2026 (A41; antes: sáb 31/10), sistema no ar até pelo menos 30/11/2026, com backup testado (A21, A32).
 > - **Datas e horas** vêm de um relógio em `America/Sao_Paulo` no Java (A9); `/api/teste/python` só no perfil `dev` (F4); **uma otimização por vez** (A27).
 > - O código da Sprint 3 está **escrito e testado** em `docs/Sprint_3/referencia/` e entra nas pastas reais pelos PRs de cada fase (roteiro da Sprint 3).
 >
@@ -211,10 +211,10 @@ O `.env` real nunca é versionado; o `.env.example` lista as variáveis sem valo
 |---|---|---|
 | Frontend | GitHub Pages | Arquivos estáticos |
 | Backend + Python | Render, **um serviço** via Dockerfile (JRE 25 + Python 3.14 + `gurobipy` 13.0.3), plano free, região Virginia, *health check* em `/api/saude` | Arquivos prontos em `docs/Sprint_3/referencia/deploy/` (`Dockerfile`, `.dockerignore`, `render.yaml`) |
-| Banco | PostgreSQL 16 gerenciado do Render, plano free | **Expira 30 dias depois de criado**: criado no sábado 31/10 à noite, vale até 30/11/2026, data-limite da avaliação. Backup com `pg_dump` e restauração testada (A32) |
+| Banco | PostgreSQL 16 gerenciado do Render, plano free | **Expira 30 dias depois de criado**: criado na seg 02/11/2026 (A41), vale até 02/12/2026, depois de 30/11, data-limite do professor. Backup com `pg_dump` e restauração testada (A32) |
 | Frontend | GitHub Pages publicado por **GitHub Actions** (a pasta `frontend/` não é raiz nem `/docs`) | *Workflow* pronto em `docs/Sprint_3/referencia/deploy/frontend-pages.yml` |
 
-**Atualizado em 27/10/2026 (US20 entrou na Sprint 3):** o deploy do esqueleto não chegou a ser feito nas Sprints 1 e 2. A imagem foi **simulada localmente** com os limites do plano free (512 MB, 0,1 CPU): sobe em 83 s, pico de 133 MiB de memória, fluxo completo sem falhas. O serviço free dorme após 15 min sem uso. No Render, o solver só roda com a autorização da Gurobi (A30); até lá, `OTIMIZADOR_HABILITADO=false` (plano B1).
+**Atualizado em 27/10/2026 (US20 entrou na Sprint 3):** o deploy do esqueleto não chegou a ser feito nas Sprints 1 e 2. A imagem foi **simulada localmente** com os limites do plano free (512 MB, 0,1 CPU): sobe em 83 s, pico de 133 MiB de memória, fluxo completo sem falhas. O serviço free dorme após 15 min sem uso. No Render, o solver roda com a licença do `pip`, autorizada por escrito pela Gurobi em 28/10 (A38): `OTIMIZADOR_HABILITADO=true`; o plano B1 (`false`) fica como reserva. Deploy definitivo na Sprint 4, seg 02/11 (A41).
 
 ---
 
@@ -228,8 +228,8 @@ O `.env` real nunca é versionado; o `.env.example` lista as variáveis sem valo
 | 4 | Login por perfil com JWT; frontend trata 401/403 (US1–US3) | Autenticação e autorização | 1 |
 | 5 | `otimizador.py` + `pytest` (CT23, CT24) usando o contrato JSON, sem Java | Módulo Python isolado e testável | 2 |
 | 6 | `POST /api/producao/recomendacao` (só Administrador) chamando o Python | Backend ↔ Python | 2 |
-| 7 | Deploy do esqueleto (Pages + Render) — antecipado para o fim da Sprint 1 | Ambiente real | Não foi feito nas Sprints 1–2; **deploy definitivo na Sprint 3** (US20, sábado 31/10) |
-| 8 | Sprint 3: estoque por linhas, pedido com baixa, recomendação por lucro, reposição, dashboard, marketing e deploy | Fluxo do Termo de ponta a ponta | 3 (roteiro da Sprint 3; código de referência validado em `docs/Sprint_3/referencia/`) |
+| 7 | Deploy do esqueleto (Pages + Render) — antecipado para o fim da Sprint 1 | Ambiente real | Não foi feito nas Sprints 1–3; **deploy definitivo na Sprint 4** (US20, seg 02/11; A39, A41) |
+| 8 | Estoque por linhas, pedido com baixa, recomendação por lucro, reposição, dashboard, marketing e deploy | Fluxo do Termo de ponta a ponta | Planejado na Sprint 3 (roteiro e código de referência validado em `docs/Sprint_3/referencia/`); **executado na Sprint 4**, entrega em 06/11 (A39) |
 
 ---
 

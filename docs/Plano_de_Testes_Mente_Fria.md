@@ -4,9 +4,9 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-**Etapa:** E4 — Semana 4 (entrega 11/09/2026). **Atualizado em 27/10/2026** para a Sprint 3 (Adendo nº 1 ao Termo de Aceite aprovado): casos CT30–CT72, ajustes de CT23, CT24 e CT29, licença do Gurobi e ferramentas de teste. **28/10/2026:** CT68 e CT72 ajustados à autorização escrita da Gurobi para a licença do `pip` no Render (A38).
+**Etapa:** E4 — Semana 4 (entrega 11/09/2026). **Atualizado em 27/10/2026** para a Sprint 3 (Adendo nº 1 ao Termo de Aceite aprovado): casos CT30–CT72, ajustes de CT23, CT24 e CT29, licença do Gurobi e ferramentas de teste. **28/10/2026:** CT68 e CT72 ajustados à autorização escrita da Gurobi para a licença do `pip` no Render (A38); os casos da Sprint 3 passam a ser executados na **Sprint 4** oficial (entrega em 06/11) e na semana de correção de bugs que vem depois (A39).
 
-**Status:** este documento é a **estratégia** de testes e a lista de casos (seção 3), que cresce a cada sprint. As evidências de execução ficam nas pastas de cada sprint (`docs/Sprint_2/sprint-2-evidencias-teste.md`, `docs/Sprint_3/evidencias/`); o arquivo `E5-E8_evidencias_de_teste.md`, previsto antes, não foi criado.
+**Status:** este documento é a **estratégia** de testes e a lista de casos (seção 3), que cresce a cada sprint. As evidências de execução ficam nas pastas de cada sprint (`docs/Sprint_2/sprint-2-evidencias-teste.md`, `docs/Sprint_3/evidencias/`, `docs/Sprint_4/evidencias/`); o arquivo `E5-E8_evidencias_de_teste.md`, previsto antes, não foi criado.
 
 ---
 
@@ -108,11 +108,11 @@ Incluímos uma coluna extra, **Caso de uso (E3)**, além do modelo, para fechar 
 
 > **Decisão de implementação (CT29) — 25/09/2026:** o grupo decidiu que ingredientes vencidos não contam como estoque disponível na recomendação de produção (detalhes em `docs/Apoio/Arquitetura.md`, seção 2.1, e no Contrato de Comunicação, §1.1). O Java desconta o saldo vencido antes de montar o JSON enviado ao Python. **Sprint 3:** o estoque passou a ser por linha de entrada (D10), e o CT24 continua válido enquanto o custo do ingrediente disputado for menor que o preço.
 
-*US21–US25 são `Won't` no backlog e não geram caso de teste. US13, US19, US26 e US27 estão fora da Sprint 3 (Adendo nº 1) e ganham casos quando entrarem.*
+*US21–US25 são `Won't` no backlog e não geram caso de teste. US13, US19, US27 e as versões completas de US15 e US16 estão fora do semestre (Adendo nº 1; A40). A US26 só entra se passar no* gate *da seg 02/11 (A40); nesse caso, ganha casos a partir do CT73.*
 
-### Sprint 3 — estoque por linhas, pedido, recomendação por lucro, reposição, dashboard, marketing, publicação e segurança (CT30–CT72)
+### Sprint 3 (planejamento) e Sprint 4 (execução) — estoque por linhas, pedido, recomendação por lucro, reposição, dashboard, marketing, publicação e segurança (CT30–CT72)
 
-Incorporados em 27/10/2026 a partir de `docs/Sprint_3/sprint-3-casos-de-teste-propostos.md` (Adendo nº 1 aprovado). Formato: objetivo · pré-condições · perfil · passos → resultado esperado; **Camada:** BD = SQL; INT = integração (MockMvc + Testcontainers); PY = pytest; E2E = navegador ou manual; DEP = ambiente publicado. A coluna **Validado** diz se o comportamento já foi executado no código de referência (`docs/Sprint_3/referencia/`), e por qual teste; **não** dispensa a execução sobre o código real nem no ambiente publicado. A execução na janela de testes (02–06/11) segue a seção 3 do mesmo arquivo.
+Incorporados em 27/10/2026 a partir de `docs/Sprint_3/sprint-3-casos-de-teste-propostos.md` (Adendo nº 1 aprovado). Formato: objetivo · pré-condições · perfil · passos → resultado esperado; **Camada:** BD = SQL; INT = integração (MockMvc + Testcontainers); PY = pytest; E2E = navegador ou manual; DEP = ambiente publicado. A coluna **Validado** diz se o comportamento já foi executado no código de referência (`docs/Sprint_3/referencia/`), e por qual teste; **não** dispensa a execução sobre o código real nem no ambiente publicado. A execução no ambiente publicado, na semana de correção de bugs depois da entrega de 06/11 (até 13/11; A39, A43), segue a seção 3 do mesmo arquivo.
 
 **Formato:** objetivo · pré-condições · perfil · passos → resultado esperado. A "camada" diz onde automatizar: **BD** = SQL; **INT** = Testcontainers; **MVC** = MockMvc; **PY** = pytest; **E2E** = aceite manual ou Playwright; **DEP** = ambiente publicado.
 

@@ -70,7 +70,7 @@ Cada rota da **Sprint 1** e os métodos abaixo que a atendem. Rotas de sprints p
 | `POST /api/produtos` | Administrador | US5, US6 | `IngredienteRepository.buscarNomesPorIds` (regra do açaí) → `ProdutoRepository.inserir` + `inserirComposicao` (mesma transação) |
 | `PUT /api/produtos/{id}/preco` | Administrador | US6 | `ProdutoRepository.atualizarPreco` |
 
-**Fora da Sprint 1:** `POST /api/unidades-medida` (US26/UC20, Sprint 3) e as rotas de estoque, clientes, pedidos, produção, reposição, marketing e dashboard (Sprints 2 e 3).
+**Fora da Sprint 1:** `POST /api/unidades-medida` (US26/UC20; condicional na Sprint 4, A40) e as rotas de estoque, clientes, pedidos, produção, reposição, marketing e dashboard (Sprints 2 e 3).
 
 **Métodos com SQL pronto, mas sem rota no contrato** (as telas "Editar" do protótipo, que não são exigidas pelas US1–US7; a equipe decide se entram):
 

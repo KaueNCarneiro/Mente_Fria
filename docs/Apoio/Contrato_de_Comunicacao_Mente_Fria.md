@@ -193,7 +193,7 @@ Casas: `orcamento` e `custo_unitario` com até 2; quantidades com até 3. `id` n
 
 ## 2. Contrato Frontend ↔ Backend (REST API)
 
-**Base URL:** `http://localhost:8080` (local). As rotas abaixo **já começam com `/api`**. Produção: a URL do serviço no Render, definida no deploy (o banco gratuito é criado em 31/10/2026, à noite, e expira 30 dias depois; o sistema fica disponível até 30/11/2026, data-limite da avaliação, com backup testado; a data fica no README). O frontend guarda a base em um único lugar, `frontend/js/config.js`: no `github.io` ele usa a URL do Render com tempo limite de 90 s (o serviço gratuito "dorme" após 15 min sem uso); em qualquer outro endereço, `http://localhost:8080` com 15 s.
+**Base URL:** `http://localhost:8080` (local). As rotas abaixo **já começam com `/api`**. Produção: a URL do serviço no Render, definida no deploy (o banco gratuito é criado em 02/11/2026 e expira 30 dias depois, em 02/12; o sistema fica disponível pelo menos até 30/11/2026, data-limite do professor, com backup testado; a data fica no README). O frontend guarda a base em um único lugar, `frontend/js/config.js`: no `github.io` ele usa a URL do Render com tempo limite de 90 s (o serviço gratuito "dorme" após 15 min sem uso); em qualquer outro endereço, `http://localhost:8080` com 15 s.
 
 **Autenticação:** JWT no header `Authorization: Bearer <token>`, obtido em `POST /api/auth/login`. Todas as rotas exigem token válido, **exceto** `POST /api/auth/login`, `POST /api/auth/registro` (só enquanto não existir Administrador) e `GET /api/saude`. O token vale **2 horas**; token expirado = `401`. O `subject` do token é o id do usuário: **quem fez a ação** (pedido, movimentação) vem do token, **nunca** do corpo.
 
@@ -287,7 +287,7 @@ Erros: campos inválidos → `400` com todos de uma vez: `campos.nome` "Informe 
   { "unidade_medida": "un", "porcao_padrao": 1.000 }
 ]
 ```
-As unidades chegam ao banco pelo seed. Cadastrar uma unidade (`POST`) e alterar a porção padrão (`PATCH`) é a US26/UC20, fora da Sprint 3.
+As unidades chegam ao banco pelo seed. Cadastrar uma unidade (`POST`) e alterar a porção padrão (`PATCH`) é a US26/UC20, fora da Sprint 3; desde 28/10, condicional na Sprint 4 (A40). Se ela entrar, o formato destas rotas é acrescentado a este contrato antes do código.
 
 **`GET /api/ingredientes`** — Admin/Funcionário: o **registro completo**, `[{id, nome, unidade_medida, custo_unitario, porcao_padrao, quantidade_estoque, quantidade_minima}]`, ordenado por `nome`. (O `IngredienteResumo` de 3 campos da Sprint 1 deixa de existir: com ele, a tela de edição recusava editar.)
 
@@ -376,7 +376,7 @@ Se o banco estiver fora, a resposta é `500`.
 | Marketing | GET | `/api/marketing/sugestoes` | Admin | UC18 | 3 |
 | Teste (eco) | GET | `/api/teste/python` | **Só no perfil `dev`** | — | 1 (Hello World) |
 
-**Fora da Sprint 3** (decisão A2b; os formatos propostos estão no roteiro v4.6, em `docs/Sprint_3/historico/`):
+**Fora da Sprint 3** (decisão A2b; os formatos propostos estão no roteiro v4.6, em `docs/Sprint_3/historico/`). **Desde 28/10 (A40):** a US26 pode entrar na Sprint 4, de forma condicional; as demais ficam fora do semestre:
 
 | Recurso | Método | Rota | UC/US |
 |---|---|---|---|
@@ -486,7 +486,7 @@ Regras:
     "itens": [ { "produto_id": 1, "nome": "Açaí Tradicional 300ml", "quantidade": 2, "preco_unitario_registrado": 12.90 } ] } ]
 ```
 
-O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pedido, fora da Sprint 3), que **não devolve estoque**.
+O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pedido, fora do semestre, A40), que **não devolve estoque**.
 
 ### 2.6 Recomendação de produção (UC10/UC11)
 
@@ -582,6 +582,7 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 
 | Data | Alteração | Itens |
 |---|---|---|
+| 28/10/2026 (noite) | **Calendário (A39, A41):** a entrega passa a ser a da Sprint 4 oficial, em 06/11; o banco do Render é criado em 02/11 (antes: 31/10). Nenhum formato JSON mudou | A39, A41 |
 | 28/10/2026 | **Licença (A38):** a Gurobi autorizou por escrito a licença do `pip` no Render; `OTIMIZADOR_HABILITADO=true` no Render, sem `GRB_*`; o plano B1 (`503`) fica como reserva. Nenhum formato JSON mudou | A38 |
 | 27/10/2026 (noite, 2) | **Plano B1 da licença (A31):** `OTIMIZADOR_HABILITADO`; código `503` nas rotas de produção e reposição; `otimizador_habilitado` no dashboard; mensagem própria no marketing | A31 |
 | 27/10/2026 (noite) | **§1.6:** solver no Render só com autorização expressa da Gurobi (resposta do professor; A30, A31); licenças corrigidas: existe a WLS acadêmica do Kauê, válida até 25/09/2027, de uso pessoal (A34). **§2:** disponibilidade até 30/11/2026, com backup (A32) | A30–A32, A34 |

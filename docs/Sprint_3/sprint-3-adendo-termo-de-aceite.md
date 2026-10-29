@@ -1,6 +1,7 @@
 # Adendo nº 1 ao Termo de Aceite — Mente Fria (APROVADO)
 
 **Status:** **aprovado e assinado em 27/10/2026** pelo professor, pelo Product Owner e pela equipe (tabela no fim). O texto abaixo da linha é a versão aprovada: **não alterar**. Mudanças futuras viram um novo adendo, datado.
+**Correção de nomenclatura (28/10/2026, decisão A43):** o texto aprovado dizia "Sprint 3" por um equívoco de redação. O adendo foi validado pessoalmente com o professor **já como Sprint 4**, que é a sprint em curso no cronograma dele. Por isso, nos três trechos onde aparecia (introdução, item 4 e item 6), "Sprint 3" passou a "Sprint 4". **Nenhum conteúdo, critério de aceitação ou data foi alterado.**
 **Uso:** anexar ao Termo de Aceite de 28/08/2026, **sem alterar o Termo original**. Os documentos relacionados (Backlog, Visão, Arquitetura, DER, UML, mapas, Plano de Testes e README) foram atualizados a partir dele em 27/10 (decisão A33).
 
 ---
@@ -11,7 +12,7 @@
 **Termo original:** 28/08/2026 (preservado sem alterações).
 **Data deste adendo:** 27/10/2026. **Vigência:** a partir da aprovação do professor.
 
-Este adendo registra os ajustes de escopo da Sprint 3. Para cada ajuste: o texto original, o novo texto, a justificativa, os critérios de aceitação e a rastreabilidade (histórias do Backlog, casos de teste do Plano de Testes e seções do Contrato de Comunicação v2). O restante do Termo continua valendo como está.
+Este adendo registra os ajustes de escopo da Sprint 4. Para cada ajuste: o texto original, o novo texto, a justificativa, os critérios de aceitação e a rastreabilidade (histórias do Backlog, casos de teste do Plano de Testes e seções do Contrato de Comunicação v2). O restante do Termo continua valendo como está.
 
 ## 1. Otimização da produção: maximizar o lucro estimado (US10, US11)
 
@@ -82,7 +83,7 @@ Este adendo registra os ajustes de escopo da Sprint 3. Para cada ajuste: o texto
 
 **Texto original:** escopo, "Alerta de validade: identificação de ingredientes próximos do vencimento"; critério de pronto, "Alertas e recomendações são gerados corretamente, incluindo ingredientes próximos do vencimento e necessidades de reposição".
 
-**Situação:** as histórias dedicadas aos alertas (US15 e US16, ambas "Should") ficaram fora da Sprint 3, mas o Termo aceitou "Must + Should" e cita os alertas no critério de pronto. Parte do comportamento já está entregue nas telas de estoque e no dashboard:
+**Situação:** as histórias dedicadas aos alertas (US15 e US16, ambas "Should") ficaram fora da Sprint 4, mas o Termo aceitou "Must + Should" e cita os alertas no critério de pronto. Parte do comportamento já está entregue nas telas de estoque e no dashboard:
 
 | Critério do Backlog | Como é atendido hoje |
 |---|---|
@@ -113,7 +114,7 @@ Este adendo registra os ajustes de escopo da Sprint 3. Para cada ajuste: o texto
 
 ## 6. Histórias fora deste semestre e sprint extra
 
-**Ficam fora da Sprint 3:** US13 (clientes, Could), US19 (exportar CSV, Could), US26 (porção padrão, Could) e a nova **US27 — cancelar pedido** (Could; o cancelamento **não devolve** ingredientes ao estoque). As US15 e US16 seguem o item 4.
+**Ficam fora da Sprint 4:** US13 (clientes, Could), US19 (exportar CSV, Could), US26 (porção padrão, Could) e a nova **US27 — cancelar pedido** (Could; o cancelamento **não devolve** ingredientes ao estoque). As US15 e US16 seguem o item 4.
 
 **Sprint extra:** com a concordância do professor, a equipe pode adiantar histórias "Could" (por exemplo, a US27) **somente** se as obrigatórias estiverem concluídas, testadas e estáveis. Na dúvida, a prioridade é testar e corrigir.
 

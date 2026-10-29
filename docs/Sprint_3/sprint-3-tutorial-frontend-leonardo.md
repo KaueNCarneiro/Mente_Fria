@@ -3,6 +3,8 @@
 **Para:** Leonardo Fagundes Oliveira · **Papel:** frontend (HTML, CSS, JavaScript) e publicação no GitHub Pages · **Revisão:** 27/10/2026, noite (v5.3: **calendário deslocado um dia, A36**; antes, v5.2: Contrato v2 aprovado; botão "Descartar" por linha, A12; Render definitivo no sábado, A21) · **Substitui** a v5.1 (`historico/v5.1-27-10-antes-das-respostas/`), a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e `historico/Tutorial_Sprint3_Frontend_Leonardo.md`.
 **Base:** `sprint-3-roteiro.md` (v5.3), o **contrato oficial** `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2; a proposta ficou congelada) e `sprint-3-decisoes-e-pendencias.md`.
 
+> **Atenção (28/10/2026, decisão A39):** no cronograma do professor, este trabalho é a **Sprint 4**, com entrega e Review na **sex 06/11/2026**. Este tutorial foi escrito na Sprint 3 e continua sendo o **guia de execução**. As datas do §0, do §5 e do §9 foram atualizadas para o calendário da Sprint 4 (backend publicado na seg 02/11, A41); o calendário completo, os marcos e as decisões A39–A42 estão em `docs/Sprint_4/`. Se algum dia citado no texto divergir, vale `docs/Sprint_4/sprint-4-roteiro.md`, §4.
+
 > **O que foi verificado e o que não foi (26/10).** Tudo foi executado numa **cópia** do `frontend/` da `main`:
 > - **Divisão do `app.js`:** 25 telas e estados idênticos antes e depois (`IGUAIS`); `node --check` ok em todos os módulos.
 > - **Guarda por lista:** comportamento da tabela da §4, também sem mudar nenhuma tela existente.
@@ -22,18 +24,18 @@
 
 | Ordem | Entrega | Quando | Depende de |
 |---|---|---|---|
-| 1 | Baseline (22 OK) e retrato das telas | **Qua 28** (A36; antes: seg 26) | Nada |
-| 2 | `app.js` dividido em módulos (PR) | **Qua 28** | Nada (**não espera o backend**) |
-| 3 | Guarda de rotas por lista (PR) | Qua 28 | Item 2 |
-| 4 | **`config.js` de produção e *workflow* do Pages** (§9), com o Kauê | **Qui 29** | Nada (a URL definitiva do Render só sai no sábado à noite) |
-| 5 | Telas de Estoque e Pedido contra o Contrato v2, com API simulada | Qui 29 | Contrato v2 (A10, **aprovado em 27/10**) |
-| 6 | **Gate da Fase 2**: aceite real com 16 evidências | Sex 30 (manhã) | Lucas (Fases 1 e 2) |
-| 7 | Telas de Estoque e Pedido com o backend real | Sex 30 – Sáb 31 | Lucas (Fase 3) |
-| 8 | Tela 12 (Produção) e **Tela 03 (Dashboard)** | Sáb 31 | Fase 4A; Fase 6 |
-| 9 | **Telas 13 (Reposição) e 14 (Marketing)**. A 14 pode ficar com o Lucas, se apertar | Dom 01/11 | Fases 5 e 6 |
-| 10 | Investigar o Playwright instável (A13) | Até Dom 01/11 | — |
-| 11 | **Botão "Descartar"** no detalhe das linhas (A12, **opcional**) | Sáb 31 | Lucas (Fase 3). **É o primeiro a sair** se a conferência de sábado à tarde mostrar atraso (A28) |
-| 12 | Aceite **na URL publicada**, com a otimização funcionando (A38; só com a reserva B1 as Telas 12, 13 e 14 mostrariam o aviso do `503`) | Seg 02/11 | Deploy final |
+| 1 | Baseline (22 OK) e retrato das telas | **Qui 29/10** (A39; antes: qua 28) | Nada |
+| 2 | `app.js` dividido em módulos (PR) | **Qui 29/10** | Nada (**não espera o backend**) |
+| 3 | Guarda de rotas por lista (PR) | Sex 30/10 | Item 2 |
+| 4 | **`config.js` de produção e *workflow* do Pages** (§9), com o Kauê | **Sex 30/10** | Nada (a URL definitiva do Render só sai na seg 02/11, A41) |
+| 5 | Telas de Estoque e Pedido contra o Contrato v2, com API simulada | Sex 30/10 | Contrato v2 (A10, **aprovado em 27/10**) |
+| 6 | **Gate da Fase 2**: aceite real com 16 evidências | **Sáb 31/10** (manhã) | Lucas (Fases 1 e 2) |
+| 7 | Telas de Estoque e Pedido com o backend real | Sáb 31/10 – Dom 01/11 | Lucas (Fase 3) |
+| 8 | Tela 12 (Produção) e **Tela 03 (Dashboard)** | Seg 02/11 (Tela 12) e ter 03/11 (Tela 03) | Fase 4A; Fase 6 |
+| 9 | **Telas 13 (Reposição) e 14 (Marketing)**. A 14 pode ficar com o Lucas, se apertar | Tela 13: começar na seg 02/11, à tarde (assim que a Fase 5 entrar); as duas prontas na **ter 03/11** (marco M4) | Fases 5 e 6 |
+| 10 | Investigar o Playwright instável (A13) | Até qua 04/11 | — |
+| 11 | **Botão "Descartar"** no detalhe das linhas (A12, **opcional**) | Seg 02/11, **se** aprovado no M3 | Lucas (Fase 3). **É o primeiro a sair:** o PO decide no M3 (dom 01/11, à noite), conforme as Telas 10/16 e 11/17 estejam ou não funcionando com o backend real (A42) |
+| 12 | Aceite **na URL publicada**, com a otimização funcionando (A38; só com a reserva B1 as Telas 12, 13 e 14 mostrariam o aviso do `503`) | **Qua 04/11** (entrega na sex 06/11) | Todas as telas na `main` |
 
 **Pronto quando:**
 1. `app.js` dividido, com `IGUAIS` e 22 OK;
@@ -177,7 +179,7 @@ Rode também o `comparar_retratos` entre o `retrato_depois.json` e um retrato no
 
 > **Lembre:** isso é experiência de uso. **A segurança é o `403` do backend** (CT05, CT08), já testado na Fase 1 do Lucas.
 
-## 5. Gate da Fase 2: aceite com o backend **real** (sexta 30, A36)
+## 5. Gate da Fase 2: aceite com o backend **real** (sáb 31/10, de manhã, A39)
 
 Comece **só quando o Lucas avisar** que os 10 itens da Fase 2 passaram.
 
@@ -216,7 +218,7 @@ Comece **só quando o Lucas avisar** que os 10 itens da Fase 2 passaram.
 | Mensagem diferente da do `mapa_constraints.md` ou da do Contrato v2, §2.1 | Lucas |
 | Contrato ambíguo | Registrar no Contrato (decisão do PO) |
 
-Guarde as **16 evidências** em `docs/Sprint_3/evidencias/`. A Fase 2 só conta como concluída com elas.
+Guarde as **16 evidências** em `docs/Sprint_4/evidencias/`. A Fase 2 só conta como concluída com elas.
 
 ## 6. Telas novas
 
@@ -242,7 +244,7 @@ Padrão de todas as telas:
 
 **Lista** (`GET /api/estoque`): mostre o total, o **válido** e o **vencido** (com texto, nunca só com cor), a validade mais próxima e o selo "Abaixo do mínimo" quando `quantidade_valida ≤ quantidade_minima`. O cálculo do selo é seu, salvo decisão diferente no Contrato (item **[decidir]**).
 
-**Detalhe** (opcional, A12): `GET /api/estoque/{id}/linhas`, com a `situacao` de cada linha. Mostre a situação em texto: "Vencida", "Vence em breve", "Dentro da validade", "Sem validade".
+**Detalhe** (obrigatório: é a cobertura do alerta de vencimento, adendo, item 4; só o **botão "Descartar"** é opcional, A12): `GET /api/estoque/{id}/linhas`, com a `situacao` de cada linha. Mostre a situação em texto: "Vencida", "Vence em breve", "Dentro da validade", "Sem validade".
 
 **Botão "Descartar"** (A12, entrou em 27/10, **opcional**: é o primeiro corte se apertar, A28):
 - aparece **só** nas linhas com `situacao = "VENCIDA"` e `quantidade_restante > 0`;
@@ -386,7 +388,7 @@ O `config.js` novo (§9) continua apontando para `http://localhost:8080` quando 
 
 **Nunca** desative um teste antigo para "passar".
 
-### 7.1 A13: investigar a instabilidade (antes da janela de testes)
+### 7.1 A13: investigar a instabilidade (até qua 04/11)
 
 **O que a auditoria observou** (mesma máquina, servidor na porta alternativa via `FRONTEND_URL`):
 
@@ -409,7 +411,7 @@ O `config.js` novo (§9) continua apontando para `http://localhost:8080` quando 
 1. **`frontend/README.md`:** reescreva "Situação do backend deste checkout" (datada de 27/09) com o estado real, a estrutura de módulos, o aceite real e as ferramentas de retrato.
 2. Um PR por etapa (divisão, guarda, cada tela, Pages), com Conventional Commits, revisão de um colega e evidências.
 
-## 9. Publicação no GitHub Pages (US20) — preparar na quinta 29; URL definitiva no sábado 31 à noite
+## 9. Publicação no GitHub Pages (US20) — preparar na sex 30/10; URL definitiva na seg 02/11 (A41)
 
 O backend vai para o Render (tutorial do Kauê, §12). O frontend vai para o **GitHub Pages**, publicado por **GitHub Actions**. O Pages "por branch" só publica a raiz ou a pasta `/docs`, e o nosso frontend está em `frontend/`.
 
@@ -419,7 +421,7 @@ Troque o `frontend\js\config.js` pelo de `docs\Sprint_3\referencia\deploy\config
 - no **`github.io`**, ele usa a URL do Render e um tempo limite de **90 s**;
 - em qualquer outro endereço (Live Server, `http.server`, testes), continua com `http://localhost:8080` e **15 s**.
 
-**Troque a constante `PRODUCAO`** pela URL do serviço **definitivo** do Render, que só existe a partir do **sábado 31** (A21: o banco gratuito expira 30 dias depois de criado, por isso a criação ficou para o último dia possível). Se houver ensaio na quinta 29 ou na sexta 30 (A36), use a URL do ensaio **só para testar**, sem comitar.
+**Troque a constante `PRODUCAO`** pela URL do serviço **definitivo** do Render, que só existe a partir da **seg 02/11** (A41: o banco gratuito expira 30 dias depois de criado; criado nesse dia, vale até 02/12). Não há ensaio separado.
 
 **Por que 90 s:** o plano free do Render **dorme** após 15 min sem uso e leva ~1 min para acordar (documentação do Render, 26/10). Com 15 s, a primeira chamada do dia mostraria "O servidor demorou para responder" (CT70).
 
@@ -438,7 +440,7 @@ Crie `.github\workflows\frontend-pages.yml` com o conteúdo de `docs\Sprint_3\re
 2. **A origem do CORS** é só `https://kauencarneiro.github.io` (sem `/Mente_Fria/` e sem barra). É esse valor que o Kauê põe em `CORS_ALLOWED_ORIGIN` no Render.
 3. Abra a URL, F12 → Network, e faça o cadastro e o login. Não pode aparecer `blocked by CORS policy`.
 4. Todos os caminhos de arquivo precisam ser **relativos** (`css/…`, `js/…`). Com caminho absoluto (`/css/…`), o Pages procura na raiz do domínio e não acha. **Hoje já são** (conferido em 26/10: `css/styles.css`, `js/app.js` e a fonte em `../assets/`); mantenha assim nas telas novas.
-5. Guarde o print com a URL visível em `docs/Sprint_3/evidencias/` e ponha a URL no `frontend/README.md`.
+5. Guarde o print com a URL visível em `docs/Sprint_4/evidencias/` e ponha a URL no `frontend/README.md`.
 
 O *workflow* e o `config.js` **não foram executados no GitHub** na auditoria: dependem do repositório. O `config.js` foi conferido com Node nos dois endereços.
 
@@ -471,6 +473,6 @@ O *workflow* e o `config.js` **não foram executados no GitHub** na auditoria: d
 - [ ] Frontend no Pages falando com o Render; aceite na URL publicada
 - [ ] `frontend/README.md` atualizado (com a URL); PRs revisados
 
-## Fora da Sprint 3 (decisão A2b)
+## Fora do escopo obrigatório (decisões A2b e A40)
 
-Clientes (Telas 18 e 18B, US13), alertas (US15/US16), CSV do dashboard (US19), Porção Padrão (`PATCH`, US26) e o cancelamento de pedido (US27).
+**Porção Padrão** (Tela 19, US26) só entra se passar no *gate* da seg 02/11; quem a faz é o **Diogo** (A43), e você **não** participa: as seis telas obrigatórias vêm primeiro. Ficam **fora do semestre**: clientes (Telas 18 e 18B, US13), alertas completos (US15/US16; a cobertura parcial é a do adendo, item 4), CSV do dashboard (US19) e cancelamento de pedido (US27).

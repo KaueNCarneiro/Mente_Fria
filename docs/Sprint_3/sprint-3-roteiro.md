@@ -1,12 +1,12 @@
 # Roteiro — Sprint 3 — Mente Fria (v5.3)
 
-**Revisão:** 27/10/2026, noite (v5.3: resposta do professor, plano B1, revisão de coerência do diagnóstico geral). **Bases anteriores:** v5.2 (27/10, respostas da equipe),  v5.1 (noite de 26/10, em `historico/v5.1-27-10-antes-das-respostas/`), v5 (tarde de 26/10, em `historico/v5-26-10-antes-das-4-historias/`) e v4.6, de Kauê e Diogo (`historico/sprint-3-roteiro-v4.6.md`).
+**Revisão:** 28/10/2026 (A38: a Gurobi autorizou por escrito a licença do `pip` no Render; o deploy vai com o solver ligado e o B1 vira reserva). Antes: 27/10/2026, noite (v5.3: resposta do professor, plano B1, revisão de coerência do diagnóstico geral). **Bases anteriores:** v5.2 (27/10, respostas da equipe),  v5.1 (noite de 26/10, em `historico/v5.1-27-10-antes-das-respostas/`), v5 (tarde de 26/10, em `historico/v5-26-10-antes-das-4-historias/`) e v4.6, de Kauê e Diogo (`historico/sprint-3-roteiro-v4.6.md`).
 **Período:** **26/10 (seg) a 02/11/2026 (seg)**, deslocado um dia em 27/10 (decisão A36; **aceito pelo professor em 27/10**). Janela de testes e correções: **02/11, depois da Review, a 06/11/2026** (antes: 01–06/11, decisão A1).
 **Documentos irmãos (nesta pasta):**
 - `sprint-3-decisoes-e-pendencias.md`: decisões e bloqueios, com IDs F, D, P e A.
 - **Contrato oficial:** `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2, na `main` desde os PRs #34 e #35). A `sprint-3-contrato-v2-proposta.md` ficou **congelada** como registro.
 - `sprint-3-mensagem-professor.md` (enviada em 27/10) e `resposta-professor.md` (a resposta).
-- `sprint-3-adendo-termo-de-aceite.md` (rascunho do adendo; vai com `sprint-3-mensagem-professor-adendo.md`, que também pede o prazo da A36) e `sprint-3-licenca-gurobi.md` (licença, plano B1 e demonstração local).
+- `sprint-3-adendo-termo-de-aceite.md` (adendo **aprovado e assinado** pelo professor em 27/10) e `sprint-3-licenca-gurobi.md` (licença, resposta da Gurobi de 28/10, plano B1 como reserva e demonstração local).
 - `sprint-3-matriz-rastreabilidade.md`, `sprint-3-casos-de-teste-propostos.md`, `sprint-3-relatorio-auditoria.md`.
 - Os 4 tutoriais: `sprint-3-tutorial-*.md`.
 - `referencia/`: código, SQL e arquivos de deploy **já executados**, prontos para copiar.
@@ -26,12 +26,12 @@ O fim da Sprint 3 passa de 01/11 para **02/11**, o que encosta um dia na janela 
 ### 0.00 Resposta do professor (27/10, noite) — v5.3
 
 Texto completo em `resposta-professor.md`.
-1. **Adendo ao Termo aceito:** rascunho em `sprint-3-adendo-termo-de-aceite.md` (A33), com o cálculo do lucro explícito. Os demais documentos só mudam **depois** da aprovação do adendo.
-2. **Licença do Gurobi no Render NÃO autorizada** até a Gurobi confirmar por escrito (A30). Pedido pronto em `sprint-3-licenca-gurobi.md`; plano B decidido: **B1** (A31, item 6 abaixo).
+1. **Adendo ao Termo aprovado e assinado pelo professor em 27/10** (`sprint-3-adendo-termo-de-aceite.md`, A33), com o cálculo do lucro explícito. Os documentos afetados já foram atualizados (A37).
+2. **Licença do Gurobi no Render: AUTORIZADA por escrito em 28/10 (A38)**, com a licença restrita do `pip`. A WLS do Kauê **não** pode ir para o Render (URL pública). No Render: `OTIMIZADOR_HABILITADO=true` e **nenhuma** variável `GRB_*`. *(Antes: "não autorizada até a Gurobi confirmar", A30.)*
 3. **Sistema publicado até 30/11**, com backup e restauração testados (A32). O banco definitivo passa a ser criado **no sábado 31 à noite**.
 4. **Obrigatórios primeiro:** a lista de cortes mudou (§7). A sprint extra só acontece com o obrigatório testado e estável (A28).
-5. **Lacuna encontrada:** o Termo aceitou "Must + Should" e cita alertas de vencimento e de reposição no critério de pronto, mas US15/US16 estão fora. O adendo, item 4, propõe como tratar (decisão da equipe).
-6. **Plano B da licença decidido: B1** (A31). No Render, `OTIMIZADOR_HABILITADO=false`: produção e reposição respondem `503` com mensagem, e o resto funciona. A otimização é demonstrada pelo Kauê, com a WLS dele. Implementado e testado: a suíte do backend vai a **95** e as funções de apoio a **15**.
+5. **Lacuna encontrada:** o Termo aceitou "Must + Should" e cita alertas de vencimento e de reposição no critério de pronto, mas US15/US16 estão fora. O adendo, item 4, registra como tratar: **opção (a)**, a cobertura atual (G1, decidida em 27/10).
+6. **Plano B da licença: B1** (A31), **reserva desde 28/10** (A38): só é ligado se o solver der problema no Render. Com ele, `OTIMIZADOR_HABILITADO=false`: produção e reposição respondem `503` com mensagem, e o resto funciona. Nesse caso, a otimização é demonstrada pelo Kauê, no computador dele. Implementado e testado: a suíte do backend vai a **95** e as funções de apoio a **15**.
 
 ### 0.0 Da v5.1 para a v5.2 (27/10, respostas da equipe)
 
@@ -42,7 +42,7 @@ Texto completo em `resposta-professor.md`.
 5. **Render (A21): deploy definitivo no sábado 31**, para o banco gratuito durar até 30/11. Ensaio opcional na qui 29 ou sex 30 (A36) numa conta pessoal, apagado no mesmo dia.
 6. **P2: `gurobipy` 13.0.3.**
 7. **A15 corrigida:** um merge do branch `sprint-3` **não** desfaz o PR #24 (simulado e, depois, conferido no merge real, PR #25: A29). Os documentos chegaram à `main` pelo PR #27. Falta juntar os dois `.env.example`.
-8. **A28: gatilhos no sábado 31 à tarde (A36; antes: sexta à noite)**: cortar o botão da A12 se houver atraso; confirmar o solver ou o B1 antes do deploy da noite; Sprint 4 relâmpago só se tudo estiver pronto.
+8. **A28: gatilhos no sábado 31 à tarde (A36; antes: sexta à noite)**: cortar o botão da A12 se houver atraso; confirmar que o solver está ligado no deploy da noite (A38; o B1 só se houver problema); Sprint 4 relâmpago só se tudo estiver pronto.
 9. **Contrato oficial atualizado para a v2** (A10), com autorização do Kauê; já está na `main` (PRs #34 e #35).
 
 ### 0.1 Da v5 para a v5.1 (noite de 26/10)
@@ -76,7 +76,7 @@ Texto completo em `resposta-professor.md`.
 
 É o fluxo do critério de pronto do Termo de Aceite.
 
-**Com o plano B1 da licença (A31), enquanto a Gurobi não autorizar:** na URL publicada, as Telas 12, 13 e 14 e o bloco "Plano de produção" do dashboard mostram o aviso de que a recomendação está disponível só na demonstração local. O resto do fluxo funciona na URL. A recomendação de produção, a reposição e as sugestões de campanha são demonstradas **pelo Kauê, no computador dele, com a WLS dele** (`sprint-3-licenca-gurobi.md`, §5). Isso precisa constar do adendo (item 5) e ser dito ao professor **antes** da avaliação, porque o Termo pede a "receita máxima estimada" no dashboard e o fluxo pela URL.
+**Licença (A38, 28/10):** com a autorização escrita da Gurobi, o fluxo completo do Termo, **inclusive a otimização e a "receita máxima estimada" do dashboard**, roda na URL publicada. *O parágrafo abaixo vale só se o plano B1 for ligado como reserva:* **com o plano B1 (A31):** na URL publicada, as Telas 12, 13 e 14 e o bloco "Plano de produção" do dashboard mostram o aviso de que a recomendação está disponível só na demonstração local. O resto do fluxo funciona na URL. A recomendação de produção, a reposição e as sugestões de campanha são demonstradas **pelo Kauê, no computador dele** (`sprint-3-licenca-gurobi.md`, §5). O adendo (item 5) já prevê esse caso, e o professor teria de ser avisado **antes** da avaliação.
 
 | Entrega | Histórias | Responsável principal |
 |---|---|---|
@@ -196,10 +196,10 @@ Fases 1–2 na main (29/10) ──> ENSAIO opcional (conta pessoal, apagado no m
 |---|---|---|---|---|
 | **Seg 26** (noite) | Ler a proposta do Contrato v2 | Ler o tutorial; Docker funcionando (A26) | Ler o tutorial | Baseline (22 OK) e retratos |
 | **Ter 27** | **Sem entregas de código** (A36). À noite: **enviar o pedido à Gurobi** (A30) | Decisões G1 e G2 (feitas); revisão dos documentos | — | — |
-| **Qua 28** | Revisar o contrato oficial; Fase P (copiar e testar) | **PR do banco** (DDL + 41 testes); **enviar o adendo e o pedido de prazo (02/11) ao professor** (com o Lucas); repositórios de usuário, unidade, ingrediente e produto | **PR da Fase 1** (18/18); começar a Fase 2; revisar o adendo | Dividir o `app.js`; guarda; PR |
+| **Qua 28** | Revisar o contrato oficial; Fase P (copiar e testar); **repassar ao professor o e-mail da Gurobi** (A38) | **PR do banco** (DDL + 41 testes); repositórios de usuário, unidade, ingrediente e produto | **PR da Fase 1** (18/18); começar a Fase 2 | Dividir o `app.js`; guarda; PR |
 | **Qui 29** | **PR da Fase P + Q** (47 testes); ensaio de deploy (opcional, conta pessoal) | Repositórios de movimentação, pedido, reposição e dashboard; `seed_demo.sql`; `sql_repositorios_sprint3.md` | **PR da Fase 2** (15/15) → avisar o Leo; ensaio de deploy com o Kauê (opcional) | `config.js` + *workflow* do Pages (com o Kauê); Telas de Estoque e Pedido com API simulada |
 | **Sex 30** | **Fase 4A em dupla**; Java da reposição; ensaio, se não foi na quinta | Plano de Testes: casos do banco; DER e mapa de constraints | **PR da Fase 3** (15/15); Fase 4A em dupla; **decidir quem cria a conta definitiva do Render (G4)** | **Gate da Fase 2** (manhã); Estoque e Pedido com o backend real |
-| **Sáb 31** | **PR da Fase 5** (reposição); casos do Python e da US14 no Plano; **à noite: deploy definitivo** (conta, banco e serviço criados hoje; o banco vale até 30/11 no mesmo horário; A32) e **backup** logo depois do seed | Documentos que não dependem do adendo | **PR da Fase 4A** e **PR da Fase 6**; **à tarde, conferência da A28 (G9)**: botão da A12, Sprint 4 relâmpago, solver ou B1 | Tela 12; Tela 03; botão "Descartar" (A12) |
+| **Sáb 31** | **PR da Fase 5** (reposição); casos do Python e da US14 no Plano; **à noite: deploy definitivo** (conta, banco e serviço criados hoje; o banco vale até 30/11 no mesmo horário; A32) e **backup** logo depois do seed | Cabeçalho de `bd/constraints_teste.sql`; A26 nas evidências (os demais documentos já foram atualizados, A37) | **PR da Fase 4A** e **PR da Fase 6**; **à tarde, conferência da A28 (G9)**: botão da A12, Sprint 4 relâmpago, solver ligado no deploy (A38; B1 só se houver problema) | Tela 12; Tela 03; botão "Descartar" (A12) |
 | **Dom 01/11** | **CT67–CT72** no ambiente publicado (o Render publica sozinho o que entrar na `main`); README; CT20 com um colega | Revisar PRs; Plano de Testes completo; evidências | PRs revisados; Tela 14 (se o Leo precisar) | Telas 13 e 14; testes de navegador |
 | **Seg 02/11** | **Review e Retrospectiva**; evidências | Evidências do banco | Congelamento do código | Evidências do frontend; aceite **na URL publicada** |
 | **02–06/11** | Janela de testes **no ambiente publicado**, depois da Review: só correções (v4.6, §4.4, item 5); fluxo registrar → teste que reproduz → `fix/...` → PR → retestar. Aceita pelo professor (A36) | | | |
@@ -217,7 +217,7 @@ Fases 1–2 na main (29/10) ──> ENSAIO opcional (conta pessoal, apagado no m
 **Conferência do sábado 31, à tarde (A28; deslocada pela A36)**, feita pelo PO, **antes do deploy da noite**:
 - **Corte:** as Telas 10/16, 11/17 e 12 funcionam com o backend real? Se **não**, o botão da A12 sai.
 - **Sprint 4 relâmpago:** todos os PRs das Fases 1–6 estão na `main`, as seis telas prontas **e testadas, sem defeito aberto** nas obrigatórias? Se **sim**, o domingo pode receber US27 e/ou US26, sem atrasar o CT67–CT72. Na dúvida, não (orientação do professor, 27/10).
-- **Licença (A30):** chegou autorização escrita da Gurobi? Se **não**, o deploy da noite vai com o plano B1 (A31).
+- **Licença (A38):** autorização escrita recebida em 28/10. O deploy da noite vai com `OTIMIZADOR_HABILITADO=true` e **sem** `GRB_*`. O B1 (A31) só se o solver falhar no Render.
 
 **Nenhuma história Must sai.** Se mesmo assim não couber, o PO conversa com o professor **antes** de 02/11 (A36). Não use a janela de testes para desenvolver.
 
@@ -230,9 +230,9 @@ Fases 1–2 na main (29/10) ──> ENSAIO opcional (conta pessoal, apagado no m
 3. **Gates.** Uma fase só conta quando o lado de consumo real a usa:
    - Fase 2 → aceite do Leonardo;
    - Fase 3 → telas de Estoque e Pedido;
-   - Fase 4A → Tela 12 com 151/1/0 (na demonstração local; no Render, com o B1, a Tela 12 mostra o aviso do `503`);
+   - Fase 4A → Tela 12 com 151/1/0, **também na URL publicada** (A38; só com o B1 ligado ela mostraria o aviso do `503`);
    - Fases 5 e 6 → Telas 13, 03 e 14;
-   - US20 → CT68 na URL publicada (sem a otimização, enquanto valer o B1) e CT72 (o `503` e as mensagens).
+   - US20 → CT68 na URL publicada, **com a otimização** (A38), e CT72 (a reserva B1: o `503` e as mensagens).
 4. **Pirâmide** (números de `referencia/`):
 
    | Camada | Ferramenta | Testes prontos |
@@ -260,7 +260,7 @@ Fases 1–2 na main (29/10) ──> ENSAIO opcional (conta pessoal, apagado no m
 | Gargalo no Lucas (caminho crítico) | Média / Alto | Todo o Java pronto; Kauê com a reposição; Diogo com os repositórios |
 | **Render free:** banco expira em 30 dias; serviço dorme após 15 min; 0,1 CPU (sobe em ~83 s; primeiro login ~7 s) | Certa / Médio | Banco criado no sábado 31 (vale até 30/11); data da avaliação perguntada ao professor; `config.js` com 90 s; "acordar" o serviço antes de cada sessão de teste (A21) |
 | **Primeiro contato com o Render só no sábado** (se o ensaio não for feito) | Média / Alto | Ensaio na qui 29 ou sex 30 numa conta pessoal; simulação local já feita |
-| **Licença do Gurobi no servidor não autorizada** (professor, 27/10) | **Alta / Alto** | O Kauê pergunta à Gurobi se a WLS acadêmica dele (válida até 2027, uso pessoal) pode rodar no Render; plano B1 **já implementado** em `referencia/` (A30, A31, A34) |
+| ~~Licença do Gurobi no servidor não autorizada~~ **Resolvido em 28/10 (A38):** licença do `pip` autorizada por escrito. Risco que sobra: o solver não caber no Render free (memória, tempo) | **Baixa / Médio** | Imagem já testada com 512 MB e 0,1 CPU (F8, A21); CT72 e B1 como reserva: trocar a variável para `false` no painel. **Nunca** usar a WLS no Render |
 | **Banco expira no dia 30/11, data-limite da avaliação** | Média / Alto | Criar no sábado à noite; backups com restauração testada (A32) |
 | **Alertas de vencimento e de reposição (Termo) com US15/US16 fora** | Média / Médio | Adendo, item 4: registrar a cobertura atual ou tornar o prazo parametrizável (A33) |
 | Contrato v2 não aprovado a tempo | Baixa / Alto | Proposta igual ao código; 30 min de reunião na terça |
@@ -279,8 +279,8 @@ Fases 1–2 na main (29/10) ──> ENSAIO opcional (conta pessoal, apagado no m
 - [ ] Cadastros de US4–US7 com erros por campo vindos do backend real.
 - [ ] Estoque com validade; saída convencional e descarte; vencido nunca vendido. Botão "Descartar" por linha, se não foi cortado (A12, A28).
 - [ ] Pedido com baixa por linhas, atômico.
-- [ ] Recomendação de produção na Tela 12 = 151/1/0 com o seed de demonstração, sem termos técnicos: **na demonstração local** pelo Kauê (B1) ou na URL, se a Gurobi autorizar (A30).
-- [ ] Com o B1: Telas 12, 13 e 14 e o dashboard publicados mostram o aviso do `503` (CT72); a demonstração local foi ensaiada; o professor foi avisado (adendo, item 5).
+- [ ] Recomendação de produção na Tela 12 = 151/1/0 com o seed de demonstração, sem termos técnicos: **na URL publicada** (A38); na demonstração local pelo Kauê só se o B1 for ligado.
+- [ ] Reserva B1 conferida (CT72): com `OTIMIZADOR_HABILITADO=false`, as Telas 12, 13 e 14 e o dashboard mostram o aviso do `503`; o professor recebeu o e-mail da Gurobi (A38).
 - [ ] **Reposição** na Tela 13 com período e orçamento (US14).
 - [ ] **Dashboard** do mês na Tela 03 com ranking e filtros (US17).
 - [ ] **Sugestões de campanha** na Tela 14 (US18).

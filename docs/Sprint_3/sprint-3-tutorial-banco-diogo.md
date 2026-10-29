@@ -19,11 +19,11 @@
 |---|---|---|---|
 | **1** | **PR do banco:** patch do DDL e os 41 testes novos | **Qua 28** | Lucas (Fase 2 depende do seed com estoque 0), Kauê |
 | **2** | Mensagem ao professor: P3 (§9.1), com o Lucas | **Feito em 27/10** | Toda a equipe |
-| **2b** | **Enviar o adendo** (`sprint-3-adendo-termo-de-aceite.md`, com a data preenchida) **e o pedido de prazo** (Sprint 3 até 02/11, A36) ao professor, com o Lucas. Texto pronto: `sprint-3-mensagem-professor-adendo.md` | **Qua 28** | Toda a equipe (o calendário depende do ok dele) |
+| 2b | ~~Enviar o adendo e o pedido de prazo ao professor~~ **Não é mais preciso:** o professor aprovou o adendo (assinado) e o prazo de 02/11 pessoalmente em 27/10 | — | — |
 | **3** | Repositórios de usuário, unidade, ingrediente e produto (§7) | **Qua 28 – Qui 29** | Lucas (Fase 2) |
 | 4 | Repositórios de movimentação, pedido, **reposição** e **dashboard** (§7) | **Qui 29** | Lucas (Fases 3 e 6), Kauê (Fase 5) |
 | 5 | `seed_demo.sql` no repositório e `sql_repositorios_sprint3.md` (consultas 1–13) | Qui 29 | Todos (demonstração) |
-| 6 | Documentos (§9.2) e casos de teste do banco no Plano de Testes | Sex 30 – Dom 01/11 | Janela de testes |
+| 6 | **Revisar** os documentos da §9.2 e os casos do banco no Plano de Testes (já atualizados em 27/10, A37); falta só o cabeçalho de `bd/constraints_teste.sql`, no seu PR do banco | Sex 30 – Dom 01/11 | Janela de testes |
 | 7 | Registrar a A26 nas evidências da Sprint 3 como **incidente novo** (o BD01 segue sem causa registrada) | Até Sáb 31 | — |
 
 **Pronto quando:**

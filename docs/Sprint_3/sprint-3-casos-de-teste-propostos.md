@@ -1,11 +1,11 @@
 # Casos de teste propostos — Sprint 3 — Mente Fria
 
-**Status:** PROPOSTA (auditoria de 26/10/2026; v5.2, 27/10: CT71 do descarte por linha, A12; v5.3, 27/10 noite: CT72 do plano B1 e CT68 ajustado ao B1). **Destino:** `docs/Plano_de_Testes_Mente_Fria.md`, seção 3, nova subseção "Sprint 3". O Diogo e o Kauê incorporam **até 01/11** (A36; a janela de testes de 02–06/11, aceita pelo professor em 27/10, executa o Plano).
+**Status:** PROPOSTA (auditoria de 26/10/2026; v5.2, 27/10: CT71 do descarte por linha, A12; v5.3, 27/10 noite: CT72 do plano B1 e CT68 ajustado ao B1; 28/10: CT68 e CT72 ajustados à A38, licença do `pip` autorizada no Render). **Destino:** `docs/Plano_de_Testes_Mente_Fria.md`, seção 3, nova subseção "Sprint 3". O Diogo e o Kauê incorporam **até 01/11** (A36; a janela de testes de 02–06/11, aceita pelo professor em 27/10, executa o Plano).
 **Numeração:** continua a oficial (CT01–CT29).
 - CT30–CT37 têm os mesmos números que o tutorial do banco de 14/10 já usava.
 - **CT51–CT70 são novos** (US14, US17, US18 e US20, que entraram na Sprint 3 pela decisão A2b).
 - **CT71 é novo** (27/10): descarte de uma linha vencida pelo botão (A12). Fica na seção da US9.
-- **CT72 é novo** (27/10): otimização desligada no servidor (plano B1 da licença, A31). Fica na seção da US20.
+- **CT72 é novo** (27/10): otimização desligada no servidor (plano B1 da licença, A31). Desde 28/10 (A38), o B1 é só **reserva**: o CT72 confere que a chave funciona. Fica na seção da US20.
 - Os alertas (US15/US16) continuam fora; quando voltarem, usam o próximo número livre.
 
 **Sem meta de cobertura** (Plano de Testes, §2).
@@ -100,10 +100,10 @@ Cenário de referência (conta à mão): 15/09 Dono 2× Tradicional; 05/10 Func 
 | ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado em 26/10 |
 |---|---|---|---|---|---|---|
 | CT67 | A imagem sobe dentro dos limites do plano free | `docker build` da raiz; banco com o DDL | — | Container com 512 MB e 0,1 CPU → `GET /api/saude` `200` em até ~2 min; sem `OOMKilled`; `/api/teste/python` → `401` | DEP (local) | **Sim** (simulação: 83 s; pico 133 MiB) |
-| CT68 | Fluxo do Termo no ambiente publicado | Deploy no Render + Pages | Admin e Funcionário | Pela URL HTTPS do Pages: cadastro → login → entrada de estoque → recomendação → pedido → baixa; reposição; dashboard; marketing. **Com o plano B1 (A31):** recomendação, reposição e marketing mostram o aviso do `503` (CT72) e são demonstrados localmente pelo Kauê; o resto do fluxo, na URL | DEP, E2E | Não (depende do deploy real); **o mesmo fluxo passou no container local** |
+| CT68 | Fluxo do Termo no ambiente publicado | Deploy no Render + Pages | Admin e Funcionário | Pela URL HTTPS do Pages: cadastro → login → entrada de estoque → recomendação → pedido → baixa; reposição; dashboard; marketing. **Com a licença do `pip` autorizada (A38, 28/10):** recomendação (151/1/0 com o seed), reposição, marketing e o plano no dashboard **funcionam na URL**. Só se a reserva B1 (A31) for ligada eles mostram o aviso do `503` (CT72) e passam para a demonstração local | DEP, E2E | Não (depende do deploy real); **o mesmo fluxo passou no container local** |
 | CT69 | CORS do GitHub Pages | Idem | — | `OPTIONS` com a origem do Pages → `200` com `Access-Control-Allow-Origin`; outra origem → `403` | DEP | Sim no container local; no Render, não |
 | CT70 | Primeira chamada depois de o serviço "dormir" | Serviço sem uso por 15 min | Admin | A tela espera (até 90 s) e funciona; **não** aparece "O servidor demorou para responder" | DEP, E2E | Não (`config.js` conferido: 90 s no Pages, 15 s local) |
-| CT72 | Otimização desligada no servidor (plano B1 da licença, A31) | `OTIMIZADOR_HABILITADO=false` (como no Render sem autorização da Gurobi) | Admin e Funcionário | Produção → `503` "A recomendação está disponível só na demonstração local da equipe.", sem chamar o Python (Funcionário continua `403`); reposição: campo inválido → `400`, sem pedidos → `200`, com pedidos → `503`; marketing → mensagem própria; dashboard → `200` com `otimizador_habilitado: false`; as Telas 03, 12, 13 e 14 mostram a mensagem como aviso | INT, DEP, E2E | **Sim** (`OtimizadorDesligadoTest`, 3 testes; tirar a chave de propósito derruba o teste). No Render e nas telas, não |
+| CT72 | Otimização desligada no servidor (plano B1 da licença, A31; **reserva desde 28/10**, A38) | `OTIMIZADOR_HABILITADO=false` (a chave de reserva, se o solver der problema no Render) | Admin e Funcionário | Produção → `503` "A recomendação está disponível só na demonstração local da equipe.", sem chamar o Python (Funcionário continua `403`); reposição: campo inválido → `400`, sem pedidos → `200`, com pedidos → `503`; marketing → mensagem própria; dashboard → `200` com `otimizador_habilitado: false`; as Telas 03, 12, 13 e 14 mostram a mensagem como aviso | INT, DEP, E2E | **Sim** (`OtimizadorDesligadoTest`, 3 testes; tirar a chave de propósito derruba o teste). No Render e nas telas, não. **No Render, opcional** (A38): trocar a variável, conferir e voltar para `true` |
 
 ### Segurança e erros (US3, US7, infraestrutura)
 
@@ -119,7 +119,7 @@ Cenário de referência (conta à mão): 15/09 Dono 2× Tradicional; 05/10 Func 
 
 ## 3. Execução na janela de testes (02–06/11, A36; aceita pelo professor)
 
-- Ordem sugerida: primeiro os caminhos do Termo de Aceite **no ambiente publicado** (CT68, CT06, CT12, CT30, CT38, CT58, CT72), depois os casos de erro. **Com o plano B1 (A31):** CT42, CT51 e CT64 rodam **na demonstração local** (Kauê, com a WLS dele); no Render, só se a Gurobi autorizar.
+- Ordem sugerida: primeiro os caminhos do Termo de Aceite **no ambiente publicado** (CT68, CT06, CT12, CT30, CT38, CT58), depois os casos de erro e, por último, o CT72 (a reserva). **Com a A38 (28/10):** CT42, CT51 e CT64 rodam **no Render**. Só se o B1 for ligado eles passam para a demonstração local do Kauê.
 - Divisão por perfil: dois integrantes testam como Administrador e dois como Funcionário.
 - Cada defeito segue o fluxo: registrar → caso que reproduz → `fix/...` → PR → retestar (roteiro v4.6, §4.4, item 5).
 - Para defeitos difíceis, usar a skill `diagnosing-bugs`.

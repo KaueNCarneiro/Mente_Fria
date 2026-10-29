@@ -47,7 +47,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
    | `PYTHON_CMD` | Comando do Python na máquina (`python`, `python3` ou `py`) |
    | `OTIMIZADOR_SCRIPT` | Caminho do script, relativo à pasta de onde o backend inicia (`../optimization/app/otimizador.py`) |
    | `REPOSICAO_SCRIPT` | Caminho do módulo de reposição (`../optimization/app/reposicao.py`) |
-   | `OTIMIZADOR_HABILITADO` | `true` (padrão) chama o Python; `false` faz produção e reposição responderem `503` (usado no Render enquanto a Gurobi não autorizar a licença lá) |
+   | `OTIMIZADOR_HABILITADO` | `true` (padrão) chama o Python; `false` faz produção e reposição responderem `503` (reserva, se o solver der problema no Render; o padrão no Render é `true`) |
    | `OTIMIZADOR_TIMEOUT_SEGUNDOS` | Tempo limite de cada chamada ao Python (padrão `10`) |
    | `MF_PYTHON` | Só para os testes do backend: caminho do Python com `gurobipy`, para os testes que chamam o Python de verdade (opcional) |
 
@@ -63,7 +63,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
    PYTHON_CMD=python
    OTIMIZADOR_SCRIPT=../optimization/app/otimizador.py
    ```
-   As credenciais da licença Gurobi WLS (`GRB_WLSACCESSID`, `GRB_WLSSECRET`, `GRB_LICENSEID`) são segredo tanto quanto `DB_PASSWORD`: **nunca** commitar o `.lic` nem os valores. A WLS é pessoal: só o titular a usa, e no Render só com autorização escrita da Gurobi. O backend lê o `.env` pelo caminho definido em `backend/src/main/resources/application.properties` (relativo à pasta de onde o Java é iniciado); se aparecer `Could not resolve placeholder 'DB_USER'`, defina as variáveis no terminal ou no IntelliJ.
+   As credenciais da licença Gurobi WLS (`GRB_WLSACCESSID`, `GRB_WLSSECRET`, `GRB_LICENSEID`) são segredo tanto quanto `DB_PASSWORD`: **nunca** commitar o `.lic` nem os valores. A WLS é pessoal: só o titular a usa, no computador dele, e **nunca** no Render (a Gurobi vetou a WLS numa URL pública; no Render vale a licença do `pip`, autorizada por escrito em 28/10/2026). O backend lê o `.env` pelo caminho definido em `backend/src/main/resources/application.properties` (relativo à pasta de onde o Java é iniciado); se aparecer `Could not resolve placeholder 'DB_USER'`, defina as variáveis no terminal ou no IntelliJ.
 4. Crie o banco e rode o schema:
    ```bash
    docker run --name mente-fria-db -e POSTGRES_PASSWORD=SUA_SENHA_LOCAL -e POSTGRES_DB=mente_fria -p 5432:5432 -d postgres:16
@@ -122,4 +122,4 @@ Como rodar:
 Testes de integração com Testcontainers estão no código da Sprint 3 (`docs/Sprint_3/referencia/backend/`, 95 testes) e entram na `main` com as fases. Não há CI configurado.
 
 ## Licença / Uso acadêmico
-Projeto desenvolvido para a disciplina de Laboratório de Engenharia de Software — ADS, Fatec Ribeirão Preto, 2026. O Gurobi é usado com a licença restrita do `pip` (desenvolvimento e avaliação) e com a WLS acadêmica pessoal do Kauê, ambas só para uso não comercial. O uso do solver no sistema publicado depende de autorização escrita da Gurobi; sem ela, a otimização é demonstrada localmente. O sistema serve à demonstração acadêmica e não deve ser usado em operação comercial.
+Projeto desenvolvido para a disciplina de Laboratório de Engenharia de Software — ADS, Fatec Ribeirão Preto, 2026. O Gurobi é usado com a licença restrita do `pip` (desenvolvimento e avaliação) e com a WLS acadêmica pessoal do Kauê, ambas só para uso não comercial. No sistema publicado, o solver usa a licença restrita do `pip`, com autorização escrita da Gurobi (28/10/2026) para esta demonstração acadêmica. O sistema serve à demonstração acadêmica e não deve ser usado em operação comercial.

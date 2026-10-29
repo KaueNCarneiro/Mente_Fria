@@ -2,7 +2,7 @@
 
 Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: uma açaiteria), que centraliza o controle de estoque, produtos, ingredientes, pedidos e clientes. Seu diferencial é calcular, via Programação Linear Inteira, a quantidade ideal de produção de cada produto para maximizar o **lucro estimado** (preço de venda menos o custo dos ingredientes) com o estoque válido disponível, conforme o Adendo nº 1 ao Termo de Aceite (27/10/2026).
 
-**Deploy:** ainda não publicado — previsto para a **Sprint 3** (US20): banco e serviço criados no Render em 31/10/2026, sistema no ar até **30/11/2026** (o banco gratuito expira 30 dias depois de criado; data de expiração: _[preencher no deploy]_). Plataformas: GitHub Pages (frontend) e Render (backend + banco). O link entra aqui assim que existir, mesmo que instável.
+**Deploy:** ainda não publicado — previsto para a **Sprint 4** (US20): banco e serviço criados no Render em **02/11/2026**, sistema no ar até pelo menos **30/11/2026**, data-limite do professor (o banco gratuito expira 30 dias depois de criado; data de expiração: _[preencher no deploy]_). Plataformas: GitHub Pages (frontend) e Render (backend + banco). O link entra aqui assim que existir, mesmo que instável.
 **Equipe:** Leonardo Fagundes Oliveira (RA 2840482421009) — Diogo Pereira Miranda (RA 2840482423006) — Lucas Gabriel Valadares Bassi (RA 2840482423008) — Kauê Nogueira Carneiro (RA 2840482423039) · Laboratório de Engenharia de Software · ADS Fatec Ribeirão Preto
 
 ## Stack
@@ -89,7 +89,9 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 
 > **Estado atual (corte da Sprint 2, 02/10/2026):** o backend só tem `GET /api/saude` e `GET /api/ingredientes`; login/JWT, CORS e endpoints de escrita ainda não existem. O frontend foi verificado apenas com respostas simuladas. Detalhes em `docs/Sprint_2/`. Documentação do projeto (DER, UML, Arquitetura, Contrato de Comunicação, Plano de Testes): pasta `docs/`.
 >
-> **Sprint 3 (26/10 a 02/11/2026, em andamento):** o código de todas as histórias da sprint está escrito e testado em `docs/Sprint_3/referencia/` e entra na `main` fase a fase, por PR. Roteiro, decisões e tutoriais: `docs/Sprint_3/`. Mudanças de escopo aprovadas pelo professor: `docs/Sprint_3/sprint-3-adendo-termo-de-aceite.md`.
+> **Sprint 3 (encerrada no cronograma do professor):** planejamento e preparação. O código de todas as histórias do escopo foi escrito e testado em `docs/Sprint_3/referencia/`; roteiro, decisões, tutoriais e o adendo aprovado pelo professor estão em `docs/Sprint_3/`.
+>
+> **Sprint 4 (em andamento; execução de 29/10 a 06/11/2026):** esse código entra na `main` fase a fase, por PR, e o sistema é publicado; entrega e Review em **06/11**. Calendário e decisões: `docs/Sprint_4/`. Depois, uma semana de correção de bugs (até 13/11).
 
 ## Estrutura do repositório
 ```
@@ -119,7 +121,7 @@ Como rodar:
 - Frontend (Playwright, com API simulada; servidor do frontend na porta 5500): em `/frontend`, `npm install` e `npm test`
 - Backend (hoje só o teste de contexto, exige o PostgreSQL no ar): em `/backend`, `./mvnw test`
 
-Testes de integração com Testcontainers estão no código da Sprint 3 (`docs/Sprint_3/referencia/backend/`, 95 testes) e entram na `main` com as fases. Não há CI configurado.
+Testes de integração com Testcontainers estão no código de referência (`docs/Sprint_3/referencia/backend/`, 95 testes) e entram na `main` com as fases da Sprint 4. Não há CI configurado.
 
 ## Licença / Uso acadêmico
 Projeto desenvolvido para a disciplina de Laboratório de Engenharia de Software — ADS, Fatec Ribeirão Preto, 2026. O Gurobi é usado com a licença restrita do `pip` (desenvolvimento e avaliação) e com a WLS acadêmica pessoal do Kauê, ambas só para uso não comercial. No sistema publicado, o solver usa a licença restrita do `pip`, com autorização escrita da Gurobi (28/10/2026) para esta demonstração acadêmica. O sistema serve à demonstração acadêmica e não deve ser usado em operação comercial.

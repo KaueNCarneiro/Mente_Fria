@@ -62,7 +62,7 @@ Cada linha tem um teste correspondente: T01–T32 em `bd/constraints_teste.sql` 
 | `movimentacao_estoque` | `fk_movimentacao_ingrediente` | ingrediente | `ingrediente_id` | Ingrediente não encontrado. | 400 | T68 |
 | `movimentacao_estoque` | `chk_movimentacao_restante`, `fk_movimentacao_usuario` | — | — | (erro interno: quem preenche é o backend) | 500 | T55–T57, T64, T69 |
 | `ingrediente` | `chk_ingrediente_quantidade_estoque` (numa baixa) | — | — | Estoque insuficiente para o ingrediente <nome> / para o produto <nome>. | **422** | T71 (CT21, CT25) |
-| `unidade_medida_porcao_padrao` | `chk_unidade_porcao_padrao` (na alteração, US26) | porção padrão | `porcao_padrao` | A porção deve ser maior que zero. | 400 | T73 (US26 fora da Sprint 3) |
+| `unidade_medida_porcao_padrao` | `chk_unidade_porcao_padrao` (na alteração, US26) | porção padrão | `porcao_padrao` | A porção deve ser maior que zero. | 400 | T73 (US26: fora da Sprint 3; condicional na Sprint 4, A40) |
 
 ## Como a API devolve isso (definido no Contrato de Comunicação, §2)
 
@@ -105,7 +105,7 @@ Erros que não pertencem a um campo (ex.: estoque insuficiente) trazem só `mens
 
 ## Necessidade que a FK cria para o backend e o frontend
 
-`ingrediente.unidade_medida` só aceita unidades já cadastradas em `unidade_medida_porcao_padrao`, e a tela de gestão de unidades (US26) ficou **fora da Sprint 3** (Adendo nº 1). Na Sprint 1, o campo "unidade de medida" da tela de ingredientes deve ser uma **lista de seleção alimentada pelo banco** (nunca texto livre), o que exige um endpoint de leitura. Consulta sugerida:
+`ingrediente.unidade_medida` só aceita unidades já cadastradas em `unidade_medida_porcao_padrao`, e a tela de gestão de unidades (US26) ficou **fora da Sprint 3** (Adendo nº 1); desde 28/10, ela só entra na Sprint 4 se passar no *gate* de seg 02/11 (A40). Na Sprint 1, o campo "unidade de medida" da tela de ingredientes deve ser uma **lista de seleção alimentada pelo banco** (nunca texto livre), o que exige um endpoint de leitura. Consulta sugerida:
 
 ```sql
 SELECT unidade_medida, porcao_padrao
@@ -117,4 +117,4 @@ As unidades do seed são `kg`, `mg`, `l`, `ml` e `un` (minúsculas: a FK diferen
 
 ## Fora deste mapa
 
-Nada das tabelas atuais. As constraints de `cliente`, `pedido`, `pedido_produto` e `movimentacao_estoque` entraram em 27/10/2026 (Sprint 3). O cadastro de clientes (US13) e o cancelamento de pedido (US27) estão fora da Sprint 3, mas suas constraints já existem no schema.
+Nada das tabelas atuais. As constraints de `cliente`, `pedido`, `pedido_produto` e `movimentacao_estoque` entraram em 27/10/2026 (Sprint 3). O cadastro de clientes (US13) e o cancelamento de pedido (US27) estão fora do semestre (A40), mas suas constraints já existem no schema.

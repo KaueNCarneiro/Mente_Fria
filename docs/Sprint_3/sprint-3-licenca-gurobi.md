@@ -19,7 +19,7 @@ O Kauê perguntou primeiro ao agente de IA do site da Gurobi (que recomendou a l
 | Render | `OTIMIZADOR_HABILITADO=true` (já no `render.yaml` de referência) e **nenhuma** variável `GRB_*`. Sem elas, o `gurobipy` usa a licença do `pip`, que já vem instalada na imagem |
 | WLS do Kauê | Só para uso pessoal dele (desenvolvimento e demonstração local, se quiser). **Nunca** no Render |
 | Testes da equipe | Nada muda: já usavam a licença do `pip` |
-| Plano B1 | Fica no código como **reserva**. Se o solver der problema no Render (memória, tempo esgotado), o Kauê troca a variável para `false` no painel e o sistema volta a responder `503` nas recomendações |
+| Plano B1 | Fica no código como **reserva**. Se o solver der problema no Render (memória, tempo esgotado), o Lucas, dono da conta do Render (A43), troca a variável para `false` no painel e o sistema volta a responder `503` nas recomendações |
 | Professor | O Kauê repassa o e-mail do suporte; o e-mail fica guardado com ele (sem dados pessoais no repositório) |
 
 A partir daqui, as §1 a §5 ficam como **registro** do que foi decidido em 27/10, com notas onde a A38 mudou algo.
@@ -44,8 +44,8 @@ Fontes: o e-mail de aprovação da Gurobi ao Kauê (guardado com ele; o número 
 |---|---|---|---|
 | 1 | **[Feito em 28/10 por chamado no suporte; resposta na §0]** **Responder ao e-mail de aprovação da licença** (para `license@gurobi.com`), do e-mail institucional do Kauê, com o texto da §3. A Gurobi diz que, para licenças acadêmicas gratuitas, o suporte cobre justamente "perguntas de licenciamento". Guardar a resposta em `docs/Sprint_3/resposta-gurobi.md`, sem o número da licença | **Kauê** (titular) | **Ter 27, à noite** |
 | 2 | Preparar o **plano B** (§4) | Lucas e Kauê | **Feito** (B1 implementado em `referencia/`) |
-| 3 | ~~Sábado 31, à tarde: com autorização escrita, o deploy usa a WLS do Kauê; sem ela, o plano B1~~ **Decidido em 28/10 (A38):** o deploy de sábado vai **com o solver ligado e a licença do `pip`** | Lucas (PO) | Sáb 31 |
-| 4 | Avisar o professor da resposta da Gurobi e de qual caminho foi seguido (o Kauê repassa o e-mail do suporte) | Kauê e Diogo | **Qua 28** |
+| 3 | ~~Sábado 31, à tarde: com autorização escrita, o deploy usa a WLS do Kauê; sem ela, o plano B1~~ **Decidido em 28/10 (A38):** o deploy definitivo vai **com o solver ligado e a licença do `pip`** | Lucas (PO) | Seg 02/11 (A41; antes: sáb 31) |
+| 4 | Avisar o professor da resposta da Gurobi e de qual caminho foi seguido (o Kauê encaminha o e-mail do suporte; o Diogo envia a mensagem da Sprint 4, que o cita) | Kauê e Diogo | **Qui 29/10** (junto com a mensagem da Sprint 4, `docs/Sprint_4/sprint-4-mensagem-professor.md`) |
 
 **[Substituído pela A38: a WLS não pode ir para o Render; não crie nenhuma `GRB_*` lá.]** *Texto de 27/10:* **Se a Gurobi autorizar:** o **Kauê**, como titular, cadastra no painel do Render as variáveis `GRB_WLSACCESSID`, `GRB_WLSSECRET` e `GRB_LICENSEID` (os valores estão no portal da Gurobi, na licença dele). O backend já as repassa ao Python (Contrato v2, §1.6). **Nunca** coloque esses valores no Git, no README ou em mensagens do grupo. As licenças acadêmicas limitam as execuções simultâneas; o backend já faz um cálculo por vez (A27).
 
@@ -88,7 +88,7 @@ Fontes: o e-mail de aprovação da Gurobi ao Kauê (guardado com ele; o número 
 
 ## 5. Como a B1 funciona (implementada em 27/10; desde 28/10, só se for preciso voltar a ela)
 
-**No Render, se a B1 for ligada** (o Kauê troca `OTIMIZADOR_HABILITADO` para `false` no painel; o `render.yaml` cria `true` desde 28/10). Com isso:
+**No Render, se a B1 for ligada** (o Lucas, dono da conta do Render, A43, troca `OTIMIZADOR_HABILITADO` para `false` no painel; o `render.yaml` cria `true` desde 28/10). Com isso:
 - `POST /api/producao/recomendacao` e `POST /api/reposicao/recomendacao` respondem `503` com "A recomendação está disponível só na demonstração local da equipe.", **sem chamar o Python** (a reposição ainda valida os campos antes e, sem pedidos no período, responde normalmente);
 - o marketing responde que as sugestões dependem da recomendação, disponível só na demonstração local;
 - o dashboard traz `otimizador_habilitado: false`, e a Tela 03 explica que o plano só existe na demonstração local;

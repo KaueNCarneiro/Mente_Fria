@@ -1,10 +1,12 @@
 # Roteiro — Sprint 3 — Mente Fria (v5.3)
 
+> **Atenção (28/10/2026, decisão A39):** no cronograma do professor, a Sprint 3 terminou e o período atual é a **Sprint 4**, com entrega e Review em **sex 06/11/2026**. Este roteiro é o **registro do planejamento feito na Sprint 3**. As fases, os *gates* e as regras técnicas continuam valendo; o **calendário em vigor** está em `docs/Sprint_4/sprint-4-roteiro.md`. As datas de 26/10 a 06/11 citadas abaixo são do plano de 27/10 (A36) e foram substituídas, **exceto as que trazem a marca A39, A40, A41 ou A42**, que já são as do calendário novo.
+
 **Revisão:** 28/10/2026 (A38: a Gurobi autorizou por escrito a licença do `pip` no Render; o deploy vai com o solver ligado e o B1 vira reserva). Antes: 27/10/2026, noite (v5.3: resposta do professor, plano B1, revisão de coerência do diagnóstico geral). **Bases anteriores:** v5.2 (27/10, respostas da equipe),  v5.1 (noite de 26/10, em `historico/v5.1-27-10-antes-das-respostas/`), v5 (tarde de 26/10, em `historico/v5-26-10-antes-das-4-historias/`) e v4.6, de Kauê e Diogo (`historico/sprint-3-roteiro-v4.6.md`).
-**Período:** **26/10 (seg) a 02/11/2026 (seg)**, deslocado um dia em 27/10 (decisão A36; **aceito pelo professor em 27/10**). Janela de testes e correções: **02/11, depois da Review, a 06/11/2026** (antes: 01–06/11, decisão A1).
+**Período (registro):** o plano de 27/10 ia de 26/10 a 02/11/2026, com janela de testes de 02 a 06/11 (A36). **Substituído em 28/10 pela A39:** a execução é a Sprint 4 oficial, até **06/11/2026**, seguida de uma semana de correção de bugs (até 13/11).
 **Documentos irmãos (nesta pasta):**
 - `sprint-3-decisoes-e-pendencias.md`: decisões e bloqueios, com IDs F, D, P e A.
-- **Contrato oficial:** `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2, na `main` desde os PRs #34 e #35). A `sprint-3-contrato-v2-proposta.md` ficou **congelada** como registro.
+- **Contrato oficial:** `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2: PR #28 para o `sprint-3` e PR #30 para a `main`, em 27/10; ajustes nos PRs #34 e #35). A `sprint-3-contrato-v2-proposta.md` ficou **congelada** como registro.
 - `sprint-3-mensagem-professor.md` (enviada em 27/10) e `resposta-professor.md` (a resposta).
 - `sprint-3-adendo-termo-de-aceite.md` (adendo **aprovado e assinado** pelo professor em 27/10) e `sprint-3-licenca-gurobi.md` (licença, resposta da Gurobi de 28/10, plano B1 como reserva e demonstração local).
 - `sprint-3-matriz-rastreabilidade.md`, `sprint-3-casos-de-teste-propostos.md`, `sprint-3-relatorio-auditoria.md`.
@@ -14,6 +16,10 @@
 ---
 
 ## 0. O que mudou
+
+### 0.0000 Calendário oficial do professor (28/10, noite) — A39 a A42
+
+Pelo cronograma do professor, a Sprint 3 já terminou e o período atual é a **Sprint 4**, cuja entrega foi adiada para **sex 06/11/2026**. Depois dela há uma semana de mapeamento e correção de bugs (até 13/11), que não é sprint. Consequências: o calendário passa para `docs/Sprint_4/sprint-4-roteiro.md` (A39); só a **US26** pode entrar, de forma condicional, e as demais histórias de fora ficam fora do semestre (A40); o **deploy definitivo passa para seg 02/11** (A41); as conferências de corte passam para o M3 (dom 01/11, à noite: botão "Descartar") e a seg 02/11, de manhã (*gate* da US26) (A42, A43). As seções 0.000 a 0.2 abaixo são o registro das versões anteriores.
 
 ### 0.000 Calendário deslocado um dia (27/10, noite) — A36
 
@@ -70,7 +76,7 @@ Texto completo em `resposta-professor.md`.
 
 ## 1. Objetivo e entregas da Sprint 3
 
-**Objetivo:** em 02/11 (A36), o sistema está **publicado numa URL HTTPS** e funciona de ponta a ponta, com banco, backend e frontend reais, nos dois perfis:
+**Objetivo:** em **06/11** (A39; antes: 02/11, A36), o sistema está **publicado numa URL HTTPS** e funciona de ponta a ponta, com banco, backend e frontend reais, nos dois perfis:
 
 > cadastro e login → cadastros (ingrediente, produto, preço) → entrada de estoque com validade → recomendação de produção por lucro (Tela 12) e sugestões de campanha (Tela 14) → pedido com baixa automática por linhas → reposição com orçamento (Tela 13) → dashboard do mês (Tela 03).
 
@@ -137,9 +143,9 @@ Classificação pela evidência, não pelo que os relatórios afirmam.
 
 **Dentro, como opcional:** o botão "Descartar" por linha (A12, entrou em 27/10). É o primeiro corte se houver atraso (A28).
 
-**Fora da Sprint 3:** US13 (Could), US15 e US16 (Should), US19, US26 e US27 (Could). **Sprint 4 relâmpago:** se, na conferência de sábado 31 à tarde (A36), tudo da Sprint 3 estiver na `main` e as seis telas prontas e testadas, o domingo 01/11 pode receber 1 ou 2 histórias pequenas (sugestão: US27 e US26), sem atrasar o CT67–CT72 (A28). Com o calendário deslocado, isso é **improvável**: domingo já tem as Telas 13 e 14. Se o professor estender a janela de testes, a Sprint 4 relâmpago também pode usar o início dela (P7, mantida em 27/10). Caso contrário, as histórias ficam para depois da janela de testes, se o professor permitir.
+**Fora da Sprint 3:** US13 (Could), US15 e US16 (Should), US19, US26 e US27 (Could). **Atualização de 28/10 (A40):** a "Sprint 4 relâmpago" deixou de existir. Só a **US26** pode entrar, de forma condicional (*gate* na seg 02/11); US13, US19, US27 e as versões completas de US15 e US16 ficam **fora do semestre** (roteiro da Sprint 4, §2 e §5). *Texto de 27/10, substituído:* **Sprint 4 relâmpago:** se, na conferência de sábado 31 à tarde (A36), tudo da Sprint 3 estiver na `main` e as seis telas prontas e testadas, o domingo 01/11 pode receber 1 ou 2 histórias pequenas (sugestão: US27 e US26), sem atrasar o CT67–CT72 (A28). Com o calendário deslocado, isso é **improvável**: domingo já tem as Telas 13 e 14. Se o professor estender a janela de testes, a Sprint 4 relâmpago também pode usar o início dela (P7, mantida em 27/10). Caso contrário, as histórias ficam para depois da janela de testes, se o professor permitir.
 
-**Mudanças de conteúdo a comunicar ao professor (P3, feito na terça 27; mensagem pronta em `sprint-3-mensagem-professor.md`):** receita → lucro (F9); reposição com orçamento; dashboard com a receita máxima estimada do último cálculo (A16, A17); licença do Gurobi no deploy (A22, depois A30/A34); banco criado em 31/10, válido até 30/11 (A21); sprint extra (A28). **Resposta recebida em 27/10** (`resposta-professor.md`). **Professor avisado pessoalmente em 27/10** da WLS do Kauê (A34) e do efeito do B1. A orientação dele continua a mesma: contatar a Gurobi e validar antes de colocar no Render (G2, A35).
+**Mudanças de conteúdo a comunicar ao professor (P3, feito na terça 27; mensagem pronta em `sprint-3-mensagem-professor.md`):** receita → lucro (F9); reposição com orçamento; dashboard com a receita máxima estimada do último cálculo (A16, A17); licença do Gurobi no deploy (A22, depois A30/A34); banco criado em 31/10, válido até 30/11 (A21; **depois: 02/11, A41**); sprint extra (A28; **depois: A40**). **Resposta recebida em 27/10** (`resposta-professor.md`). **Professor avisado pessoalmente em 27/10** da WLS do Kauê (A34) e do efeito do B1. A orientação dele continua a mesma: contatar a Gurobi e validar antes de colocar no Render (G2, A35).
 
 ---
 
@@ -162,10 +168,10 @@ As regras de negócio detalhadas da v4.6 **continuam valendo**: estoque por linh
 | **4A — Python no Java** | Ponte, eco (`dev`), recomendação | Lucas + Kauê | Fases P e 3 | `Fase4ProducaoTest` **7/7**; `PythonRealTest` e `ProcessoPythonTest` com `MF_PYTHON` | Lucas §5; Kauê §8 |
 | **Q + 5 — Reposição (US14)** | `reposicao.py` e `POST /api/reposicao/recomendacao` | **Kauê** (+ Diogo no SQL 9) | Fases P e 3 | `pytest`: **47 passed**; `ReposicaoTest` **8/8**; `PythonRealTest.reposicaoContaAMao` | Kauê §11 |
 | **6 — Dashboard e marketing (US17, US18)** | `GET /api/dashboard` e `GET /api/marketing/sugestoes` | **Lucas** (+ Diogo no repositório) | Fases 3 e 4A | `DashboardTest` **5/5**; `MarketingTest` **4/4** | Lucas §6; Diogo §7 |
-| **7 — Publicação (US20)** | Render (backend + Postgres) e GitHub Pages | **Kauê e Lucas** (Render), **Leonardo** (Pages) | Ensaio opcional (qui 29 ou sex 30, conta pessoal); **definitivo no sáb 31 à noite** (A21, A36); o que entrar na `main` depois é publicado sozinho | URL HTTPS no README; data de expiração do banco; CT67–CT70 | Kauê §12; Leonardo §9; Lucas §8 |
+| **7 — Publicação (US20)** | Render (backend + Postgres) e GitHub Pages | **Kauê e Lucas** (Render), **Leonardo** (Pages) | **Definitivo na seg 02/11** (A41; antes: sáb 31, A36), sem ensaio separado; o que entrar na `main` depois é publicado sozinho | URL HTTPS no README; data de expiração do banco; CT67–CT70 | Kauê §12; Leonardo §9; Lucas §8 |
 | **Front 2** | Telas 10/16, 11/17 e 12 | Leonardo | Fases 3 e 4A | Testes de navegador; **sem termo técnico** | Leonardo §6.1–§6.3 |
 | **Front 3** | Telas **03, 13 e 14** | Leonardo (+ Lucas na 14, se preciso) | Fases 5 e 6 | Testes de navegador; funções de apoio 15/15 | Leonardo §6.4–§6.6 |
-| **8 — Qualidade e encerramento** | Plano de Testes (até CT72), README, evidências, relatório, retrospectiva, CT20 | Todos (Kauê facilita) | — | Plano completo **até 01/11** (A36) | Kauê §9; Diogo §9 |
+| **8 — Qualidade e encerramento** | Plano de Testes (até CT72), README, evidências, relatório, retrospectiva, CT20 | Todos (Kauê facilita) | — | Plano de Testes com CT30–CT72 **feito em 27/10** (A37); encerramento até 05/11 (roteiro da Sprint 4) | Kauê §9; Diogo §9 |
 
 ---
 
@@ -176,21 +182,23 @@ Contrato v2 (Kauê, 27/10) ─┬─> Fase 3 ──> Fase 4A ──┬─> Fase 
                            │                        └─> Tela 12
                            └─> Telas 10/11 (Leo)
 Fase 1 ──> Fase 2 ──> Gate (Leo) ──> Fase 3 ──> Fase 5 (reposição usa pedidos) ──> Tela 13
-Banco (Diogo, 27/10) ──> Fases 2, 3, 5 e 6
-Fase P + Q (Kauê, 27–28/10) ──> Fases 4A e 5
-Fases 1–2 na main (29/10) ──> ENSAIO opcional (conta pessoal, apagado no mesmo dia) ··· ──> DEPLOY DEFINITIVO (sáb 31, noite) ──> merges de domingo publicados sozinhos
+Banco (Diogo) ──> Fases 2, 3, 5 e 6
+Fase P + Q (Kauê) ──> Fases 4A e 5
+Fases 1–3 na main ──> DEPLOY DEFINITIVO (seg 02/11, A41) ──> merges seguintes publicados sozinhos
 ```
 
 **Caminho crítico:** Fase 1 → 2 → 3 → 4A → 6 → Telas 03 e 14. Ele passa pelo Lucas e, no fim, pelo Leonardo, que tem **seis telas**. Para aliviar:
 - todo o Java está pronto em `referencia/`: o Lucas copia e revisa, não escreve;
 - a reposição inteira (Python e Java) é do Kauê;
 - os repositórios são do Diogo;
-- o Lucas pode assumir a Tela 14 (a mais simples) no domingo 01/11 (A36);
+- o Lucas pode assumir a Tela 14 (a mais simples), se preciso (roteiro da Sprint 4, §4);
 - as funções de apoio das Telas 03, 13 e 14 já estão testadas.
 
 ---
 
-## 7. Calendário (26/10 a 02/11 e janela de testes) — deslocado um dia em 27/10 (A36)
+## 7. Calendário de 27/10 (A36) — **SUBSTITUÍDO em 28/10 (A39)**
+
+> **Não use esta seção para planejar.** O calendário, as conferências de corte (dom 01/11 e seg 02/11, A42) e a ordem de corte em vigor estão em `docs/Sprint_4/sprint-4-roteiro.md`, §4 e §5. A tabela e os textos abaixo ficam como registro do plano de 27/10.
 
 | Dia | Kauê | Diogo | Lucas | Leonardo |
 |---|---|---|---|---|
@@ -226,7 +234,7 @@ Fases 1–2 na main (29/10) ──> ENSAIO opcional (conta pessoal, apagado no m
 ## 8. Estratégia de integração e testes
 
 1. **Contrato antes do código** (A10). A proposta do contrato é igual ao código: aprovar é rápido.
-2. **Deploy: ensaio cedo, definitivo no sábado (A21, 27/10).** O banco gratuito expira 30 dias depois de criado; para ele durar até 30/11, o definitivo é criado no sábado 31. Para os problemas do Render (memória, tempo, CORS, licença) não aparecerem só no sábado, faça um **ensaio** na quinta 29 ou na sexta 30 (A36) numa conta pessoal, apagando tudo no mesmo dia. A simulação local (512 MB, 0,1 CPU) já passou.
+2. **Deploy: definitivo na seg 02/11 (A41; antes: sáb 31, A21).** O banco gratuito expira 30 dias depois de criado: criado em 02/11, vale até 02/12, depois de 30/11. Assim, o Render fica 4 dias em uso antes da entrega, e o ensaio numa conta pessoal deixa de ser necessário. A simulação local (512 MB, 0,1 CPU) já passou.
 3. **Gates.** Uma fase só conta quando o lado de consumo real a usa:
    - Fase 2 → aceite do Leonardo;
    - Fase 3 → telas de Estoque e Pedido;
@@ -247,8 +255,8 @@ Fases 1–2 na main (29/10) ──> ENSAIO opcional (conta pessoal, apagado no m
    | Ponta a ponta | Aceite manual na URL publicada | CT68 |
 
 5. **Sem meta de cobertura** (Plano de Testes, §2).
-6. **Casos novos:** CT30–CT72, para o Diogo e o Kauê incorporarem ao Plano de Testes até 01/11 (A36).
-7. **Evidências** registradas **durante** a sprint em `docs/Sprint_3/evidencias/`.
+6. **Casos novos:** CT30–CT72, **incorporados ao Plano de Testes em 27/10** (A37).
+7. **Evidências** registradas **durante** a sprint em `docs/Sprint_4/evidencias/` (A39).
 
 ---
 
@@ -256,23 +264,25 @@ Fases 1–2 na main (29/10) ──> ENSAIO opcional (conta pessoal, apagado no m
 
 | Risco | Prob./Impacto | Mitigação |
 |---|---|---|
-| **Leonardo com seis telas** (10/16, 11/17, 12, 03, 13, 14) | Alta / Alto | Funções de apoio prontas e testadas; Lucas assume a Tela 14 se preciso; corte do §7 |
+| **Leonardo com seis telas** (10/16, 11/17, 12, 03, 13, 14) | Alta / Alto | Funções de apoio prontas e testadas; Lucas assume a Tela 14 se preciso; ordem de corte do roteiro da Sprint 4, §5 |
 | Gargalo no Lucas (caminho crítico) | Média / Alto | Todo o Java pronto; Kauê com a reposição; Diogo com os repositórios |
-| **Render free:** banco expira em 30 dias; serviço dorme após 15 min; 0,1 CPU (sobe em ~83 s; primeiro login ~7 s) | Certa / Médio | Banco criado no sábado 31 (vale até 30/11); data da avaliação perguntada ao professor; `config.js` com 90 s; "acordar" o serviço antes de cada sessão de teste (A21) |
-| **Primeiro contato com o Render só no sábado** (se o ensaio não for feito) | Média / Alto | Ensaio na qui 29 ou sex 30 numa conta pessoal; simulação local já feita |
+| **Render free:** banco expira em 30 dias; serviço dorme após 15 min; 0,1 CPU (sobe em ~83 s; primeiro login ~7 s) | Certa / Médio | Banco criado na seg 02/11 (vale até 02/12; A41); `config.js` com 90 s; "acordar" o serviço antes de cada sessão de teste (A21) |
+| **Primeiro contato com o Render só no deploy definitivo** (seg 02/11, A41) | Média / Alto | 4 dias de uso antes da entrega; simulação local já feita |
 | ~~Licença do Gurobi no servidor não autorizada~~ **Resolvido em 28/10 (A38):** licença do `pip` autorizada por escrito. Risco que sobra: o solver não caber no Render free (memória, tempo) | **Baixa / Médio** | Imagem já testada com 512 MB e 0,1 CPU (F8, A21); CT72 e B1 como reserva: trocar a variável para `false` no painel. **Nunca** usar a WLS no Render |
-| **Banco expira no dia 30/11, data-limite da avaliação** | Média / Alto | Criar no sábado à noite; backups com restauração testada (A32) |
+| **Banco gratuito expira 30 dias depois de criado** (data-limite do professor: 30/11) | Baixa / Alto | Criado na seg 02/11, vale até 02/12 (A41); backups com restauração testada (A32) |
 | **Alertas de vencimento e de reposição (Termo) com US15/US16 fora** | Média / Médio | Adendo, item 4: registrar a cobertura atual ou tornar o prazo parametrizável (A33) |
-| Contrato v2 não aprovado a tempo | Baixa / Alto | Proposta igual ao código; 30 min de reunião na terça |
+| ~~Contrato v2 não aprovado a tempo~~ **Resolvido:** aprovado e aplicado em 27/10 (A10) | — | — |
 | Trabalho só local, sem push (nada no GitHub desde 14/10) | Média / Alto | **Um PR por fase, todos os dias** |
 | Docker de outra máquina com o mesmo BD01 | Média / Médio | Contorno da A26 (renomear as pastas; nunca "Reset to factory defaults") |
-| Teste de navegador instável (A13) | Média / Médio | Investigar antes da janela de testes |
+| Teste de navegador instável (A13) | Média / Médio | Investigar até qua 04/11 (roteiro da Sprint 4) |
 | Alguém começar trabalho a partir do branch `origin/sprint-3` (caminho antigo do `.env`; A15) | Baixa / Baixo | Branches novos sempre a partir da `main`; apagar o `sprint-3` depois de levar os comentários do `env.example` |
 | Resultado do marketing e do dashboard some quando o backend reinicia | Certa / Baixo | Mensagem "Gere a recomendação na tela Produção" (A16, D15) |
 
 ---
 
-## 10. Critérios para considerar a Sprint 3 pronta (02/11, A36)
+## 10. Critérios de pronto — **substituídos em 28/10** pelo roteiro da Sprint 4, §7 (entrega em 06/11, A39)
+
+> Lista mantida como registro; a lista em vigor está no roteiro da Sprint 4.
 
 - [ ] **Sistema publicado**: frontend no GitHub Pages e backend no Render, **por HTTPS**, URL no README (US20, CT67–CT70 e CT72).
 - [ ] Login pelos dois perfis com backend real; `401`/`403` em JSON.
@@ -286,4 +296,4 @@ Fases 1–2 na main (29/10) ──> ENSAIO opcional (conta pessoal, apagado no m
 - [ ] **Sugestões de campanha** na Tela 14 (US18).
 - [ ] Testes: banco `32|0` e `41|0`; Python `47 passed` em 2 máquinas; backend `mvnw test` verde (inclusive Testcontainers); Playwright estável.
 - [ ] Contrato v2 oficial; Plano de Testes até CT72; README sem "planejadas" para variáveis já em uso.
-- [ ] Um PR revisado por fase, na `main`; evidências em `docs/Sprint_3/evidencias/`; retrospectiva registrada.
+- [ ] Um PR revisado por fase, na `main`; evidências em `docs/Sprint_4/evidencias/`; retrospectiva registrada.

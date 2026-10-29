@@ -1,5 +1,7 @@
 # Evidências da Sprint 3
 
+> **Desde 28/10/2026 (A39):** as evidências dos PRs das fases, do deploy e da entrega de 06/11 são da **Sprint 4** e vão em `docs/Sprint_4/evidencias/`. Esta pasta fica para o que é da Sprint 3 (por exemplo, o incidente A26).
+
 Guarde aqui as evidências **durante** a sprint, e não no fim. Assim, a Sprint 3 não termina com `[PREENCHER]`, como aconteceu com a Sprint 2.
 
 **Nome dos arquivos:** `AAAA-MM-DD_<integrante>_<fase-ou-CT>_<descricao>.<ext>`.

@@ -3,6 +3,8 @@
 **Para:** Diogo Pereira Miranda · **Papel:** dados e qualidade da documentação · **Revisão:** 27/10/2026, noite (v5.3: **calendário deslocado um dia, A36**; antes, v5.2: mensagem ao professor pronta; P2 = 13.0.3; A11 com você) · **Substitui** a v5.1 (`historico/v5.1-27-10-antes-das-respostas/`), a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e `historico/Tutorial_Sprint3_BancoDeDados_Diogo.md`.
 **Base:** `sprint-3-roteiro.md` (v5.3), `sprint-3-decisoes-e-pendencias.md`, `sprint-3-casos-de-teste-propostos.md` e o contrato oficial `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2).
 
+> **Atenção (28/10/2026, decisão A39):** no cronograma do professor, este trabalho é a **Sprint 4**, com entrega e Review na **sex 06/11/2026**. Este tutorial foi escrito na Sprint 3 e continua sendo o **guia de execução**. As datas do §0 foram atualizadas para o calendário da Sprint 4; o calendário completo, os marcos e as decisões A39–A42 estão em `docs/Sprint_4/`. Se algum dia citado no texto divergir, vale `docs/Sprint_4/sprint-4-roteiro.md`, §4.
+
 > **O que foi verificado (26/10).**
 > - Tudo executado **duas vezes**: num PostgreSQL 16.10 embutido (tarde) e, à noite, no **Docker real (postgres:16, versão 16.15)**, com **os mesmos comandos `docker` deste tutorial** num container temporário.
 >   - O patch aplica (`git apply --check` ok) e o resultado é idêntico ao `referencia/bd/Script_DDL.sql`.
@@ -17,14 +19,17 @@
 
 | Prioridade | Entrega | Quando | Libera quem |
 |---|---|---|---|
-| **1** | **PR do banco:** patch do DDL e os 41 testes novos | **Qua 28** | Lucas (Fase 2 depende do seed com estoque 0), Kauê |
+| **1** | **PR do banco:** patch do DDL e os 41 testes novos | **Qui 29/10** (marco M1) | Lucas (Fase 2 depende do seed com estoque 0), Kauê |
 | **2** | Mensagem ao professor: P3 (§9.1), com o Lucas | **Feito em 27/10** | Toda a equipe |
+| **2c** | **Enviar a mensagem da Sprint 4** ao professor (`docs/Sprint_4/sprint-4-mensagem-professor.md`), depois da revisão do Lucas; o Kauê encaminha o e-mail da Gurobi no mesmo dia (A39, A43) | **Qui 29/10** | Toda a equipe |
 | 2b | ~~Enviar o adendo e o pedido de prazo ao professor~~ **Não é mais preciso:** o professor aprovou o adendo (assinado) e o prazo de 02/11 pessoalmente em 27/10 | — | — |
-| **3** | Repositórios de usuário, unidade, ingrediente e produto (§7) | **Qua 28 – Qui 29** | Lucas (Fase 2) |
-| 4 | Repositórios de movimentação, pedido, **reposição** e **dashboard** (§7) | **Qui 29** | Lucas (Fases 3 e 6), Kauê (Fase 5) |
-| 5 | `seed_demo.sql` no repositório e `sql_repositorios_sprint3.md` (consultas 1–13) | Qui 29 | Todos (demonstração) |
-| 6 | **Revisar** os documentos da §9.2 e os casos do banco no Plano de Testes (já atualizados em 27/10, A37); falta só o cabeçalho de `bd/constraints_teste.sql`, no seu PR do banco | Sex 30 – Dom 01/11 | Janela de testes |
-| 7 | Registrar a A26 nas evidências da Sprint 3 como **incidente novo** (o BD01 segue sem causa registrada) | Até Sáb 31 | — |
+| **3** | Repositórios de usuário, unidade, ingrediente e produto (§7) | **Qui 29/10** | Lucas (Fase 2) |
+| 4 | Repositórios de movimentação, pedido, **reposição** e **dashboard** (§7) | **Sex 30/10** | Lucas (Fases 3 e 6), Kauê (Fase 5) |
+| 5 | `seed_demo.sql` no repositório e `sql_repositorios_sprint3.md` (consultas 1–13) | Sex 30/10 | Todos (demonstração) |
+| 6 | **Revisar** os documentos da §9.2 e os casos do banco no Plano de Testes (já atualizados em 27/10, A37). O cabeçalho de `bd/constraints_teste.sql` vai **no seu PR do banco** (qui 29/10) | Revisão: sáb 31/10 – dom 01/11 | Semana de bugs |
+| 7 | Registrar a A26 nas evidências da Sprint 3 como **incidente novo** (o BD01 segue sem causa registrada) | Sáb 31/10 | — |
+| 8 | Seed de demonstração no banco publicado, com o Kauê e o Lucas (§8) | **Seg 02/11**, à tarde (deploy definitivo, A41) | Todos (Review) |
+| 9 | **US26** (porção padrão por unidade) é **sua** (A43), **se** passar no *gate* da seg 02/11, de manhã (A40): seção do contrato e casos de teste CT73+ (seg; o Kauê aprova o contrato); backend `POST`/`PATCH /api/unidades-medida` com testes de integração (ter; o Lucas revisa); Tela 19 (qua; o Lucas revisa) | Seg 02/11 – **qua 04/11, 18h** (se não estiver na `main` até lá, sai) | — |
 
 **Pronto quando:**
 1. `32 | 0` e `41 | 0`;
@@ -152,7 +157,7 @@ ALTER TABLE movimentacao_estoque ADD CONSTRAINT chk_movimentacao_motivo CHECK ((
 
 **Experimento B:** `ALTER TABLE movimentacao_estoque DROP CONSTRAINT chk_movimentacao_motivo;` → `38 | 3` (falham T58, T62 e T63).
 
-Depois de cada experimento, **recrie** o banco de teste. Guarde os prints em `docs/Sprint_3/evidencias/`.
+Depois de cada experimento, **recrie** o banco de teste. Guarde os prints em `docs/Sprint_4/evidencias/`.
 
 ## 5. Estoque por linhas: o algoritmo e a prova
 
@@ -223,7 +228,7 @@ python docs\Sprint_3\referencia\apoio\concorrencia_referencia.py
 
 ## 7. Repositórios Java (F7) — prontos e testados em `referencia/`
 
-**Acordo (F7):** você é o dono dos `*Repository` e dos `record`s de linha; o Lucas, dos serviços e controllers. Os repositórios estão **escritos, compilados e testados** em `docs/Sprint_3/referencia/backend/src/main/java/com/mentefria/backend/`. Seu trabalho é **copiar, ler, conferir o SQL com o `consultas_sprint3.sql` e abrir o PR** (ou entregar ao Lucas para irem no PR da fase, combinando na terça).
+**Acordo (F7):** você é o dono dos `*Repository` e dos `record`s de linha; o Lucas, dos serviços e controllers. Os repositórios estão **escritos, compilados e testados** em `docs/Sprint_3/referencia/backend/src/main/java/com/mentefria/backend/`. Seu trabalho é **copiar, ler, conferir o SQL com o `consultas_sprint3.sql` e abrir o PR** (ou entregar ao Lucas para irem no PR da fase, combinando antes do PR).
 
 Regras que o código segue (revisão com a skill de JDBC): `NamedParameterJdbcTemplate` (D4), `BigDecimal`, parâmetros nomeados (nada concatenado com dado do usuário), **sem regra de negócio**, **sem JPA**; `Optional` + `query(...).stream().findFirst()` quando pode não haver linha; `RETURNING` com `queryForObject` quando sempre há; `:hoje` e `:agora` vindos do Java.
 
@@ -379,9 +384,9 @@ Peça revisão ao Lucas e ao Kauê. **Antes**, apague qualquer cópia do `.patch
 - [ ] Mensagem ao professor (F9, P3: lucro, reposição, dashboard, deploy e licença) enviada e resposta guardada
 - [ ] Repositórios de `referencia/` copiados e lidos; testes de integração das fases verdes
 - [ ] `sql_repositorios_sprint3.md` com as consultas 1–13; `seed_demo.sql` no `bd/`; números do dashboard conferidos (§8)
-- [ ] Documentos da §9.2; CT30–CT72 no Plano de Testes até 01/11 (A36)
+- [ ] Documentos da §9.2 revisados; CT30–CT72 no Plano de Testes (feito em 27/10, A37)
 - [ ] PRs com "recriar o banco"
 
-## Fora da Sprint 3 (decisão A2b)
+## Fora do escopo obrigatório (decisões A2b e A40)
 
-Cancelamento (US27, já no schema), clientes (US13, constraints prontas), alertas (US15/US16; as consultas 1 e 2 servem de base), CSV (US19) e porção padrão (US26).
+**Porção padrão (US26)** só entra se passar no *gate* da seg 02/11, de manhã (A40), e é **sua** (A43). O banco já está pronto (T72, T73) e os critérios 1 e 2 já funcionam na tela de ingredientes. Faltam: a seção do contrato (formato de `POST /api/unidades-medida` e `PATCH /api/unidades-medida/{unidade_medida}`, com `400` e `404`; o roteiro v4.6, em `historico/`, tem a proposta), os casos de teste a partir do CT73, o backend com testes de integração e a Tela 19. **Não há código de referência**: siga o padrão dos repositórios e controllers que você já copiou. Se não estiver na `main` até qua 04/11 às 18h, ela sai sem afetar o resto. Ficam **fora do semestre**: cancelamento (US27, já no schema), clientes (US13, constraints prontas), alertas completos (US15/US16; as consultas 1 e 2 servem de base para a cobertura parcial do adendo, item 4) e CSV (US19).

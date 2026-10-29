@@ -1,5 +1,7 @@
 # Relatório de auditoria — materiais da Sprint 3 — Mente Fria
 
+> **Registro (28/10/2026, A39):** este relatório é um retrato de 26 e 27/10. Todas as datas e planos dele (fim em 01/11 ou 02/11, deploy no sábado, janela de testes, "Sprint 4 relâmpago") foram substituídos. O calendário e as pendências em vigor estão em `docs/Sprint_4/`.
+
 **Data:** 26/10/2026 (tarde: v5; noite: v5.1) e **27/10/2026 (v5.2: respostas da equipe, §A.0; v5.3, noite: resposta do professor, plano B1 e diagnóstico geral, §A.00)**. Versões anteriores em `historico/v5-26-10-antes-das-4-historias/` e `historico/v5.1-27-10-antes-das-respostas/`.
 
 **Pedido:** auditar o roteiro da Sprint 3 (v4.6) e os artefatos produzidos em 14/10 (53 arquivos, contados no inventário da §B), corrigi-los e entregar roteiro, tutoriais, matriz e lista priorizada.
@@ -30,7 +32,7 @@ Leitura do repositório inteiro e da documentação, sem alterar nada, seguida d
 - **Erros corrigidos:** a A26 **não** é a causa do BD01 (o BD01 é "Virtualization support not detected"); o contrato oficial dizia "92 testes" (são 95); a proposta do contrato ficou **congelada**; o desempate do adendo foi reescrito como o código faz (produto por produto, em ordem de cadastro); a mensagem ao professor recebeu a nota de que a WLS existe.
 - **Ponto novo:** a US27 **não existe** no Backlog; é história nova.
 - **Decisões levantadas para o grupo:** G1 a G9 (decisão A35).
-- **Calendário deslocado um dia (A36, 27/10, noite):** fim da Sprint 3 em 02/11 (aceito pelo professor em 27/10), deploy definitivo mantido no sábado 31 à noite. **Onde as §F e §G deste relatório citam dias da semana, vale o calendário do roteiro, §7.**
+- **Calendário deslocado um dia (A36, 27/10, noite):** fim da Sprint 3 em 02/11 (aceito pelo professor em 27/10), deploy definitivo mantido no sábado 31 à noite. **Onde as §F e §G deste relatório citam dias da semana, vale o calendário do roteiro, §7.** **Atualização de 28/10, noite (A39):** esse calendário também foi substituído. As §F e §G ficam **congeladas como registro**; o calendário e as pendências em vigor estão em `docs/Sprint_4/sprint-4-roteiro.md` e `docs/Sprint_4/sprint-4-decisoes-e-pendencias.md` (entrega em 06/11/2026).
 
 ### A.0 Respostas da equipe em 27/10 e o que foi feito
 

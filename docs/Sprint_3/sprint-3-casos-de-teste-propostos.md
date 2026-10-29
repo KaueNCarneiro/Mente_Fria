@@ -1,6 +1,6 @@
 # Casos de teste propostos — Sprint 3 — Mente Fria
 
-**Status:** PROPOSTA (auditoria de 26/10/2026; v5.2, 27/10: CT71 do descarte por linha, A12; v5.3, 27/10 noite: CT72 do plano B1 e CT68 ajustado ao B1; 28/10: CT68 e CT72 ajustados à A38, licença do `pip` autorizada no Render). **Destino:** `docs/Plano_de_Testes_Mente_Fria.md`, seção 3, nova subseção "Sprint 3". O Diogo e o Kauê incorporam **até 01/11** (A36; a janela de testes de 02–06/11, aceita pelo professor em 27/10, executa o Plano).
+**Status:** **incorporado ao Plano de Testes em 27/10** (A37); este arquivo fica como origem dos casos (auditoria de 26/10/2026; v5.2, 27/10: CT71 do descarte por linha, A12; v5.3, 27/10 noite: CT72 do plano B1 e CT68 ajustado ao B1; 28/10: CT68 e CT72 ajustados à A38, licença do `pip` autorizada no Render). **Destino:** `docs/Plano_de_Testes_Mente_Fria.md`, seção 3, nova subseção "Sprint 3". Incorporados em 27/10 (A37). **Execução:** na Sprint 4, os testes automatizados de cada fase; depois da entrega de 06/11, a bateria completa no ambiente publicado, na **semana de mapeamento e correção de bugs** (até 13/11; A39, A43). *Antes: janela de testes de 02 a 06/11 (A36).*
 **Numeração:** continua a oficial (CT01–CT29).
 - CT30–CT37 têm os mesmos números que o tutorial do banco de 14/10 já usava.
 - **CT51–CT70 são novos** (US14, US17, US18 e US20, que entraram na Sprint 3 pela decisão A2b).
@@ -117,7 +117,9 @@ Cenário de referência (conta à mão): 15/09 Dono 2× Tradicional; 05/10 Func 
 
 ---
 
-## 3. Execução na janela de testes (02–06/11, A36; aceita pelo professor)
+## 3. Execução na semana de correção de bugs (depois de 06/11; até 13/11; A39)
+
+*Antes: "janela de testes de 02 a 06/11" (A36). O sistema já está publicado desde 02/11 (A41).*
 
 - Ordem sugerida: primeiro os caminhos do Termo de Aceite **no ambiente publicado** (CT68, CT06, CT12, CT30, CT38, CT58), depois os casos de erro e, por último, o CT72 (a reserva). **Com a A38 (28/10):** CT42, CT51 e CT64 rodam **no Render**. Só se o B1 for ligado eles passam para a demonstração local do Kauê.
 - Divisão por perfil: dois integrantes testam como Administrador e dois como Funcionário.

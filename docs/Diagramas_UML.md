@@ -4,7 +4,7 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-> **Revisão de 27/10/2026 (Sprint 3, Adendo nº 1 ao Termo de Aceite aprovado):** a recomendação de produção maximiza o **lucro estimado** (`Produto.calcularLucroPorCopo()`); a reposição recebe período **e orçamento**; o estoque é controlado **por linha de entrada** (`MovimentacaoEstoque.quantidadeRestante` e `motivo`); o pedido ganhou `status` e os dados de cancelamento para a nova US27 (fora da Sprint 3). O diagrama de casos de uso ainda não tem o caso de uso da US27.
+> **Revisão de 27/10/2026 (Sprint 3, Adendo nº 1 ao Termo de Aceite aprovado):** a recomendação de produção maximiza o **lucro estimado** (`Produto.calcularLucroPorCopo()`); a reposição recebe período **e orçamento**; o estoque é controlado **por linha de entrada** (`MovimentacaoEstoque.quantidadeRestante` e `motivo`); o pedido ganhou `status` e os dados de cancelamento para a nova US27 (fora do semestre, A40). O diagrama de casos de uso ainda não tem o caso de uso da US27.
 
 ---
 
@@ -147,7 +147,7 @@ Proprietário))
     }
     %% Sprint 3: cada ENTRADA é uma linha de estoque; quantidadeRestante diminui a cada baixa (só na ENTRADA).
     %% motivo só existe na SAIDA: PEDIDO, CONVENCIONAL ou DESCARTE_VENCIDO. Linha vencida nunca é vendida.
-    %% StatusPedido: ATIVO ou CANCELADO. cancelar() é a US27 (fora da Sprint 3) e NÃO devolve estoque.
+    %% StatusPedido: ATIVO ou CANCELADO. cancelar() é a US27 (fora do semestre, A40) e NÃO devolve estoque.
     %% dataValidade só é preenchida quando tipo = ENTRADA (equivalente conceitual da
     %% CHECK chk_movimentacao_data_validade no DER); em SAIDA permanece null.
     %% estaProximoDoVencimento só se aplica a instâncias com tipo = ENTRADA e dataValidade != null.
@@ -216,5 +216,5 @@ O atributo `dataValidade`, antes em `Ingrediente`, passou para `MovimentacaoEsto
 | UC17 — Visualizar dashboard gerencial | US17 |
 | UC18 — Gerar sugestões de marketing | US18 |
 | UC19 — Exportar dashboard em CSV | US19 |
-| UC20 — Definir porção padrão por unidade de medida | US26 *(item 26 do `Backlog_Priorizado` — Could; fora da Sprint 3, Adendo nº 1)* |
-| UC21 — Cancelar pedido *(ainda não desenhado no diagrama de casos de uso)* | US27 *(história nova do Adendo nº 1 — Could, fora da Sprint 3)* |
+| UC20 — Definir porção padrão por unidade de medida | US26 *(item 26 do `Backlog_Priorizado` — Could; fora da Sprint 3, Adendo nº 1; desde 28/10, condicional na Sprint 4, A40)* |
+| UC21 — Cancelar pedido *(ainda não desenhado no diagrama de casos de uso)* | US27 *(história nova do Adendo nº 1 — Could, fora do semestre, A40)* |

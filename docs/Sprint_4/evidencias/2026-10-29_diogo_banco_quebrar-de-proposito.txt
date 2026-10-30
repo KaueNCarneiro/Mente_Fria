@@ -1,0 +1,330 @@
+==============================================================================
+EVIDENCIA - Plano de Testes, criterio n. 4 / Tutorial do banco, item 4.1
+Quebrar de proposito: os testes T33-T73 detectam constraints erradas?
+==============================================================================
+Gerado em: 2026-10-29 23:07:39
+Executado por: Diogo
+Branch: feature/banco-sprint3   Commit: af05b26
+Arquivos em bd/ com alteracao nao comitada:
+   M bd/Script_DDL.sql
+  ?? bd/constraints_sprint3_teste.sql
+SHA-256 dos arquivos usados:
+  84FFE923BADC5A8A  bd\Script_DDL.sql
+  28E80784342CF943  bd\constraints_sprint3_teste.sql
+  9723B301EB5AE0AE  bd\constraints_teste.sql
+
+==============================================================================
+PREPARACAO
+==============================================================================
+--- Versao do PostgreSQL
+> docker exec mente-fria-db psql -U postgres -tAc "SELECT version();"
+PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+(codigo de saida: 0)
+
+--- Copiar o DDL
+> docker cp bd/Script_DDL.sql mente-fria-db:/tmp/Script_DDL.sql
+(codigo de saida: 0)
+
+--- Copiar os testes da Sprint 3
+> docker cp bd/constraints_sprint3_teste.sql mente-fria-db:/tmp/constraints_sprint3_teste.sql
+(codigo de saida: 0)
+
+--- Copiar os testes antigos
+> docker cp bd/constraints_teste.sql mente-fria-db:/tmp/constraints_teste.sql
+(codigo de saida: 0)
+
+==============================================================================
+EXPERIMENTO A - constraints literais do roteiro (o F1 em acao)
+Esperado: falham T55, T62, T64 e T66; resultado 37 | 4
+==============================================================================
+--- Recriar o banco de teste (antes do Experimento A)
+> docker exec mente-fria-db psql -U postgres -c "DROP DATABASE IF EXISTS mente_fria_teste WITH (FORCE);" -c "CREATE DATABASE mente_fria_teste;"
+DROP DATABASE
+CREATE DATABASE
+(codigo de saida: 0)
+
+--- Carregar o Script_DDL.sql
+> docker exec mente-fria-db psql -U postgres -d mente_fria_teste -q -f /tmp/Script_DDL.sql
+(codigo de saida: 0)
+
+--- Trocar as duas constraints pelas versoes literais do roteiro
+> docker exec mente-fria-db psql -U postgres -d mente_fria_teste -c "ALTER TABLE movimentacao_estoque DROP CONSTRAINT chk_movimentacao_restante, DROP CONSTRAINT chk_movimentacao_motivo;" -c "ALTER TABLE movimentacao_estoque ADD CONSTRAINT chk_movimentacao_restante CHECK (quantidade_restante IS NULL OR quantidade_restante BETWEEN 0 AND quantidade);" -c "ALTER TABLE movimentacao_estoque ADD CONSTRAINT chk_movimentacao_motivo CHECK ((tipo = 'ENTRADA' AND motivo IS NULL) OR (tipo = 'SAIDA' AND motivo IN ('PEDIDO','CONVENCIONAL','DESCARTE_VENCIDO')));"
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+(codigo de saida: 0)
+
+--- Rodar T33-T73
+> docker exec mente-fria-db psql -U postgres -d mente_fria_teste -v ON_ERROR_STOP=1 -f /tmp/constraints_sprint3_teste.sql
+BEGIN
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+INSERT 0 1
+DO
+ teste | resultado |                        cenario                        |                      detalhe                      
+-------+-----------+-------------------------------------------------------+---------------------------------------------------
+ T33   | OK        | Cliente válido é aceito                               | aceito
+ T34   | OK        | Cliente sem nome                                      | rejeitado por: NOT NULL:nome
+ T35   | OK        | Cliente sem contato                                   | rejeitado por: NOT NULL:contato
+ T36   | OK        | Cliente sem endereço                                  | rejeitado por: NOT NULL:endereco
+ T37   | OK        | Pedido sem cliente é aceito (status nasce ATIVO)      | aceito
+ T38   | OK        | Pedido sem usuário                                    | rejeitado por: NOT NULL:usuario_id
+ T39   | OK        | Pedido com usuário inexistente                        | rejeitado por: fk_pedido_usuario
+ T40   | OK        | Pedido com cliente inexistente                        | rejeitado por: fk_pedido_cliente
+ T41   | OK        | Valor total negativo                                  | rejeitado por: chk_pedido_valor_total
+ T42   | OK        | Status de pedido inválido                             | rejeitado por: chk_pedido_status
+ T43   | OK        | CANCELADO sem data e sem usuário do cancelamento      | rejeitado por: chk_pedido_cancelamento
+ T44   | OK        | ATIVO com data de cancelamento preenchida             | rejeitado por: chk_pedido_cancelamento
+ T45   | OK        | CANCELADO completo é aceito                           | aceito
+ T46   | OK        | Usuário do cancelamento inexistente                   | rejeitado por: fk_pedido_usuario_cancelamento
+ T47   | OK        | Item de pedido válido é aceito                        | aceito
+ T48   | OK        | Quantidade do item igual a zero                       | rejeitado por: chk_pedido_produto_quantidade
+ T49   | OK        | Preço registrado igual a zero                         | rejeitado por: chk_pedido_produto_preco
+ T50   | OK        | Mesmo produto duas vezes no mesmo pedido              | rejeitado por: pedido_produto_pkey
+ T51   | OK        | Item com produto inexistente                          | rejeitado por: fk_pedido_produto_produto
+ T52   | OK        | Item com pedido inexistente                           | rejeitado por: fk_pedido_produto_pedido
+ T53   | OK        | ENTRADA com validade e restante = quantidade é aceita | aceito
+ T54   | OK        | ENTRADA sem validade é aceita (nunca vence)           | aceito
+ T55   | FALHOU    | ENTRADA sem quantidade_restante                       | foi ACEITO, mas deveria ser rejeitado
+ T56   | OK        | quantidade_restante maior que a quantidade da entrada | rejeitado por: chk_movimentacao_restante
+ T57   | OK        | quantidade_restante negativa                          | rejeitado por: chk_movimentacao_restante
+ T58   | OK        | ENTRADA com motivo preenchido                         | rejeitado por: chk_movimentacao_motivo
+ T59   | OK        | SAIDA por pedido é aceita                             | aceito
+ T60   | OK        | SAIDA convencional é aceita                           | aceito
+ T61   | OK        | SAIDA por descarte de vencido é aceita                | aceito
+ T62   | FALHOU    | SAIDA sem motivo                                      | foi ACEITO, mas deveria ser rejeitado
+ T63   | OK        | SAIDA com motivo inválido                             | rejeitado por: chk_movimentacao_motivo
+ T64   | FALHOU    | SAIDA com quantidade_restante preenchida              | foi ACEITO, mas deveria ser rejeitado
+ T65   | OK        | SAIDA com validade preenchida                         | rejeitado por: chk_movimentacao_data_validade
+ T66   | FALHOU    | Tipo de movimentação inválido                         | rejeitado por: chk_movimentacao_motivo
+ T67   | OK        | Quantidade da movimentação igual a zero (CT26)        | rejeitado por: chk_movimentacao_quantidade
+psql:/tmp/constraints_sprint3_teste.sql:134: ERROR:  Há testes de banco falhando (veja a tabela acima).
+ T68   | OK        | Movimentação com ingrediente inexistente              | rejeitado por: fk_movimentacao_ingrediente
+ T69   | OK        | Movimentação com usuário inexistente                  | rejeitado por: fk_movimentacao_usuario
+ T70   | OK        | Movimentação sem tipo                                 | rejeitado por: NOT NULL:tipo
+ T71   | OK        | Baixa maior que o saldo deixaria o estoque negativo   | rejeitado por: chk_ingrediente_quantidade_estoque
+ T72   | OK        | Nova unidade de medida é aceita                       | aceito
+ T73   | OK        | Alterar a porção padrão da unidade para zero          | rejeitado por: chk_unidade_porcao_padrao
+(41 rows)
+
+ passaram | falharam 
+----------+----------
+       37 |        4
+(1 row)
+
+CONTEXT:  PL/pgSQL function inline_code_block line 2 at RAISE
+(codigo de saida: 3)
+
+==============================================================================
+EXPERIMENTO B - sem a constraint chk_movimentacao_motivo
+Esperado: falham T58, T62 e T63
+==============================================================================
+--- Recriar o banco de teste (antes do Experimento B)
+> docker exec mente-fria-db psql -U postgres -c "DROP DATABASE IF EXISTS mente_fria_teste WITH (FORCE);" -c "CREATE DATABASE mente_fria_teste;"
+DROP DATABASE
+CREATE DATABASE
+(codigo de saida: 0)
+
+--- Carregar o Script_DDL.sql
+> docker exec mente-fria-db psql -U postgres -d mente_fria_teste -q -f /tmp/Script_DDL.sql
+(codigo de saida: 0)
+
+--- Remover chk_movimentacao_motivo
+> docker exec mente-fria-db psql -U postgres -d mente_fria_teste -c "ALTER TABLE movimentacao_estoque DROP CONSTRAINT chk_movimentacao_motivo;"
+ALTER TABLE
+(codigo de saida: 0)
+
+--- Rodar T33-T73
+> docker exec mente-fria-db psql -U postgres -d mente_fria_teste -v ON_ERROR_STOP=1 -f /tmp/constraints_sprint3_teste.sql
+BEGIN
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+INSERT 0 1
+DO
+ teste | resultado |                        cenario                        |                      detalhe                      
+-------+-----------+-------------------------------------------------------+---------------------------------------------------
+ T33   | OK        | Cliente válido é aceito                               | aceito
+ T34   | OK        | Cliente sem nome                                      | rejeitado por: NOT NULL:nome
+ T35   | OK        | Cliente sem contato                                   | rejeitado por: NOT NULL:contato
+ T36   | OK        | Cliente sem endereço                                  | rejeitado por: NOT NULL:endereco
+ T37   | OK        | Pedido sem cliente é aceito (status nasce ATIVO)      | aceito
+ T38   | OK        | Pedido sem usuário                                    | rejeitado por: NOT NULL:usuario_id
+ T39   | OK        | Pedido com usuário inexistente                        | rejeitado por: fk_pedido_usuario
+ T40   | OK        | Pedido com cliente inexistente                        | rejeitado por: fk_pedido_cliente
+ T41   | OK        | Valor total negativo                                  | rejeitado por: chk_pedido_valor_total
+ T42   | OK        | Status de pedido inválido                             | rejeitado por: chk_pedido_status
+ T43   | OK        | CANCELADO sem data e sem usuário do cancelamento      | rejeitado por: chk_pedido_cancelamento
+ T44   | OK        | ATIVO com data de cancelamento preenchida             | rejeitado por: chk_pedido_cancelamento
+ T45   | OK        | CANCELADO completo é aceito                           | aceito
+ T46   | OK        | Usuário do cancelamento inexistente                   | rejeitado por: fk_pedido_usuario_cancelamento
+ T47   | OK        | Item de pedido válido é aceito                        | aceito
+ T48   | OK        | Quantidade do item igual a zero                       | rejeitado por: chk_pedido_produto_quantidade
+ T49   | OK        | Preço registrado igual a zero                         | rejeitado por: chk_pedido_produto_preco
+ T50   | OK        | Mesmo produto duas vezes no mesmo pedido              | rejeitado por: pedido_produto_pkey
+ T51   | OK        | Item com produto inexistente                          | rejeitado por: fk_pedido_produto_produto
+ T52   | OK        | Item com pedido inexistente                           | rejeitado por: fk_pedido_produto_pedido
+ T53   | OK        | ENTRADA com validade e restante = quantidade é aceita | aceito
+ T54   | OK        | ENTRADA sem validade é aceita (nunca vence)           | aceito
+ T55   | OK        | ENTRADA sem quantidade_restante                       | rejeitado por: chk_movimentacao_restante
+ T56   | OK        | quantidade_restante maior que a quantidade da entrada | rejeitado por: chk_movimentacao_restante
+ T57   | OK        | quantidade_restante negativa                          | rejeitado por: chk_movimentacao_restante
+ T58   | FALHOU    | ENTRADA com motivo preenchido                         | foi ACEITO, mas deveria ser rejeitado
+ T59   | OK        | SAIDA por pedido é aceita                             | aceito
+ T60   | OK        | SAIDA convencional é aceita                           | aceito
+ T61   | OK        | SAIDA por descarte de vencido é aceita                | aceito
+ T62   | FALHOU    | SAIDA sem motivo                                      | foi ACEITO, mas deveria ser rejeitado
+ T63   | FALHOU    | SAIDA com motivo inválido                             | foi ACEITO, mas deveria ser rejeitado
+ T64   | OK        | SAIDA com quantidade_restante preenchida              | rejeitado por: chk_movimentacao_restante
+ T65   | OK        | SAIDA com validade preenchida                         | rejeitado por: chk_movimentacao_data_validade
+ T66   | OK        | Tipo de movimentação inválido                         | rejeitado por: chk_movimentacao_tipo
+ T67   | OK        | Quantidade da movimentação igual a zero (CT26)        | rejeitado por: chk_movimentacao_quantidade
+ T68   | OK        | Movimentação com ingrediente inexistente              | rejeitado por: fk_movimentacao_ingrediente
+ T69   | OK        | Movimentação com usuário inexistente                  | rejeitado por: fk_movimentacao_usuario
+ T70   | OK        | Movimentação sem tipo                                 | rejeitado por: NOT NULL:tipo
+ T71   | OK        | Baixa maior que o saldo deixaria o estoque negativo   | rejeitado por: chk_ingrediente_quantidade_estoque
+ T72   | OK        | Nova unidade de medida é aceita                       | aceito
+ T73   | OK        | Alterar a porção padrão da unidade para zero          | rejeitado por: chk_unidade_porcao_padrao
+(41 rows)
+
+ passaram | falharam 
+----------+----------
+       38 |        3
+(1 row)
+
+psql:/tmp/constraints_sprint3_teste.sql:134: ERROR:  Há testes de banco falhando (veja a tabela acima).
+CONTEXT:  PL/pgSQL function inline_code_block line 2 at RAISE
+(codigo de saida: 3)
+
+==============================================================================
+CONTROLE - DDL correto (banco recriado)
+Esperado: T33-T73 -> 41 | 0; T01-T32 -> 32 | 0
+==============================================================================
+--- Recriar o banco de teste (depois dos experimentos)
+> docker exec mente-fria-db psql -U postgres -c "DROP DATABASE IF EXISTS mente_fria_teste WITH (FORCE);" -c "CREATE DATABASE mente_fria_teste;"
+DROP DATABASE
+CREATE DATABASE
+(codigo de saida: 0)
+
+--- Carregar o Script_DDL.sql
+> docker exec mente-fria-db psql -U postgres -d mente_fria_teste -q -f /tmp/Script_DDL.sql
+(codigo de saida: 0)
+
+--- Rodar T33-T73
+> docker exec mente-fria-db psql -U postgres -d mente_fria_teste -v ON_ERROR_STOP=1 -f /tmp/constraints_sprint3_teste.sql
+BEGIN
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+INSERT 0 1
+DO
+ teste | resultado |                        cenario                        |                      detalhe                      
+-------+-----------+-------------------------------------------------------+---------------------------------------------------
+ T33   | OK        | Cliente válido é aceito                               | aceito
+ T34   | OK        | Cliente sem nome                                      | rejeitado por: NOT NULL:nome
+ T35   | OK        | Cliente sem contato                                   | rejeitado por: NOT NULL:contato
+ T36   | OK        | Cliente sem endereço                                  | rejeitado por: NOT NULL:endereco
+ T37   | OK        | Pedido sem cliente é aceito (status nasce ATIVO)      | aceito
+ T38   | OK        | Pedido sem usuário                                    | rejeitado por: NOT NULL:usuario_id
+ T39   | OK        | Pedido com usuário inexistente                        | rejeitado por: fk_pedido_usuario
+ T40   | OK        | Pedido com cliente inexistente                        | rejeitado por: fk_pedido_cliente
+ T41   | OK        | Valor total negativo                                  | rejeitado por: chk_pedido_valor_total
+ T42   | OK        | Status de pedido inválido                             | rejeitado por: chk_pedido_status
+ T43   | OK        | CANCELADO sem data e sem usuário do cancelamento      | rejeitado por: chk_pedido_cancelamento
+ T44   | OK        | ATIVO com data de cancelamento preenchida             | rejeitado por: chk_pedido_cancelamento
+ T45   | OK        | CANCELADO completo é aceito                           | aceito
+ T46   | OK        | Usuário do cancelamento inexistente                   | rejeitado por: fk_pedido_usuario_cancelamento
+ T47   | OK        | Item de pedido válido é aceito                        | aceito
+ T48   | OK        | Quantidade do item igual a zero                       | rejeitado por: chk_pedido_produto_quantidade
+ T49   | OK        | Preço registrado igual a zero                         | rejeitado por: chk_pedido_produto_preco
+ T50   | OK        | Mesmo produto duas vezes no mesmo pedido              | rejeitado por: pedido_produto_pkey
+ T51   | OK        | Item com produto inexistente                          | rejeitado por: fk_pedido_produto_produto
+ T52   | OK        | Item com pedido inexistente                           | rejeitado por: fk_pedido_produto_pedido
+ T53   | OK        | ENTRADA com validade e restante = quantidade é aceita | aceito
+ T54   | OK        | ENTRADA sem validade é aceita (nunca vence)           | aceito
+ T55   | OK        | ENTRADA sem quantidade_restante                       | rejeitado por: chk_movimentacao_restante
+ T56   | OK        | quantidade_restante maior que a quantidade da entrada | rejeitado por: chk_movimentacao_restante
+ T57   | OK        | quantidade_restante negativa                          | rejeitado por: chk_movimentacao_restante
+ T58   | OK        | ENTRADA com motivo preenchido                         | rejeitado por: chk_movimentacao_motivo
+ T59   | OK        | SAIDA por pedido é aceita                             | aceito
+ T60   | OK        | SAIDA convencional é aceita                           | aceito
+ T61   | OK        | SAIDA por descarte de vencido é aceita                | aceito
+ T62   | OK        | SAIDA sem motivo                                      | rejeitado por: chk_movimentacao_motivo
+ T63   | OK        | SAIDA com motivo inválido                             | rejeitado por: chk_movimentacao_motivo
+ T64   | OK        | SAIDA com quantidade_restante preenchida              | rejeitado por: chk_movimentacao_restante
+ T65   | OK        | SAIDA com validade preenchida                         | rejeitado por: chk_movimentacao_data_validade
+ T66   | OK        | Tipo de movimentação inválido                         | rejeitado por: chk_movimentacao_tipo
+ T67   | OK        | Quantidade da movimentação igual a zero (CT26)        | rejeitado por: chk_movimentacao_quantidade
+ T68   | OK        | Movimentação com ingrediente inexistente              | rejeitado por: fk_movimentacao_ingrediente
+ T69   | OK        | Movimentação com usuário inexistente                  | rejeitado por: fk_movimentacao_usuario
+ T70   | OK        | Movimentação sem tipo                                 | rejeitado por: NOT NULL:tipo
+ T71   | OK        | Baixa maior que o saldo deixaria o estoque negativo   | rejeitado por: chk_ingrediente_quantidade_estoque
+ T72   | OK        | Nova unidade de medida é aceita                       | aceito
+ T73   | OK        | Alterar a porção padrão da unidade para zero          | rejeitado por: chk_unidade_porcao_padrao
+(41 rows)
+
+ passaram | falharam 
+----------+----------
+       41 |        0
+(1 row)
+
+DO
+ROLLBACK
+(codigo de saida: 0)
+
+--- Rodar T01-T32 (regressao)
+> docker exec mente-fria-db psql -U postgres -d mente_fria_teste -v ON_ERROR_STOP=1 -f /tmp/constraints_teste.sql
+BEGIN
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+DO
+ teste | resultado |                            cenario                             |                      detalhe                      
+-------+-----------+----------------------------------------------------------------+---------------------------------------------------
+ T01   | OK        | Usuário válido é aceito                                        | aceito
+ T02   | OK        | E-mail duplicado (CT03)                                        | rejeitado por: uq_usuario_email
+ T03   | OK        | Perfil inválido                                                | rejeitado por: chk_usuario_perfil
+ T04   | OK        | Usuário sem nome                                               | rejeitado por: NOT NULL:nome
+ T05   | OK        | Usuário sem e-mail                                             | rejeitado por: NOT NULL:email
+ T06   | OK        | Usuário sem senha (hash)                                       | rejeitado por: NOT NULL:senha_hash
+ T07   | OK        | Ingrediente válido é aceito                                    | aceito
+ T08   | OK        | Custo zero é aceito (a regra é custo >= 0)                     | aceito
+ T09   | OK        | Custo negativo (CT10)                                          | rejeitado por: chk_ingrediente_custo_unitario
+ T10   | OK        | Porção padrão zero (CT11)                                      | rejeitado por: chk_ingrediente_porcao_padrao
+ T11   | OK        | Quantidade mínima negativa                                     | rejeitado por: chk_ingrediente_quantidade_minima
+ T12   | OK        | Estoque negativo                                               | rejeitado por: chk_ingrediente_quantidade_estoque
+ T13   | OK        | Unidade de medida inexistente                                  | rejeitado por: fk_ingrediente_unidade_medida
+ T14   | OK        | Unidade em maiúsculo ("KG" ≠ "kg": a FK diferencia maiúsculas) | rejeitado por: fk_ingrediente_unidade_medida
+ T15   | OK        | Ingrediente sem nome                                           | rejeitado por: NOT NULL:nome
+ T16   | OK        | Ingrediente sem unidade de medida                              | rejeitado por: NOT NULL:unidade_medida
+ T17   | OK        | Ingrediente sem custo                                          | rejeitado por: NOT NULL:custo_unitario
+ T18   | OK        | Ingrediente sem porção padrão                                  | rejeitado por: NOT NULL:porcao_padrao
+ T19   | OK        | Produto válido é aceito                                        | aceito
+ T20   | OK        | Preço zero (CT17)                                              | rejeitado por: chk_produto_preco_venda
+ T21   | OK        | Preço negativo (CT17)                                          | rejeitado por: chk_produto_preco_venda
+ T22   | OK        | Produto sem preço                                              | rejeitado por: NOT NULL:preco_venda
+ T23   | OK        | Produto sem nome                                               | rejeitado por: NOT NULL:nome
+ T24   | OK        | Atualizar preço para zero (US6)                                | rejeitado por: chk_produto_preco_venda
+ T25   | OK        | Composição válida é aceita (banana no Tradicional)             | aceito
+ T26   | OK        | Quantidade utilizada zero (CT14)                               | rejeitado por: chk_produto_ingrediente_quantidade
+ T27   | OK        | Quantidade utilizada negativa (CT14)                           | rejeitado por: chk_produto_ingrediente_quantidade
+ T28   | OK        | Mesmo ingrediente duas vezes no mesmo produto                  | rejeitado por: produto_ingrediente_pkey
+ T29   | OK        | Composição com ingrediente inexistente                         | rejeitado por: fk_produto_ingrediente_ingrediente
+ T30   | OK        | Composição com produto inexistente                             | rejeitado por: fk_produto_ingrediente_produto
+ T31   | OK        | Porção padrão da unidade igual a zero                          | rejeitado por: chk_unidade_porcao_padrao
+ T32   | OK        | Unidade de medida duplicada                                    | rejeitado por: unidade_medida_porcao_padrao_pkey
+(32 rows)
+
+ passaram | falharam 
+----------+----------
+       32 |        0
+(1 row)
+
+DO
+ROLLBACK
+(codigo de saida: 0)
+
+==============================================================================
+Fim. O banco mente_fria_teste ficou com o DDL correto.
+==============================================================================

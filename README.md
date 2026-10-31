@@ -91,7 +91,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 >
 > **Sprint 3 (encerrada no cronograma do professor):** planejamento e preparação. O código de todas as histórias do escopo foi escrito e testado em `docs/Sprint_3/referencia/`; roteiro, decisões, tutoriais e o adendo aprovado pelo professor estão em `docs/Sprint_3/`.
 >
-> **Sprint 4 (em andamento; execução de 29/10 a 06/11/2026):** esse código entra na `main` fase a fase, por PR, e o sistema é publicado; entrega e Review em **06/11**. Calendário e decisões: `docs/Sprint_4/`. Depois, uma semana de correção de bugs (até 13/11).
+> **Sprint 4 (em andamento; execução de 29/10 a 06/11/2026):** esse código entra na `main` fase a fase, por PR, e o sistema é publicado; entrega e Review em **06/11**. Calendário e decisões: `docs/Sprint_4/`; tutoriais de execução, reescritos um por integrante: `docs/Sprint_4/tutoriais/` (A44). Depois, uma semana de correção de bugs (até 13/11).
 
 ## Estrutura do repositório
 ```

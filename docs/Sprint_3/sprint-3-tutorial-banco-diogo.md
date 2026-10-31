@@ -1,5 +1,7 @@
 # Tutorial — Sprint 3 (Banco de Dados e Documentos) — Diogo
 
+> **SUBSTITUÍDO em 31/10/2026 (decisão A44)** por `docs/Sprint_4/tutoriais/tutorial-diogo-banco.md`, reescrito com explicações do código, passo a passo completo e comandos validados: os testes de banco e os experimentos (com o `ALTER TABLE` rodando explicitamente no `mente_fria_teste`), o seed de demonstração, o fluxo dos repositórios nas branches das fases e o SQL da US26. **Use o novo.** Este arquivo fica só como registro.
+
 **Para:** Diogo Pereira Miranda · **Papel:** dados e qualidade da documentação · **Revisão:** 27/10/2026, noite (v5.3: **calendário deslocado um dia, A36**; antes, v5.2: mensagem ao professor pronta; P2 = 13.0.3; A11 com você) · **Substitui** a v5.1 (`historico/v5.1-27-10-antes-das-respostas/`), a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e `historico/Tutorial_Sprint3_BancoDeDados_Diogo.md`.
 **Base:** `sprint-3-roteiro.md` (v5.3), `sprint-3-decisoes-e-pendencias.md`, `sprint-3-casos-de-teste-propostos.md` e o contrato oficial `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2).
 
@@ -227,6 +229,14 @@ python docs\Sprint_3\referencia\apoio\concorrencia_referencia.py
 - As FKs `pedido_produto.produto_id` e `pedido.usuario_id` não têm índice. Para o volume de uma açaiteria é irrelevante; fica só registrado.
 
 ## 7. Repositórios Java (F7) — prontos e testados em `referencia/`
+
+> **Como entregar os repositórios (decisão A44, 30/10/2026):** eles **não** vão num PR seu, porque só compilam junto com as classes do Lucas da mesma fase. Você faz **commit direto na branch da fase do Lucas**:
+> 1. espere o Lucas avisar que a branch da fase está no GitHub (por exemplo, `feature/backend-fase2-cadastros`);
+> 2. na pasta do projeto, no PowerShell: `git status` (precisa estar limpo), `git fetch` e `git checkout feature/backend-fase2-cadastros`;
+> 3. copie **só** os seus `*Repository.java` da fase com `Copy-Item` (Fase 2: `usuario/UsuarioRepository`, `unidade/UnidadeMedidaRepository`, `ingrediente/IngredienteRepository`, `produto/ProdutoRepository`; Fase 3: `estoque/MovimentacaoRepository`, `pedido/PedidoRepository`; Fase 6: `dashboard/DashboardRepository`). Os `record`s e o resto ficam com o Lucas. **O `reposicao/ReposicaoRepository` vai do mesmo jeito para a branch da Fase 5 do Kauê (`feature/backend-reposicao`)**, quando ele avisar (sáb 31/10);
+> 4. `git add backend`, `git commit -m "feat: repositorios da Fase N (parte do Diogo)"` e `git push`; avise o Lucas (na Fase 5, o Kauê).
+>
+> O passo a passo completo, validado, está no tutorial novo do Lucas (`docs/Sprint_4/tutoriais/tutorial-lucas-backend.md`, Partes 2.7, 4.5, 5.2 e 7.2) e, para a Fase 5, no do Kauê (`docs/Sprint_4/tutoriais/tutorial-kaue-python-deploy-facilitacao.md`, Partes 2.7 e 7.2). O seu tutorial novo vem depois, no mesmo formato. O comando de teste do fim desta seção só funciona na branch do Lucas, com as classes dele.
 
 **Acordo (F7):** você é o dono dos `*Repository` e dos `record`s de linha; o Lucas, dos serviços e controllers. Os repositórios estão **escritos, compilados e testados** em `docs/Sprint_3/referencia/backend/src/main/java/com/mentefria/backend/`. Seu trabalho é **copiar, ler, conferir o SQL com o `consultas_sprint3.sql` e abrir o PR** (ou entregar ao Lucas para irem no PR da fase, combinando antes do PR).
 

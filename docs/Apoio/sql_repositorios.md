@@ -408,4 +408,4 @@ Os SQLs de `pedido`/`pedido_produto` (US12), `movimentacao_estoque` por linhas e
 - os repositórios Java correspondentes em `docs/Sprint_3/referencia/backend/` (`MovimentacaoRepository`, `PedidoRepository`, `ReposicaoRepository`, `DashboardRepository` e outros), com `NamedParameterJdbcTemplate`;
 - o índice parcial `ix_movimentacao_linhas` no `Script_DDL.sql` de referência.
 
-Pelo tutorial do Diogo (§6), esses SQLs vão para `docs/Apoio/sql_repositorios_sprint3.md` junto com o PR do banco. Continuam **fora** do projeto nesta etapa: o SQL de `cliente` (US13) e as consultas dedicadas de alertas (US15/US16), que o Adendo nº 1 trata pela tela de estoque e pelo dashboard.
+Pelo tutorial do Diogo (`docs/Sprint_4/tutoriais/tutorial-diogo-banco.md`, Parte 7), esses SQLs vão para `docs/Apoio/sql_repositorios_sprint3.md`, num PR próprio. Continuam **fora** do projeto nesta etapa: o SQL de `cliente` (US13) e as consultas dedicadas de alertas (US15/US16), que o Adendo nº 1 trata pela tela de estoque e pelo dashboard.

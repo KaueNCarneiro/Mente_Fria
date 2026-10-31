@@ -1,5 +1,7 @@
 # Tutorial — Sprint 3 (Python/Gurobi, Reposição, Deploy, Contrato e Facilitação) — Kauê
 
+> **SUBSTITUÍDO em 30/10/2026 (decisão A44)** por `docs/Sprint_4/tutoriais/tutorial-kaue-python-deploy-facilitacao.md`, reescrito com explicações do código, passo a passo completo e comandos validados (inclusive a imagem do deploy, a carga do schema por URL com SSL e o backup). **Use o novo.** Este arquivo fica só como registro. Atenção: o §6 daqui manda o JSON pelo pipe do PowerShell, que troca os acentos por `?` numa janela com os padrões de fábrica; o novo usa `cmd /c "… < arquivo"`.
+
 **Para:** Kauê Nogueira Carneiro · **Papel:** módulos de otimização, reposição (US14), publicação no Render (US20), Contrato Java ↔ Python, facilitação (Scrum Master) · **Revisão:** 27/10/2026, noite (v5.3: **calendário deslocado um dia, A36**; antes, v5.2: Contrato v2 aprovado; P2 = 13.0.3; deploy definitivo no sábado, A21; A15 corrigida) · **Substitui** a v5.1 (`historico/v5.1-27-10-antes-das-respostas/`), a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e `historico/Tutorial_Sprint3_Python_Kaue.md`.
 **Base:** `sprint-3-roteiro.md` (v5.3), o **contrato oficial** `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2; a proposta ficou congelada) e `sprint-3-decisoes-e-pendencias.md`.
 

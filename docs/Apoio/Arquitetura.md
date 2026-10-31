@@ -163,7 +163,7 @@ A requisição, a resposta e as regras estão no **Contrato de Comunicação** (
 - "Estoque insuficiente para qualquer produto" é **`sucesso`** com todas as quantidades 0; o frontend mostra uma mensagem amigável. O `erro` fica para problemas de dados (produto sem composição, ingrediente ausente da lista).
 - **Código de saída `0`** = há JSON válido na `stdout` (inclusive com `status: "erro"`); diferente de `0` = falha técnica (o `stderr` vai para o log). **UTF-8** nas duas pontas. **Timeout de 10 s** (provisório). O backend nunca expõe *stack trace* ao usuário.
 - `receita_estimada` e `margem_estimada` são informativas: o Java **recalcula com `BigDecimal`** a partir das quantidades, dos preços e dos custos.
-- **Modelo de produção (Sprint 3):** estágio 1 maximiza o lucro estimado; estágio 2 desempata produto por produto, na ordem de cadastro, mantendo o lucro máximo. **Reposição:** maximiza a menor cobertura da necessidade dentro do orçamento, depois usa a sobra, depois desempata pelo mais consumido. A descrição completa está no tutorial do Kauê (`docs/Sprint_3/sprint-3-tutorial-python-kaue.md`) e no código de `docs/Sprint_3/referencia/python/app/`.
+- **Modelo de produção (Sprint 3):** estágio 1 maximiza o lucro estimado; estágio 2 desempata produto por produto, na ordem de cadastro, mantendo o lucro máximo. **Reposição:** maximiza a menor cobertura da necessidade dentro do orçamento, depois usa a sobra, depois desempata pelo mais consumido. A descrição completa está no tutorial do Kauê (`docs/Sprint_4/tutoriais/tutorial-kaue-python-deploy-facilitacao.md`, Partes 3 e 4) e no código de `docs/Sprint_3/referencia/python/app/`.
 
 ---
 

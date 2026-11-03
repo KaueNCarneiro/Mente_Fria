@@ -4,7 +4,7 @@ Quebrar de proposito: os testes T33-T73 detectam constraints erradas?
 ==============================================================================
 Gerado em: 2026-10-29 23:07:39
 Executado por: Diogo
-Branch: feature/banco-sprint3   Commit: af05b26
+Branch: feature/banco-sprint4 (chamava-se feature/banco-sprint3 quando o script rodou)   Commit: af05b26
 Arquivos em bd/ com alteracao nao comitada:
    M bd/Script_DDL.sql
   ?? bd/constraints_sprint3_teste.sql

@@ -1,5 +1,7 @@
 # Tutorial — Sprint 3 (Frontend) — Leonardo
 
+> **SUBSTITUÍDO em 30/10/2026 (decisão A44)** por `docs/Sprint_4/tutoriais/tutorial-leonardo-frontend.md`, reescrito com explicações do código, passo a passo completo e comandos validados: o *gate* da Fase 2 pela tela contra o backend real, uma tela-exemplo de Estoque e a causa da instabilidade do teste de navegador (A13). **Use o novo.** Este arquivo fica só como registro. Atenção: o §6 daqui aponta para a proposta do contrato, que ficou congelada; o novo usa o contrato oficial.
+
 **Para:** Leonardo Fagundes Oliveira · **Papel:** frontend (HTML, CSS, JavaScript) e publicação no GitHub Pages · **Revisão:** 27/10/2026, noite (v5.3: **calendário deslocado um dia, A36**; antes, v5.2: Contrato v2 aprovado; botão "Descartar" por linha, A12; Render definitivo no sábado, A21) · **Substitui** a v5.1 (`historico/v5.1-27-10-antes-das-respostas/`), a versão da tarde (`historico/v5-26-10-antes-das-4-historias/`) e `historico/Tutorial_Sprint3_Frontend_Leonardo.md`.
 **Base:** `sprint-3-roteiro.md` (v5.3), o **contrato oficial** `docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md` (v2; a proposta ficou congelada) e `sprint-3-decisoes-e-pendencias.md`.
 

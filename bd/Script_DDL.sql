@@ -102,11 +102,22 @@ CREATE TABLE pedido (
     usuario_id   INT NOT NULL,
     data_pedido  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     valor_total  DECIMAL(10,2) NOT NULL DEFAULT 0,
+    -- Sprint 3 (US27): cancelamento. Cancelar não apaga o pedido: só marca o status. O estoque NÃO volta (decisão de 14/10; devolver à linha de origem = US27b, fora do projeto).
+    status                  VARCHAR(10) NOT NULL DEFAULT 'ATIVO',
+    data_cancelamento       TIMESTAMP NULL,
+    usuario_cancelamento_id INT NULL,
     CONSTRAINT fk_pedido_cliente
         FOREIGN KEY (cliente_id) REFERENCES cliente(id),
     CONSTRAINT fk_pedido_usuario
         FOREIGN KEY (usuario_id) REFERENCES usuario(id),
-    CONSTRAINT chk_pedido_valor_total CHECK (valor_total >= 0)
+    CONSTRAINT fk_pedido_usuario_cancelamento
+        FOREIGN KEY (usuario_cancelamento_id) REFERENCES usuario(id),
+    CONSTRAINT chk_pedido_valor_total CHECK (valor_total >= 0),
+    CONSTRAINT chk_pedido_status CHECK (status IN ('ATIVO', 'CANCELADO')),
+    -- "<> 'CANCELADO'" (e não "= 'ATIVO'") para que um status inválido seja barrado só por chk_pedido_status
+    CONSTRAINT chk_pedido_cancelamento CHECK (
+        (status <> 'CANCELADO' AND data_cancelamento IS NULL AND usuario_cancelamento_id IS NULL)
+        OR (status = 'CANCELADO' AND data_cancelamento IS NOT NULL AND usuario_cancelamento_id IS NOT NULL))
 );
 
 -- =========================================================
@@ -138,14 +149,28 @@ CREATE TABLE movimentacao_estoque (
     data_movimentacao   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     observacao          VARCHAR(255) NULL,
     data_validade       DATE,
+    -- Sprint 3: cada ENTRADA é uma "linha" de estoque; quantidade_restante é o que ainda não foi consumido.
+    quantidade_restante DECIMAL(10,3) NULL,
+    -- Sprint 3: por que saiu (só SAIDA): PEDIDO, CONVENCIONAL ou DESCARTE_VENCIDO.
+    motivo              VARCHAR(20) NULL,
     CONSTRAINT fk_movimentacao_ingrediente
         FOREIGN KEY (ingrediente_id) REFERENCES ingrediente(id),
     CONSTRAINT fk_movimentacao_usuario
         FOREIGN KEY (usuario_id) REFERENCES usuario(id),
     CONSTRAINT chk_movimentacao_tipo CHECK (tipo IN ('ENTRADA', 'SAIDA')),
     CONSTRAINT chk_movimentacao_quantidade CHECK (quantidade > 0),
-    CONSTRAINT chk_movimentacao_data_validade CHECK (tipo = 'ENTRADA' OR data_validade IS NULL)
+    CONSTRAINT chk_movimentacao_data_validade CHECK (tipo = 'ENTRADA' OR data_validade IS NULL),
+    CONSTRAINT chk_movimentacao_restante CHECK (
+        (tipo = 'ENTRADA' AND quantidade_restante IS NOT NULL AND quantidade_restante BETWEEN 0 AND quantidade)
+        OR (tipo <> 'ENTRADA' AND quantidade_restante IS NULL)),
+    -- ATENÇÃO: "motivo IN (...)" com motivo NULL resulta em NULL e o CHECK ACEITA. Por isso o IS NOT NULL explícito.
+    CONSTRAINT chk_movimentacao_motivo CHECK (
+        (tipo = 'SAIDA' AND motivo IS NOT NULL AND motivo IN ('PEDIDO', 'CONVENCIONAL', 'DESCARTE_VENCIDO'))
+        OR (tipo <> 'SAIDA' AND motivo IS NULL))
 );
+-- Acelera a baixa por linhas (linhas com saldo, da menor validade para a maior).
+CREATE INDEX ix_movimentacao_linhas ON movimentacao_estoque (ingrediente_id, data_validade, id)
+    WHERE tipo = 'ENTRADA' AND quantidade_restante > 0;
 
 -- =========================================================
 -- SEED DA SPRINT 1 — dados de exemplo
@@ -176,18 +201,19 @@ INSERT INTO unidade_medida_porcao_padrao (unidade_medida, porcao_padrao) VALUES
 
 -- =========================================================
 -- 2. ingrediente (id 1 a 7)
--- quantidade_estoque = saldo de abertura. Na Sprint 2 esses saldos serão registrados como
--- movimentações ENTRADA (com data_validade), mantendo a regra do DER:
--- quantidade_estoque = soma das ENTRADAS - soma das SAÍDAS.
+-- Sprint 3 (decisão D11): o estoque OFICIAL nasce ZERO. O estoque entra pela tela (US9) como ENTRADA,
+-- com validade, e a regra do DER passa a valer sempre:
+--   quantidade_estoque = soma(quantidade_restante das ENTRADAS)
+-- Dados de estoque para demonstração ficam em bd/seed_demo.sql (e não neste seed).
 -- =========================================================
 INSERT INTO ingrediente (nome, unidade_medida, custo_unitario, porcao_padrao, quantidade_estoque, quantidade_minima) VALUES
-  ('Açaí (polpa)',           'kg', 18.50, 0.150,  40.000, 10.000), -- id 1
-  ('Leite condensado',       'l',  12.00, 0.030,  15.000,  5.000), -- id 2
-  ('Granola',                'kg', 22.00, 0.040,   8.000,  2.000), -- id 3
-  ('Banana',                 'kg',  5.50, 0.050,  12.000,  3.000), -- id 4
-  ('Morango',                'kg', 15.00, 0.040,   6.000,  2.000), -- id 5
-  ('Leite em pó',            'kg', 28.00, 0.020,   5.000,  1.500), -- id 6
-  ('Copo descartável 500ml', 'un',  0.35, 1.000, 300.000, 50.000); -- id 7
+  ('Açaí (polpa)',           'kg', 18.50, 0.150,  0.000, 10.000), -- id 1
+  ('Leite condensado',       'l',  12.00, 0.030,  0.000,  5.000), -- id 2
+  ('Granola',                'kg', 22.00, 0.040,   0.000,  2.000), -- id 3
+  ('Banana',                 'kg',  5.50, 0.050,  0.000,  3.000), -- id 4
+  ('Morango',                'kg', 15.00, 0.040,   0.000,  2.000), -- id 5
+  ('Leite em pó',            'kg', 28.00, 0.020,   0.000,  1.500), -- id 6
+  ('Copo descartável 500ml', 'un',  0.35, 1.000, 0.000, 50.000); -- id 7
 
 -- =========================================================
 -- 3. produto (id 1, 2, 3)

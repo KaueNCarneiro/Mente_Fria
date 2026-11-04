@@ -1,5 +1,5 @@
 -- =========================================================
--- constraints_sprint1_teste.sql — Mente Fria
+-- constraints_teste.sql — Mente Fria (bd/constraints_teste.sql)
 -- Testes de banco da Sprint 1 (US1–US7 / requisito R5, metade "banco")
 -- =========================================================
 -- Cada caso tenta gravar um dado inválido e confere se o PostgreSQL o rejeita EXATAMENTE
@@ -12,7 +12,7 @@
 -- Uso:
 --   createdb / CREATE DATABASE mente_fria_teste;
 --   psql -U postgres -d mente_fria_teste -f Script_DDL.sql
---   psql -U postgres -d mente_fria_teste -v ON_ERROR_STOP=1 -f constraints_sprint1_teste.sql
+--   psql -U postgres -d mente_fria_teste -v ON_ERROR_STOP=1 -f constraints_teste.sql
 --
 -- Pré-requisito: Script_DDL.sql carregado (usa os ids do seed: ingredientes 1–7, produtos 1–3).
 -- Código de saída diferente de 0 = algum teste falhou (serve para o CI no futuro).

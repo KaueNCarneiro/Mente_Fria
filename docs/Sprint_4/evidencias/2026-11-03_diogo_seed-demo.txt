@@ -1,0 +1,33 @@
+﻿=== Evidencia: bd/seed_demo.sql rodado em banco novo (mente_fria_demo), 2026-11-03 21:19 ===
+Branch: feature/seed-demo   Base: main a70b648
+
+--- 1. Saida do seed (esperado: tabela vazia e COMMIT) ---
+BEGIN
+CREATE FUNCTION
+DO
+ id | nome | saldo | soma_linhas 
+----+------+-------+-------------
+(0 rows)
+
+COMMIT
+
+--- 2. Estoque: total, valido e vencido por ingrediente ---
+          nome          |  total  | valido  | vencido 
+------------------------+---------+---------+---------
+ Açaí (polpa)           |  45.750 |  45.750 |       0
+ Leite condensado       |  14.220 |  14.220 |       0
+ Granola                |  11.160 |   5.160 |   6.000
+ Banana                 |  11.050 |  11.050 |       0
+ Morango                |   1.980 |   1.980 |       0
+ Leite em pó            |   4.760 |   4.760 |       0
+ Copo descartável 500ml | 269.000 | 269.000 |       0
+(7 rows)
+
+
+--- 3. Faturamento por mes (so pedidos ATIVO) ---
+   mes   | pedidos | faturamento 
+---------+---------+-------------
+ 2026-10 |       3 |      271.50
+ 2026-11 |       3 |      326.40
+(2 rows)
+

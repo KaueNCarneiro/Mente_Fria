@@ -4,7 +4,7 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-**Última atualização:** 19/09/2026 (conteúdo da Sprint 1). **Nota de 27/10/2026:** os SQLs da Sprint 3 (estoque por linhas, pedido com baixa, reposição, dashboard) estão na seção 6 abaixo.
+**Última atualização:** 19/09/2026 (conteúdo da Sprint 1). **Nota de 27/10/2026, atualizada em 04/11/2026:** os SQLs da Sprint 3 (estoque por linhas, pedido com baixa, reposição, dashboard) estão em [`sql_repositorios_sprint3.md`](sql_repositorios_sprint3.md), que também lista o que mudou no SQL dos métodos abaixo (§8 dele).
 
 > **Status:** todos os SQLs abaixo foram executados no PostgreSQL 16, sobre o `Script_DDL.sql` entregue, com parâmetros reais (37 verificações, incluindo os erros esperados conferidos por SQLSTATE e nome de constraint). A regra do açaí foi testada em Java 21 (15 casos). **Os trechos de código Spring (seção "Padrões de código") ainda não foram executados** — a equipe valida ao implementar. Itens marcados como **proposta** dependem de confirmação.
 
@@ -408,4 +408,4 @@ Os SQLs de `pedido`/`pedido_produto` (US12), `movimentacao_estoque` por linhas e
 - os repositórios Java correspondentes em `docs/Sprint_3/referencia/backend/` (`MovimentacaoRepository`, `PedidoRepository`, `ReposicaoRepository`, `DashboardRepository` e outros), com `NamedParameterJdbcTemplate`;
 - o índice parcial `ix_movimentacao_linhas` no `Script_DDL.sql` de referência.
 
-Pelo tutorial do Diogo (`docs/Sprint_4/tutoriais/tutorial-diogo-banco.md`, Parte 7), esses SQLs vão para `docs/Apoio/sql_repositorios_sprint3.md`, num PR próprio. Continuam **fora** do projeto nesta etapa: o SQL de `cliente` (US13) e as consultas dedicadas de alertas (US15/US16), que o Adendo nº 1 trata pela tela de estoque e pelo dashboard.
+Esses SQLs estão documentados, método a método, em [`sql_repositorios_sprint3.md`](sql_repositorios_sprint3.md) (tutorial do Diogo, Parte 7). Continuam **fora** do projeto nesta etapa: o SQL de `cliente` (US13) e as consultas dedicadas de alertas (US15/US16), que o Adendo nº 1 trata pela tela de estoque e pelo dashboard.

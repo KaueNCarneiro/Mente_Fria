@@ -1,48 +1,104 @@
-# Frontend — Mente Fria · Sprint 1
+# Frontend — Mente Fria · Sprints 1 a 4
 
-HTML, CSS e JavaScript (ES modules), sem build e sem dependências de produção. Execute por HTTP; abrir `index.html` com duplo clique não carrega os módulos corretamente.
+HTML, CSS e JavaScript (módulos ES), sem build e sem dependências de produção. Execute por HTTP: abrir o `index.html` com dois cliques (`file://`) não carrega os módulos.
+
+**Publicado em:** _(URL do GitHub Pages, preencher depois do primeiro deploy, por exemplo `https://kauencarneiro.github.io/Mente_Fria/`)_
 
 ## Executar
 
-No VS Code, abra a pasta `frontend` e execute **Open with Live Server** em `index.html`, na porta **5500**. Alternativa, no terminal dentro desta pasta:
+Dentro desta pasta, num terminal (ou **Open with Live Server** no VS Code, na porta 5500; use um dos dois):
 
 ```powershell
 py -m http.server 5500 --bind 127.0.0.1
 ```
 
-Abra http://127.0.0.1:5500/index.html. Mantenha o terminal/Live Server ligado enquanto estiver usando o sistema. `ERR_CONNECTION_REFUSED` ao abrir essa página indica que o servidor do frontend não está atendendo nesse endereço.
+Abra http://127.0.0.1:5500/index.html (sempre `127.0.0.1`, que é a origem liberada no CORS do backend). `ERR_CONNECTION_REFUSED` nessa página quer dizer que o servidor do frontend não está rodando.
 
-A API é configurada exclusivamente em `js/config.js`: `API_BASE_URL = 'http://localhost:8080'`, **sem `/api` no final**. A execução da API e do banco deve seguir os documentos da equipe. O frontend não inicia nem modifica o backend. Para hospedagem HTTPS, use a base HTTPS fornecida pela equipe e configure a origem no backend.
+O backend é escolhido em `js/config.js`, pelo endereço da página:
 
-## Escopo e decisões
+| Onde a página está | Backend | Tempo limite |
+|---|---|---|
+| `*.github.io` (GitHub Pages) | O serviço do Render (constante `PRODUCAO`, sem `/api` no fim) | 90 s, porque o plano gratuito do Render "dorme" e leva cerca de 1 min para acordar |
+| Qualquer outro (local, testes) | `http://localhost:8080` | 15 s |
 
-- Cadastro do primeiro administrador e login com JWT; sessão no `sessionStorage` da aba, sem guardar senhas. Registro cria conta e depois faz login. Falha nessa segunda etapa orienta o usuário a entrar, sem repetir o cadastro.
-- Administrador: listar/cadastrar funcionários; listar/cadastrar/editar ingredientes; listar/cadastrar produtos com composição; alterar preço.
-- Funcionário: início, consulta de ingredientes e produtos. Rotas e ações administrativas bloqueadas na interface. O backend deve validar o perfil em cada requisição; a interface não constitui autorização de segurança.
-- Erros gerais e `campos` exibidos junto aos campos; validações locais, prevenção de envio duplo, carregamento, timeout, listas vazias e nova tentativa.
-- Unidades vêm de `GET /api/unidades-medida`. O padrão pré-preenche a porção, que permanece editável (D-B). Ao editar, preserva a porção do ingrediente até o usuário trocar a unidade.
-- Composição sem repetição: número inteiro de porções × `porcao_padrao`, enviado como `quantidade_utilizada` em até três casas. Exige ingrediente cujo nome normalizado contém `acai` (CT15). Conversão no frontend conforme B1 do contrato e Arquitetura; há uma referência antiga a Service no documento de SQL.
-- A tela de teste em `index.html#/comunicacao` atende ao roteiro de infraestrutura: saúde, listagem de ingredientes e endpoint temporário Python. A listagem envia token quando houver sessão.
+## Telas
 
-O Figma fornece logo, cores, fonte Inter, menus, formulários e tabelas. Documentos prevalecem nos seguintes pontos: perfil chamado Administrador; porção acrescentada; ausência de atalhos que ignoram login; tamanho incorporável ao nome (não existe campo `tamanho` no contrato); status ativo definido pelo backend na criação; sem edição de funcionários nem edição completa de produtos, que são opcionais fora da Sprint 1. A edição de ingredientes usa a listagem completa, sem depender do GET individual opcional. Recursos das próximas sprints estão identificados no menu e indisponíveis.
+| Tela | Rota | Perfis | API (contrato §) |
+|---|---|---|---|
+| Login e cadastro do Administrador | `#/login`, `#/cadastro` | Público | `/api/auth/*` (2.1) |
+| Funcionários | `#/funcionarios`, `/novo` | Admin | `/api/usuarios` |
+| Ingredientes | `#/ingredientes`, `/novo`, `/editar/{id}` | Lista: os dois; cadastro e edição: Admin | `/api/ingredientes` |
+| Produtos | `#/produtos`, `/novo`, `/preco/{id}` | Lista: os dois; cadastro e preço: Admin | `/api/produtos` |
+| **Estoque** (10/16) | `#/estoque`, `/linhas/{id}`, `/movimentar` | Os dois | `/api/estoque*` (2.4) |
+| **Pedidos** (11/17) | `#/pedidos`, `/novo` | Os dois | `/api/pedidos` (2.5) |
+| **Produção** (12) | `#/producao` | Admin | `POST /api/producao/recomendacao` (2.6) |
+| **Reposição** (13) | `#/reposicao` | Admin | `POST /api/reposicao/recomendacao` (2.7) |
+| **Dashboard** (03) | `#/dashboard` | Admin | `GET /api/dashboard` (2.8) |
+| **Marketing** (14) | `#/marketing` | Admin | `GET /api/marketing/sugestoes` (2.9) |
+| Teste de comunicação | `#/comunicacao` | Público | `/api/saude`, `/api/ingredientes` |
 
-## Situação do backend deste checkout
+Ficam fora do semestre (decisões A2b e A40): Clientes (US13), Porção Padrão (US26, com o Diogo), alertas completos (US15/US16), CSV do dashboard (US19) e cancelamento de pedido (US27). No menu, aparecem apagados.
 
-Na inspeção de 27/09/2026, o código Java contém `GET /api/saude` e `GET /api/ingredientes`; este último retorna apenas `id`, `nome`, `unidade_medida`. Login, registro, usuários, unidades, produtos e escrita de ingredientes ainda não estão implementados nesse checkout. A integração de cadastros está preparada conforme o contrato, mas depende dessas entregas. A edição de ingredientes avisa quando os campos completos não chegam, sem inventar valores.
+## Regras que valem para todas as telas
 
-Falha de `fetch` não prova CORS: pode ser API desligada, endereço incorreto, CORS ou rede. Confira o painel Network do navegador. Portas 5500 e 8080 diferentes são esperadas: o backend precisa permitir `http://127.0.0.1:5500` e `http://localhost:5500`, métodos e headers do contrato. Não use `no-cors`: ele torna a resposta ilegível e não resolve autenticação.
+- **Estados:** carregando, vazio, erro com "Tentar novamente" e sucesso.
+- **Validação antes de enviar**, com a mensagem embaixo de cada campo. O backend revalida tudo (`400`, `403`, `422`) e as mensagens dele aparecem do mesmo jeito.
+- **Botão desabilitado durante o envio**, para um clique duplo não mandar duas vezes (CT71).
+- **Dados da API sempre como texto**, nunca `innerHTML` (o `node()` do `ui.js` cria nós de texto).
+- **Sem termos técnicos** nas Telas 12, 13 e 14 (US11, CT43): nada de "otimização", "solver", "restrição" e similares. A tela fala em lucro e quantidade.
+- **Reserva B1:** se o servidor desligar a recomendação, Produção e Reposição recebem `503` e mostram a mensagem como **aviso**, não como erro; a tela continua utilizável.
+- **Guarda de rotas por lista** (`js/nav.js`): o Funcionário só abre o que está no mapa `FUNCIONARIO`. É experiência de uso; **a segurança é o `403` do backend**.
+- Sessão no `sessionStorage` da aba (token, nome e perfil; nunca a senha). Um `401` com token encerra a sessão e volta ao login.
 
-## Verificação
+## Estrutura
 
-Testes de navegador com respostas simuladas cobrem os fluxos, contratos enviados, autorização da interface, validações e falhas. Não substituem os testes com API/PostgreSQL reais. Dependência apenas de desenvolvimento:
+```
+js/
+  app.js            ponto de entrada: só importa o router
+  router.js         lê o "#/..." e escolhe a tela; aplica a guarda
+  nav.js            go(), admin() e a guarda de rotas (rotaPermitida)
+  state.js          estado compartilhado (flash, revision)
+  ui.js             node, table, field, formBase, bindForm, heading, loading, stat, confirmDialog...
+  api.js            toda chamada HTTP: token, tempo limite e erros (ApiError com status e campos)
+  config.js         qual backend usar (local ou Render)
+  validation.js     cálculos puros (decimal, porções, açaí)
+  apoio_telas_novas.js   funções puras das Telas 03, 13 e 14 (filtros, resumo, termos técnicos)
+  screens/          um módulo por tela: auth, shell, funcionarios, ingredientes, produtos,
+                    comunicacao, estoque, pedidos, producao, dashboard, reposicao, marketing
+css/styles.css      estilos responsivos
+assets/             logo, ícones e a fonte Inter (com licença)
+tests/browser.cjs   testes de navegador com a API simulada
+```
+
+**Para criar uma tela nova:** (1) ler o formato no contrato; (2) criar `js/screens/<tela>.js`; (3) registrar a rota no `router.js`; (4) pôr no menu do `screens/shell.js`; (5) se o Funcionário usa, acrescentar a rota no mapa `FUNCIONARIO` do `nav.js`; (6) acrescentar as rotas simuladas e a verificação no `tests/browser.cjs`.
+
+## Testes
 
 ```powershell
 npm install
 npm test
 ```
 
-Mantenha o servidor do frontend na porta 5500. Chrome instalado é o navegador padrão do teste; `PLAYWRIGHT_CHANNEL` pode selecionar outro canal instalado. `FRONTEND_URL` permite outro endereço. Screenshots de evidência são gravados em `tests/artifacts` (ignorados pelo Git).
+Com o servidor do frontend na porta 5500 e o Google Chrome instalado. **Resultado esperado: `39 verificações passaram.`** (10 de 10 rodadas em 06/11/2026). As verificações usam a API simulada: o teste intercepta `http://localhost:8080/**` e falha com "Rota inesperada" se uma tela chamar uma rota que ele não conhece.
 
-Para aceite real: criar primeiro administrador, entrar com os dois perfis, cadastrar funcionário, cadastrar ingrediente com porção personalizada, cadastrar produto com açaí e conferir quantidades no backend, alterar preço, confirmar 401/403/409 e mensagens por campo. O backend deve também rejeitar requisições diretas sem autorização.
+- `PLAYWRIGHT_CHANNEL` escolhe outro navegador instalado; `FRONTEND_URL`, outro endereço.
+- As imagens de cada rodada vão para `tests/artifacts` (ignorada pelo Git).
+- A instabilidade antiga da verificação 21 (A13) foi corrigida no teste: ele contava os campos antes de a tela terminar a remoção.
 
-Estrutura: `js/api.js` centraliza HTTP/sessão; `js/validation.js` contém cálculos puros; `js/app.js` contém telas e rotas; `css/styles.css` contém estilos responsivos; `assets` contém arquivos locais exportados do Figma e a fonte Inter com licença.
+**Ferramentas de retrato** (sem navegador; provam que uma refatoração não mudou nenhuma tela): estão em `docs/Sprint_3/referencia/frontend/ferramentas/`. Copie para `frontend/ferramentas/` (não vão para o Git), rode `npm install jsdom --no-save` e use `retratar_telas.mjs`, `comparar_retratos.mjs`, `testar_guarda.mjs` e `testar_apoio_telas.mjs`.
+
+## Situação (06/11/2026)
+
+- Telas 03, 10/16, 11/17, 12, 13 e 14 prontas e testadas **com a API simulada**.
+- **Pendente:** o aceite com o backend real (as Fases 3 a 6 do backend ainda não estavam na `main`), o *gate* da Fase 2 com as 16 evidências e o aceite na URL publicada. As evidências ficam em `docs/Sprint_4/evidencias/`.
+- Publicação: `.github/workflows/frontend-pages.yml` publica esta pasta a cada push na `main` que mexa no frontend. Pré-requisito, uma vez: *Settings → Pages → Source: GitHub Actions*. A origem a liberar no `CORS_ALLOWED_ORIGIN` do Render é só `https://kauencarneiro.github.io` (sem caminho e sem barra).
+
+## Problemas comuns
+
+| Sintoma | O que fazer |
+|---|---|
+| Tela em branco | **F12 → Console**: quase sempre um `import`/`export` errado |
+| `blocked by CORS policy` local | Abrir por `http://127.0.0.1:5500`, não por `file://` nem outra porta |
+| "Não foi possível conectar à API…" | O backend está desligado, ou o CORS bloqueou: o navegador não diferencia os dois. Confira o *Network* |
+| No Pages: "O servidor demorou para responder" | O Render estava dormindo e o `config.js` publicado é o antigo (15 s) |
+| `npm test` com "Rota inesperada" | Falta a rota simulada no `tests/browser.cjs` |

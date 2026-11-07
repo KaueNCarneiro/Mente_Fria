@@ -1,0 +1,12 @@
+﻿#/pedidos/novo               LIBERADA (fica na rota)
+#/clientes/novo              LIBERADA (fica na rota)
+#/estoque                    LIBERADA (fica na rota)
+#/funcionarios               BLOQUEADA (voltou para #/inicio)
+#/produtos/novo              BLOQUEADA (voltou para #/inicio)
+#/ingredientes/editar/1      BLOQUEADA (voltou para #/inicio)
+#/dashboard                  BLOQUEADA (voltou para #/inicio)
+#/producao                   BLOQUEADA (voltou para #/inicio)
+#/pedidos/editar/1           BLOQUEADA (voltou para #/inicio)
+(admin) #/dashboard          LIBERADA
+(admin) #/pedidos/novo       LIBERADA
+(admin) #/producao           LIBERADA

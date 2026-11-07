@@ -1,0 +1,3 @@
+﻿retratos: antes 25 | depois 25
+IGUAIS: o HTML, o título e a rota de todas as telas são idênticos.
+passaram: 0 de 5 (codigo dividido, antes da correcao A13)

@@ -1,0 +1,36 @@
+# Copiar para .github/workflows/frontend-pages.yml (US20, parte do frontend).
+# Publica a pasta frontend/ no GitHub Pages a cada push na main que mexa no frontend.
+# O GitHub Pages "por branch" só publica a raiz ou /docs; por isso o deploy é por Actions.
+# Versões das actions conferidas no GitHub em 26/10/2026 (últimas majors).
+# Pré-requisito (uma vez, dono do repositório): Settings -> Pages -> Build and deployment -> Source: "GitHub Actions".
+name: Frontend no GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths: ['frontend/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.publicacao.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: frontend
+      - id: publicacao
+        uses: actions/deploy-pages@v5

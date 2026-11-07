@@ -68,6 +68,8 @@ export function table(headers,rows) {
   return node('div',{class:'table-wrap'},node('table',{},node('thead',{},node('tr',{},headers.map(h=>node('th',{scope:'col'},h)))),node('tbody',{},rows.length?rows.map(row=>node('tr',{},row.map(cell=>node('td',{},cell)))):node('tr',{},node('td',{colspan:headers.length,class:'empty'},'Nenhum registro cadastrado.')))));
 }
 export const badge = active => node('span',{class:'badge '+(active===true?'active':'inactive')},active===true?'Ativo':active===false?'Inativo':'Não informado');
+// Um número em destaque (Produção, Dashboard).
+export const stat = (label, value, detail) => node('div',{class:'stat'},node('span',{},label),node('strong',{},value),detail?node('small',{},detail):null);
 // Diálogo de confirmação genérico (telas novas). Resolve true só quando o usuário confirma.
 export function confirmDialog(title, text, confirmLabel) {
   return new Promise(resolve=>{

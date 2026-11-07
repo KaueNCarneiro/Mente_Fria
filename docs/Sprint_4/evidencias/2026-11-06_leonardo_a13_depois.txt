@@ -1,0 +1,1 @@
+﻿passaram: 0 de 10 antes (baseline) | passaram: 10 de 10 depois (com a correcao da A13)

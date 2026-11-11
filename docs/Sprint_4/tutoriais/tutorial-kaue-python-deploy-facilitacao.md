@@ -171,6 +171,27 @@ Cada passo diz qual usar.
 - [ ] Retrospectiva, Review e os dois relatórios registrados;
 - [ ] você sabe responder as "Perguntas para a Review" do fim de cada parte.
 
+> **Situação (10/11):** a pedido do Kauê, o **Diogo executou** as partes deste tutorial que não dependem de outro integrante, na máquina dele, com branches a partir da `sprint-4` e PRs com base na `sprint-4` (padrão atual do grupo; a `main` recebe depois, por um PR `sprint-4` → `main`). O `mente-fria-db` não foi usado.
+>
+> | Parte | Situação | Onde |
+> |---|---|---|
+> | 1.4 — ambiente Python | **Feito** na máquina do Diogo: `(13, 0, 3) 9.1.1` | — |
+> | 3 e 4 — Fase P + Q | **Feito**, PR aberto esperando revisão: `8 passed` → `17 failed, 8 passed` → `25 passed` → erro de coleta → **`47 passed`**; os 5 experimentos (5, 5, 2, 1 e 9 falhas); as 4 saídas iguais às guardadas; tempo de 177 a 195 ms | PR #81; `evidencias/2026-11-10_kaue_fasePQ_pytest.txt` |
+> | 4.7 — 2ª máquina | **Pendente:** até aqui os testes só rodaram na máquina do Diogo. Falta outro integrante rodar e comentar no PR #81 | — |
+> | 5 — e-mail da Gurobi ao professor | **Pendente (Kauê):** o e-mail está na caixa dele | — |
+> | 6 — Fase 4A em dupla | **Pendente (Lucas):** as Fases 2, 3 e 4A ainda não estão na `sprint-4` | — |
+> | 7.2 — começo da Fase 5 | **Feito:** a branch `feature/backend-reposicao` está no GitHub com o service, o controller e o teste. Ela ainda **não compila** (esperado, Parte 7.1) | branch `feature/backend-reposicao`, sem PR |
+> | 7.2 (repositório), 7.4 e 7.5 | **Pendente:** o commit do `ReposicaoRepository` (Diogo), a Fase 4A na `sprint-4` (Lucas) e, só então, os testes, a evidência e o PR | — |
+> | 8.1 — arquivos do deploy | **Feito**, PR aberto esperando revisão | PR #83 |
+> | 8.2 — imagem local | **Feito em parte** (passos 1, 2 e 4): sobe com 512 MB e 0,1 CPU em 42 s, `saude` ok, 104 MiB, sem `OOMKilled`; CORS `200`/`403`. **Falta o passo 3** (CT67 completo), que depende das Fases 2 a 5 | `evidencias/2026-11-10_kaue_deploy_imagem-local-parcial.txt` (no PR #83) |
+> | 8 (Pages e Render), 8.3 a 8.8 | **Pendente (Kauê e Lucas):** habilitar o Pages e autorizar o Render no repositório são do dono do repositório; o deploy, o schema, o Administrador, o seed e o backup são na conta do Lucas | — |
+> | 9.2 — `.env.example` único (G8) | **Feito**, PR aberto esperando revisão | PR #82 |
+> | 9.3 — registro da perda do histórico do Git | **Pendente (Kauê):** só quem viveu o episódio de 27/09 sabe o motivo e o que foi preservado | — |
+> | 9.4 — CT20, Retrospectiva, Review, relatórios, semana de bugs, backups | **Pendente (Kauê, com o grupo)** | — |
+> | 10, item 2 — conferência com o contrato | **Feito para o Python** (§1.1 a §1.7): mensagens de erro, campos e exemplos batem; os exemplos do contrato são conferidos por teste. A §2.7 (rota) fica para quando a Fase 5 compilar | — |
+> | 10, item 3 — modelo matemático | **Feito:** os dois documentos criados | `docs/Apoio/Modelo_Matematico_Producao.md` e `Modelo_Matematico_Reposicao.md` |
+> | 10, item 4 — contribuições individuais | **Pendente (Kauê)** | — |
+
 ---
 
 ## Parte 0 — Conceitos em 5 minutos

@@ -181,7 +181,8 @@ Cada passo diz qual usar.
 > | 5 — e-mail da Gurobi ao professor | **Pendente (Kauê):** o e-mail está na caixa dele | — |
 > | 6 — Fase 4A em dupla | **Pendente (Lucas):** as Fases 2, 3 e 4A ainda não estão na `sprint-4` | — |
 > | 7.2 — começo da Fase 5 | **Feito:** a branch `feature/backend-reposicao` está no GitHub com o service, o controller e o teste. Ela ainda **não compila** (esperado, Parte 7.1) | branch `feature/backend-reposicao`, sem PR |
-> | 7.2 (repositório), 7.4 e 7.5 | **Pendente:** o commit do `ReposicaoRepository` (Diogo), a Fase 4A na `sprint-4` (Lucas) e, só então, os testes, a evidência e o PR | — |
+> | 7.2 (repositório) | **Feito:** o `ReposicaoRepository` (consulta 9) entrou por commit do Diogo (`20748fd`, 39 linhas, igual ao da referência) | branch `feature/backend-reposicao` |
+> | 7.4 e 7.5 | **Pendente (Lucas):** a Fase 4A na `sprint-4`; só então a branch compila e vêm os testes, a evidência e o PR | — |
 > | 8.1 — arquivos do deploy | **Feito**, PR aberto esperando revisão | PR #83 |
 > | 8.2 — imagem local | **Feito em parte** (passos 1, 2 e 4): sobe com 512 MB e 0,1 CPU em 42 s, `saude` ok, 104 MiB, sem `OOMKilled`; CORS `200`/`403`. **Falta o passo 3** (CT67 completo), que depende das Fases 2 a 5 | `evidencias/2026-11-10_kaue_deploy_imagem-local-parcial.txt` (no PR #83) |
 > | 8 (Pages e Render), 8.3 a 8.8 | **Pendente (Kauê e Lucas):** habilitar o Pages e autorizar o Render no repositório são do dono do repositório; o deploy, o schema, o Administrador, o seed e o backup são na conta do Lucas | — |

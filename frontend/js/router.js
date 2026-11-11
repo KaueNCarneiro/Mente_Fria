@@ -1,7 +1,7 @@
 import {session} from './api.js';
 import {state} from './state.js';
 import {root, node, link, notice, heading} from './ui.js';
-import {go, admin} from './nav.js';
+import {go, admin, rotaPermitida} from './nav.js';
 import {authPage} from './screens/auth.js';
 import {shell} from './screens/shell.js';
 import {employees} from './screens/funcionarios.js';
@@ -14,7 +14,7 @@ async function render() {
   if(section==='comunicacao'){communication();return;}
   if(!session()){if(!['login','cadastro'].includes(section)){go('login');return;}authPage(section==='cadastro');return;}
   if(['login','cadastro'].includes(section)){go(admin()?'funcionarios':'inicio');return;}
-  if(!admin()&&(section==='funcionarios'||action)){state.flash='Esta área é exclusiva do Administrador.';go('inicio');return;}
+  if(!rotaPermitida(section,action)){state.flash='Esta área é exclusiva do Administrador.';go('inicio');return;}
   const main=shell(path);
   if(section==='funcionarios'&&(!action||action==='novo'))await employees(main,action==='novo');
   else if(section==='ingredientes'&&(!action||action==='novo'||action==='editar'&&/^\d+$/.test(id)))await ingredients(main,action,id);

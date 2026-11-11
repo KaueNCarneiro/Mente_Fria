@@ -68,6 +68,13 @@ export function table(headers,rows) {
   return node('div',{class:'table-wrap'},node('table',{},node('thead',{},node('tr',{},headers.map(h=>node('th',{scope:'col'},h)))),node('tbody',{},rows.length?rows.map(row=>node('tr',{},row.map(cell=>node('td',{},cell)))):node('tr',{},node('td',{colspan:headers.length,class:'empty'},'Nenhum registro cadastrado.')))));
 }
 export const badge = active => node('span',{class:'badge '+(active===true?'active':'inactive')},active===true?'Ativo':active===false?'Inativo':'Não informado');
+// Diálogo de confirmação genérico (telas novas). Resolve true só quando o usuário confirma.
+export function confirmDialog(title, text, confirmLabel) {
+  return new Promise(resolve=>{
+    const dialog=node('dialog',{'aria-labelledby':'confirm-title'},node('div',{class:'stack'},node('h2',{id:'confirm-title'},title),node('p',{},text),node('div',{class:'row'},button('Cancelar',()=>dialog.close('cancel')),button(confirmLabel,()=>dialog.close('ok'),'primary'))));
+    dialog.addEventListener('close',()=>{const yes=dialog.returnValue==='ok';dialog.remove();resolve(yes);},{once:true});document.body.append(dialog);dialog.showModal();
+  });
+}
 export function confirmRemoval(name) {
   return new Promise(resolve=>{
     const dialog=node('dialog',{'aria-labelledby':'confirm-title'},node('div',{class:'stack'},node('h2',{id:'confirm-title'},'Remover ingrediente?'),node('p',{},`Remover ${name} da composição deste produto?`),node('div',{class:'row'},button('Cancelar',()=>dialog.close('cancel')),button('Remover',()=>dialog.close('remove'),'primary'))));

@@ -1,0 +1,52 @@
+CT67 - imagem do deploy na maquina, com os limites do Render (tutorial do Kaue, Parte 8.2, os 4 passos)
+Data: 2026-11-11, 20:10 a 20:20 | Maquina: a do Diogo (execucao a pedido do Kaue)
+Codigo testado: sprint-4 aaa73d0 (PR #86 ja dentro; mesmo conteudo da main 931967b) + os 3 arquivos do PR #83
+                (Dockerfile, .dockerignore, render.yaml), juntados num diretorio temporario. Nenhuma branch foi alterada.
+Limites do container: --memory=512m --cpus=0.1
+Banco: PostgreSQL 16 descartavel (mf-imagem-db), com o bd/Script_DDL.sql e, depois, o bd/seed_demo.sql.
+O mente-fria-db NAO foi usado. Usuarios e senha de teste so deste banco descartavel.
+
+--- Passo 1: docker build ---
+build exit: 0 em 87 s (imagens-base ja baixadas)
+mente-fria-backend:latest   3f07501ea4b7   584MB
+
+--- Passo 2: subir com os limites ---
+ddl exit: 0
+no ar em 36 s
+2026-11-11T23:13:19.395Z  INFO 1 --- [backend] [           main] c.mentefria.backend.BackendApplication   : Started BackendApplication in 28.399 seconds (process running for 34.197)
+GET /api/saude -> {"banco":"ok","status":"ok"}
+OOMKilled: false
+docker stats: mf-imagem-app   0.04%   115.3MiB / 512MiB   22.52%
+
+--- Passo 3: ponta a ponta dentro da imagem ---
+GET  /api/teste/python (sem perfil dev, como no Render)   -> 401
+POST /api/auth/registro (primeiro usuario = Administrador) -> 201
+POST /api/auth/login                                        -> token recebido
+POST /api/usuarios (Funcionario, pelo Administrador)        -> 201
+seed_demo.sql                                               -> seed exit: 0
+POST /api/producao/recomendacao   -> 200 | 151/1/0 | lucro 1011.71 | receita 1966.80 | 1,6 s
+POST /api/reposicao/recomendacao  -> 200 | {"periodo_dias":60,"orcamento":100} | custo total 11.10 | Morango 0.74 | 1,1 s
+Depois das duas recomendacoes:
+OOMKilled: false
+docker stats: mf-imagem-app   0.05%   128MiB / 512MiB   25.00%
+Linhas " ERROR " no log do container: 0
+
+Esperado pelo tutorial: 401, 201, seed exit 0, 151/1/0 com lucro 1011.71, 11.10 Morango 0.74. Tudo igual.
+
+--- Extra: preflight CORS contra a imagem local (o CT69 oficial e no ambiente publicado) ---
+OPTIONS /api/auth/login, Origin https://kauencarneiro.github.io -> 200, Access-Control-Allow-Origin: https://kauencarneiro.github.io
+OPTIONS /api/auth/login, Origin https://outro-site.example      -> 403
+
+--- Extra: chave de reserva B1 na imagem local (o CT72 oficial e no ambiente publicado, pelas telas) ---
+Container recriado com OTIMIZADOR_HABILITADO=false (no ar em 36 s):
+POST /api/producao/recomendacao  -> 503 {"mensagem":"A recomendação está disponível só na demonstração local da equipe."}
+POST /api/reposicao/recomendacao -> 503 {"mensagem":"A recomendação está disponível só na demonstração local da equipe."}
+GET  /api/ingredientes           -> 200
+
+--- Passo 4: limpeza ---
+docker rm -f -v mf-imagem-app mf-imagem-db ; docker network rm mf-imagem-rede
+Containers restantes: so os que ja existiam (mente-fria-db, parado; elegant_wiles). Volumes soltos: 0.
+
+--- O que este teste NAO cobre ---
+O Render de verdade (conta do Lucas): a imagem local com 512 MB e 0,1 CPU e uma simulacao dele.
+CT68, CT69, CT70 e CT72 no ambiente publicado continuam pendentes ate o deploy.

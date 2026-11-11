@@ -1,0 +1,1 @@
+{"status": "sucesso", "receita_estimada": 851.4, "margem_estimada": 438.24, "recomendacao": [{"produto_id": 1, "quantidade": 66}, {"produto_id": 2, "quantidade": 0}], "consumo": [{"ingrediente_id": 1, "quantidade": 19.8}, {"ingrediente_id": 2, "quantidade": 1.98}, {"ingrediente_id": 7, "quantidade": 66.0}]}

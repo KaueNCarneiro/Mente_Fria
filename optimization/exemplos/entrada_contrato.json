@@ -1,0 +1,17 @@
+{
+  "ingredientes": [
+    { "id": 1, "quantidade_estoque": 40.000, "custo_unitario": 18.50 },
+    { "id": 2, "quantidade_estoque": 2.000, "custo_unitario": 12.00 },
+    { "id": 3, "quantidade_estoque": 0.000, "custo_unitario": 22.00 },
+    { "id": 4, "quantidade_estoque": 12.000, "custo_unitario": 5.50 },
+    { "id": 7, "quantidade_estoque": 300.000, "custo_unitario": 0.35 }
+  ],
+  "produtos": [
+    { "id": 1, "preco_venda": 12.90, "composicao": [
+        { "ingrediente_id": 1, "quantidade_utilizada": 0.300 }, { "ingrediente_id": 2, "quantidade_utilizada": 0.030 },
+        { "ingrediente_id": 7, "quantidade_utilizada": 1.000 } ] },
+    { "id": 2, "preco_venda": 18.90, "composicao": [
+        { "ingrediente_id": 1, "quantidade_utilizada": 0.450 }, { "ingrediente_id": 3, "quantidade_utilizada": 0.040 },
+        { "ingrediente_id": 4, "quantidade_utilizada": 0.050 }, { "ingrediente_id": 7, "quantidade_utilizada": 1.000 } ] }
+  ]
+}

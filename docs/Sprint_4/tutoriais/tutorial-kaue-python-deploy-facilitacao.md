@@ -192,6 +192,20 @@ Cada passo diz qual usar.
 > | 10, item 2 — conferência com o contrato | **Feito para o Python** (§1.1 a §1.7): mensagens de erro, campos e exemplos batem; os exemplos do contrato são conferidos por teste. A §2.7 (rota) fica para quando a Fase 5 compilar | — |
 > | 10, item 3 — modelo matemático | **Feito:** os dois documentos criados | `docs/Apoio/Modelo_Matematico_Producao.md` e `Modelo_Matematico_Reposicao.md` |
 > | 10, item 4 — contribuições individuais | **Pendente (Kauê)** | — |
+>
+> **Situação (11/11), o que mudou desde o quadro acima:** em 11/11 o Lucas mandou direto na `sprint-4` as Fases 2, 3, 4A e 6 e fez o merge da Fase P + Q (PR #81) e da branch `feature/backend-reposicao`; o Leonardo fez o merge do frontend (#64 a #74); os repositórios do Diogo entraram pelo #86; tudo foi para a `main` pelos PRs #85 e #87.
+>
+> | Parte | Situação em 11/11 | Onde |
+> |---|---|---|
+> | 3 e 4 — Fase P + Q | **Na `main`** (PR #81, merge do Lucas) | — |
+> | 4.7 — 2ª máquina | **Continua pendente:** o merge do #81 não registra os testes rodados em outra máquina | — |
+> | 6 — Fase 4A | **Na `main`** (parte do Lucas). A conferência em dupla não foi feita, mas os itens da tabela da Parte 6 estão cobertos por teste: `ProcessoPythonTest` 4, `PythonRealTest` 3 e `Fase4ProducaoTest` 7, sem falhas | `evidencias/2026-11-11_diogo_repositorios_mvnw-test.txt` |
+> | 7 — Fase 5 | **Na `main`**, pelo merge direto do Lucas, **sem o PR** da Parte 7.5. Testes rodados pelo Diogo na `sprint-4` `aaa73d0`: `ReposicaoTest` **8/8**; `PythonRealTest` **3/3** com o Gurobi real; suíte inteira, 95 testes sem falha (no #86). A branch `feature/backend-reposicao` ficou sem uso | `evidencias/2026-11-11_kaue_fase5_mvnw-test.txt` e `2026-11-11_kaue_fase5_python-real.txt` |
+> | 8 — Pages | **Feito:** o *workflow* "Frontend no GitHub Pages" rodou na `main` com sucesso em 11/11 | — |
+> | 8.2 — imagem local (CT67) | **Feito, os 4 passos**, com a `sprint-4` `aaa73d0` mais os arquivos do PR #83: no ar em 36 s com 512 MB e 0,1 CPU; **151/1/0** (lucro 1.011,71) em 1,6 s; morango **0,74 kg** (R$ 11,10) em 1,1 s; 128 MiB, sem `OOMKilled`. Extras na imagem local: CORS `200`/`403` e chave de reserva com `503` | `evidencias/2026-11-11_kaue_ct67.txt` (no PR #83) |
+> | 8.1, 8.3 a 8.8 — Render | **Pendente:** o PR #83 ainda não entrou, então a `main` não tem `Dockerfile` nem `render.yaml`; depois dele, o deploy é na conta do Lucas. O `config.js` do frontend ainda tem a URL provisória do Render | — |
+> | 9.2 — `.env.example` (G8) | **Pendente:** o PR #82 ainda não entrou | — |
+> | 5, 9.3, 9.4 e 10 (item 4) | **Sem mudança** | — |
 
 ---
 

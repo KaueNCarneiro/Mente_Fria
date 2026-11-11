@@ -206,6 +206,19 @@ Cada passo diz qual usar.
 > | 8.1, 8.3 a 8.8 — Render | **Pendente:** o PR #83 ainda não entrou, então a `main` não tem `Dockerfile` nem `render.yaml`; depois dele, o deploy é na conta do Lucas. O `config.js` do frontend ainda tem a URL provisória do Render | — |
 > | 9.2 — `.env.example` (G8) | **Pendente:** o PR #82 ainda não entrou | — |
 > | 5, 9.3, 9.4 e 10 (item 4) | **Sem mudança** | — |
+>
+> **Situação (11/11, noite), depois dos merges dos PRs #82, #83, #84 e #89:**
+>
+> | Parte | Situação | Onde |
+> |---|---|---|
+> | 8.1 — arquivos do deploy | **Na `main`** (PRs #83 e #89): o Render já encontra o `render.yaml` | — |
+> | 9.2 — `.env.example` (G8) | **Na `main`** (PRs #82 e #89) | — |
+> | 10, item 3 — modelo matemático | **Na `main`** (PRs #84 e #89) | — |
+> | 5 — e-mail da Gurobi ao professor | **Feito:** enviado, e o professor aprovou (informado pelo Diogo em 11/11) | — |
+> | 4.7 — 2ª máquina | **Dada por atendida** (decisão do Diogo em 11/11): o objetivo era provar que o Python não roda só no computador do Kauê, e ele rodou em dois ambientes que não são o dele: a máquina do Diogo (`47 passed`) e o container Linux do CT67 (Gurobi dentro da imagem: 151/1/0 e 0,74 kg de morango). Não há o comentário de um terceiro integrante no PR #81; quem quiser fechar isso roda os comandos da Parte 4.7 | `evidencias/2026-11-10_kaue_fasePQ_pytest.txt` e `2026-11-11_kaue_ct67.txt` |
+> | 9.3 — registro da perda do histórico do Git | **Feito**, com o que o Git, o GitHub e os documentos da Sprint 2 comprovam. Não existe cópia do repositório anterior | `docs/Sprint_3/sprint-3-registro-historico-git.md` |
+> | 9.4 e 10 (item 4) — facilitação e contribuições | **Adiadas:** o grupo faz depois de terminar todas as partes dos tutoriais (informado pelo Diogo em 11/11). A nova data ainda não foi definida | — |
+> | 8.3 a 8.8 — Render; CT68, CT69, CT70 e CT72 | **Pendente (Lucas):** é o que falta da parte técnica deste tutorial | — |
 
 ---
 

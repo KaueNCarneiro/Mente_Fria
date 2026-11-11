@@ -70,7 +70,7 @@ Cada rota da **Sprint 1** e os métodos abaixo que a atendem. Rotas de sprints p
 | `POST /api/produtos` | Administrador | US5, US6 | `IngredienteRepository.buscarNomesPorIds` (regra do açaí) → `ProdutoRepository.inserir` + `inserirComposicao` (mesma transação) |
 | `PUT /api/produtos/{id}/preco` | Administrador | US6 | `ProdutoRepository.atualizarPreco` |
 
-**Fora da Sprint 1:** `POST /api/unidades-medida` (US26/UC20; condicional na Sprint 4, A40) e as rotas de estoque, clientes, pedidos, produção, reposição, marketing e dashboard (Sprints 2 e 3).
+**Fora da Sprint 1:** `POST` e `PATCH /api/unidades-medida` (US26/UC20; condicional na Sprint 4, A40/A46; métodos `inserir` e `atualizarPorcao` do `UnidadeMedidaRepository`, abaixo) e as rotas de estoque, clientes, pedidos, produção, reposição, marketing e dashboard (Sprints 2 e 3).
 
 **Métodos com SQL pronto, mas sem rota no contrato** (as telas "Editar" do protótipo, que não são exigidas pelas US1–US7; a equipe decide se entram):
 
@@ -160,6 +160,30 @@ ORDER BY unidade_medida
 ```
 
 - **Retorno:** lista de linhas (5 no seed: `kg`, `l`, `mg`, `ml`, `un`)
+
+**`inserir`** · US26 (Tela 19; condicional, A40/A46; acrescentado em 11/11/2026)
+
+Cadastra uma unidade nova com a sua porção padrão (`POST /api/unidades-medida`, Contrato §2.11). A unidade chega já **normalizada** pelo `UnidadeMedidaService` (sem espaços nas pontas, em minúsculas), e a porção já validada.
+
+```sql
+INSERT INTO unidade_medida_porcao_padrao (unidade_medida, porcao_padrao) VALUES (:unidade, :porcao)
+RETURNING unidade_medida, porcao_padrao
+```
+
+- **Retorno:** a unidade gravada (`queryForObject` + `RETURNING`)
+- **Falhas possíveis:** `unidade_medida_porcao_padrao_pkey` (23505, unidade repetida → `409`) · `chk_unidade_porcao_padrao` (23514, porção ≤ 0; o serviço já recusa antes)
+
+**`atualizarPorcao`** · US26 (acrescentado em 11/11/2026)
+
+Altera **só** a porção padrão de uma unidade (`PATCH /api/unidades-medida/{unidade_medida}`). Não toca na tabela `ingrediente`: cada ingrediente guarda a própria `porcao_padrao` (critério 3 da US26, CT76).
+
+```sql
+UPDATE unidade_medida_porcao_padrao SET porcao_padrao = :porcao WHERE unidade_medida = :unidade
+RETURNING unidade_medida, porcao_padrao
+```
+
+- **Retorno:** 0 ou 1 linha (`Optional`; vazio = unidade inexistente → `404` no serviço)
+- **Falhas possíveis:** `chk_unidade_porcao_padrao` (23514)
 
 ### IngredienteRepository
 

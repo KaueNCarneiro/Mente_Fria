@@ -1048,6 +1048,17 @@ UPDATE 0
 
 ### 10.5 O backend (ter 03/11, branch `feature/us26-backend`)
 
+> **Situação (11/11):** **feito**, na branch `feature/us26-backend` (PR para a `sprint-4`), dentro do prazo da A46 (14/11). O que entrou:
+> - **`UnidadeMedidaRepository`:** `inserir` e `atualizarPorcao` (o SQL da 10.4), com o `RowMapper` numa constante;
+> - **`UnidadeMedida`:** os `record`s `Nova` e `NovaPorcao`;
+> - **`UnidadeMedidaService`** (novo): normalização e validações da §2.11, com o `404`;
+> - **`UnidadeMedidaController`:** passa a usar o serviço e ganha o `POST` e o `PATCH`;
+> - **`Us26PorcaoPadraoTest`:** um teste por CT, do CT73 ao CT78.
+>
+> **Resultado do `.\mvnw test` completo, com o Python real:** **101 testes, 0 falhas** (os 95 de antes e os 6 novos). Quebrando de propósito a normalização e a checagem das casas decimais, 4 dos 6 testes falham.
+>
+> Também foram atualizados o `mapa_constraints.md`, o `sql_repositorios.md`, a coluna "Validado" do CT73 ao CT78 e duas frases da §2.11. Evidência: `docs/Sprint_4/evidencias/2026-11-11_diogo_us26-backend_mvnw-test.txt`.
+
 | Arquivo | O que fazer | Molde |
 |---|---|---|
 | `unidade/UnidadeMedidaRepository.java` (seu) | Acrescentar `inserir(unidade, porcao)` e `atualizarPorcao(unidade, porcao)` com o SQL da 10.4 e parâmetros nomeados (`:unidade`, `:porcao`). O `RowMapper` do `listar` hoje é uma *lambda* dentro do método: tire-o para uma constante (`private static final RowMapper<UnidadeMedida> UNIDADE = …`) e use nos três | `IngredienteRepository.inserir` (`queryForObject` + `RETURNING`) e `IngredienteRepository.atualizar` (`UPDATE … RETURNING` + `.stream().findFirst()`) |

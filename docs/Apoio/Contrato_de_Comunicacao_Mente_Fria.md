@@ -618,9 +618,9 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 **Regras:**
 
 - **Alterar a porção padrão não muda os ingredientes já cadastrados** (critério 3 da US26). O padrão é só a **sugestão** do formulário de ingrediente; cada ingrediente guarda a sua própria `porcao_padrao`.
-- Os critérios 1 e 2 da US26 (sugerir a porção ao escolher a unidade; poder sobrescrever no ingrediente) já estão na tela de ingredientes (`frontend/js/app.js`, testada com a API simulada). O `GET /api/unidades-medida` real (§2.1) e o `POST /api/ingredientes` completo chegam com a Fase 2 do backend.
+- Os critérios 1 e 2 da US26 (sugerir a porção ao escolher a unidade; poder sobrescrever no ingrediente) já estão na tela de ingredientes (`frontend/js/screens/ingredientes.js`), e o `GET /api/unidades-medida` real (§2.1) e o `POST /api/ingredientes` completo entraram com a Fase 2 do backend (11/11/2026).
 - **No `PATCH`, a unidade vem só da URL:** um `unidade_medida` no corpo é ignorado. Uma URL com `/` codificado (`%2F`) é recusada pelo próprio Spring Security antes de chegar ao serviço.
-- **As mensagens novas** ("Informe a unidade de medida…", "Use no máximo 3 casas decimais…" e o `409` "Esta unidade já está cadastrada.") entram no `docs/Apoio/mapa_constraints.md` no PR do backend da US26, junto com o código (tutorial do Diogo, Parte 10.5).
+- **As mensagens novas** ("Informe a unidade de medida…", "Use no máximo 3 casas decimais…" e o `409` "Esta unidade já está cadastrada.") estão no `docs/Apoio/mapa_constraints.md` desde o PR do backend da US26 (11/11/2026; tutorial do Diogo, Parte 10.5).
 - **Excluir unidade fica de fora.** A FK `fk_ingrediente_unidade_medida` já impede excluir uma unidade em uso.
 
 ---

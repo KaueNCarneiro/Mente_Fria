@@ -1,0 +1,9 @@
+# Lista do que PODE entrar no build (o resto fica de fora: .git, docs, frontend, .env, venv...).
+*
+!backend/
+!optimization/app/
+backend/target/
+backend/.env
+backend/.idea/
+**/__pycache__/
+**/*.pyc

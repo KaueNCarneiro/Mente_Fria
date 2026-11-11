@@ -1,0 +1,42 @@
+# Blueprint do Render — Mente Fria (US20). Conferido com https://render.com/docs/blueprint-spec em 26/10/2026.
+# Cria: o backend (Docker, plano free) e o PostgreSQL 16 (plano free). O frontend vai para o GitHub Pages.
+# ATENÇÃO (documentação do Render, 26/10/2026): o Postgres free EXPIRA 30 dias depois de criado;
+# o serviço free desliga após 15 min sem uso e leva ~1 min para voltar.
+services:
+  - type: web
+    name: mente-fria-backend
+    runtime: docker
+    plan: free
+    region: virginia                 # a mais próxima do Brasil entre as 5; o banco tem de estar na MESMA região
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/saude
+    envVars:
+      - key: DB_HOST
+        fromDatabase: { name: mente-fria-db, property: host }
+      - key: DB_PORT
+        fromDatabase: { name: mente-fria-db, property: port }
+      - key: DB_NAME
+        fromDatabase: { name: mente-fria-db, property: database }
+      - key: DB_USER
+        fromDatabase: { name: mente-fria-db, property: user }
+      - key: DB_PASSWORD
+        fromDatabase: { name: mente-fria-db, property: password }
+      - key: JWT_SECRET
+        generateValue: true            # 256 bits aleatórios em base64 (44 caracteres; o JwtService exige 32+)
+      - key: CORS_ALLOWED_ORIGIN
+        sync: false                    # o Render pergunta na criação. Ex.: https://kauencarneiro.github.io (sem barra no fim)
+      # Licença (A38, 28/10/2026): a Gurobi autorizou por escrito a licença limitada do pip neste serviço.
+      # Por isso o solver fica LIGADO e NÃO existe nenhuma variável GRB_* aqui: sem elas, o gurobipy usa a
+      # licença do pip, que vem na imagem. A WLS do Kauê NÃO pode ser usada em URL pública (resposta da Gurobi).
+      # Reserva (plano B1, A31): se o solver der problema no Render, trocar para "false" no painel;
+      # produção e reposição passam a responder 503 com mensagem e o resto do sistema continua funcionando.
+      - key: OTIMIZADOR_HABILITADO
+        value: "true"
+
+databases:
+  - name: mente-fria-db
+    plan: free
+    region: virginia
+    databaseName: mente_fria
+    postgresMajorVersion: "16"         # o mesmo do projeto (docker postgres:16 e Testcontainers)

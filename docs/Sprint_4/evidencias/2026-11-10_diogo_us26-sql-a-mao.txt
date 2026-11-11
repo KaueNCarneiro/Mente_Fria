@@ -1,0 +1,98 @@
+==============================================================================
+EVIDENCIA - Tutorial do Diogo, Parte 10.4: o SQL da US26 a mao (CT73-CT77, so a parte do banco)
+==============================================================================
+Gerado em: 2026-11-10 21:48   Executado por: Claude, a pedido do Diogo
+Base: main 2df2eca (bd/Script_DDL.sql, bd/constraints_teste.sql e bd/constraints_sprint3_teste.sql da main)
+Ambiente: PostgreSQL TEMPORARIO (16.15 (Debian 16.15-1.pgdg13+2)), container descartavel 'mf-us26-sql-temp', removido no fim.
+          O container mente-fria-db NAO foi usado (regra da equipe). Os comandos SQL sao os da Parte 10.4.
+
+--- Recriar o mente_fria_teste e carregar o Script_DDL.sql da main (antes do teste a mao)
+DROP DATABASE
+CREATE DATABASE
+(DDL carregado sem erro)
+
+==============================================================================
+OS 6 COMANDOS DA PARTE 10.4
+==============================================================================
+--- 1. Unidade nova entra (CT73; e o T72)
+> psql -d mente_fria_teste -c "INSERT INTO unidade_medida_porcao_padrao (unidade_medida, porcao_padrao) VALUES ('g', 40) RETURNING unidade_medida, porcao_padrao;"
+ unidade_medida | porcao_padrao 
+----------------+---------------
+ g              |        40.000
+(1 row)
+
+INSERT 0 1
+
+--- 2. Unidade repetida e barrada pela chave (CT74)
+> psql -d mente_fria_teste -c "INSERT INTO unidade_medida_porcao_padrao (unidade_medida, porcao_padrao) VALUES ('g', 50);"
+ERROR:  duplicate key value violates unique constraint "unidade_medida_porcao_padrao_pkey"
+DETAIL:  Key (unidade_medida)=(g) already exists.
+
+--- 3. Porcao 0 e barrada (CT75; e o T73)
+> psql -d mente_fria_teste -c "UPDATE unidade_medida_porcao_padrao SET porcao_padrao = 0 WHERE unidade_medida = 'kg';"
+ERROR:  new row for relation "unidade_medida_porcao_padrao" violates check constraint "chk_unidade_porcao_padrao"
+DETAIL:  Failing row contains (kg, 0.000).
+
+--- 4. Alterar a porcao do kg funciona (CT76)
+> psql -d mente_fria_teste -c "UPDATE unidade_medida_porcao_padrao SET porcao_padrao = 0.050 WHERE unidade_medida = 'kg' RETURNING unidade_medida, porcao_padrao;"
+ unidade_medida | porcao_padrao 
+----------------+---------------
+ kg             |         0.050
+(1 row)
+
+UPDATE 1
+
+--- 5. Unidade inexistente: nenhuma linha (vira 404 no backend, CT77)
+> psql -d mente_fria_teste -c "UPDATE unidade_medida_porcao_padrao SET porcao_padrao = 1 WHERE unidade_medida = 'xyz' RETURNING unidade_medida, porcao_padrao;"
+ unidade_medida | porcao_padrao 
+----------------+---------------
+(0 rows)
+
+UPDATE 0
+
+--- 6. Os ingredientes em kg NAO mudaram (CT76, criterio 3 da US26)
+> psql -d mente_fria_teste -c "SELECT id, nome, unidade_medida, porcao_padrao FROM ingrediente WHERE unidade_medida = 'kg' ORDER BY id;"
+ id |     nome     | unidade_medida | porcao_padrao 
+----+--------------+----------------+---------------
+  1 | Açaí (polpa) | kg             |         0.150
+  3 | Granola      | kg             |         0.040
+  4 | Banana       | kg             |         0.050
+  5 | Morango      | kg             |         0.040
+  6 | Leite em pó  | kg             |         0.020
+(5 rows)
+
+
+==============================================================================
+POR QUE RECRIAR DEPOIS (Parte 10.4): sem recriar, o T72 falha (esperado: 40 | 1)
+==============================================================================
+> psql -d mente_fria_teste -v ON_ERROR_STOP=1 -f constraints_sprint3_teste.sql (trecho)
+-------+-----------+-------------------------------------------------------+---------------------------------------------------------------------------------------------------
+ T72   | FALHOU    | Nova unidade de medida é aceita                       | foi REJEITADO: duplicate key value violates unique constraint "unidade_medida_porcao_padrao_pkey"
+ passaram | falharam 
+----------+----------
+       40 |        1
+psql:/tmp/constraints_sprint3_teste.sql:134: ERROR:  Há testes de banco falhando (veja a tabela acima).
+
+==============================================================================
+CONTROLE: banco recriado (esperado: 41 | 0 e 32 | 0)
+==============================================================================
+--- Recriar o mente_fria_teste e carregar o Script_DDL.sql da main (depois do teste a mao)
+DROP DATABASE
+CREATE DATABASE
+(DDL carregado sem erro)
+
+> constraints_sprint3_teste.sql (trecho)
+-------+-----------+-------------------------------------------------------+---------------------------------------------------
+ passaram | falharam 
+----------+----------
+       41 |        0
+
+> constraints_teste.sql (trecho)
+-------+-----------+----------------------------------------------------------------+---------------------------------------------------
+ passaram | falharam 
+----------+----------
+       32 |        0
+
+==============================================================================
+Fim. O container temporario foi removido em seguida (docker rm -f -v).
+==============================================================================

@@ -768,15 +768,35 @@ No GitHub, no PR: aba **Files changed** → leia → **Review changes** → *Com
 | Divisão do `app.js` do Leonardo | O `IGUAIS` na evidência |
 | Documentos | Datas e decisões batendo com o roteiro da Sprint 4 |
 
+> **Situação (10/11):** **frontend do Leonardo revisado.** Os 11 PRs dele (#64 a #74, todos com base na `sprint-4`) estão encadeados: cada um contém os anteriores, então o merge tem de seguir a ordem #64 → #74. Conferido:
+> - nenhum conflito com a `sprint-4`;
+> - o `IGUAIS` da divisão do `app.js` (#64): 25 telas, antes e depois;
+> - a correção da A13 (#65) logo depois da divisão, como pede a A45: de 0 para 10 de 10 rodadas;
+> - uma evidência de `npm test` por tela, chegando a 39 verificações no fim;
+> - nenhum `innerHTML` com dados da API.
+>
+> Três observações, nenhuma bloqueia o merge na `sprint-4`:
+> 1. **#67:** o `config.js` aponta para uma URL do Render ainda provisória (`TROCAR pela URL que o Render mostrar`). Conferir antes de a `sprint-4` ir para a `main`, porque o *workflow* publica no Pages a cada push na `main` que mexa no `frontend/`.
+> 2. **#67:** o *workflow* depende de o dono do repositório ligar *Settings → Pages → Source: GitHub Actions*.
+> 3. **#66:** a guarda libera `clientes` para o Funcionário, mas a US13 está fora do semestre e o `router.js` não tem essa tela (cai em "Página não encontrada"). Não quebra nada.
+>
+> Os PRs das fases do Lucas e do Kauê (as linhas acima) ainda não existiam em 10/11.
+
 ### 8.2 Os casos do banco no Plano de Testes (dom 01/11)
 
 Os CT30–CT72 foram incorporados em 27/10 (A37). Abra `docs/Plano_de_Testes_Mente_Fria.md`, procure os casos com a camada **BD**, e confira que cada um cita o teste de banco que o prova (por exemplo, o CT35 cita o T62). Divergência → anote no PR de documentos.
+
+> **Situação (04/11):** **feito, sem divergência.** Há 3 casos com a camada BD: o CT35 cita o T62; o CT36 (invariante) é provado pela consulta 8, e não por um T; o CT62 (dashboard com o seed) é um caso de dados, confirmado em parte pela evidência do seed de 03/11.
 
 ### 8.3 Responder ao "Antes de avançar" da equipe
 
 Quando o seu PR do banco entrar, **todos** recriam o banco (Parte 3.6). Fique de olho no grupo: é a hora em que mais aparecem dúvidas de `relation … already exists` ou de estoque diferente de 0.
 
+> **Situação (10/11):** **feito.** Conferido pelo Diogo no grupo da equipe, depois do PR do banco (#44).
+
 ### 8.4 Registrar a A26 como incidente (sáb 31/10)
+
+> **Situação (04/11):** **feito.** O registro está em `docs/Sprint_3/evidencias/2026-10-26_diogo_A26_incidente-docker.md` (PR #50, na `main`).
 
 **Objetivo:** o registro do travamento do Docker, como **incidente novo**. **Não** atribua a causa ao BD01 da Sprint 2 ("Virtualization support not detected"), que segue sem causa registrada.
 
@@ -954,6 +974,8 @@ No `docs/Plano_de_Testes_Mente_Fria.md`, uma subseção "US26" no formato dos CT
 | CT78 | Funcionário tenta `POST` e `PATCH` | `403` |
 
 ### 10.4 O SQL (validado em 31/10)
+
+> **Situação (10/11):** **feito**, num PostgreSQL 16 **temporário**, e não no `mente-fria-db` (regra da equipe), com o `Script_DDL.sql` da `main` (`2df2eca`). Os 6 comandos deram exatamente as saídas abaixo; sem recriar, os 41 testes deram `40 | 1` (T72); recriado, `41 | 0` e `32 | 0`. Evidência: `docs/Sprint_4/evidencias/2026-11-10_diogo_us26-sql-a-mao.txt`.
 
 **Onde testar à mão:** banco `mente_fria_teste`, recém-criado com o DDL da `main` atualizada:
 

@@ -490,6 +490,18 @@ Abra o PR (Parte 2.2), com o Lucas como revisor.
 
 **Situação em 31/10:** nenhuma dessas branches estava no GitHub ainda. Combine com o Lucas e o Kauê no grupo.
 
+> **Situação (11/11):** **feito, por outro caminho.** O Lucas mandou a parte dele das Fases 2, 3, 4A e 6 direto na `sprint-4`, sem as branches de fase (commits de 11/11, "parte do Lucas"), e isso foi para a `main` no PR #85. Os repositórios ficaram de fora, então o backend não compilava:
+> - o código usava `UsuarioRepository`, `UnidadeMedidaRepository`, `ProdutoRepository`, `MovimentacaoRepository`, `PedidoRepository` e `DashboardRepository`, que não existiam;
+> - o `IngredienteRepository` ainda era o da Sprint 1.
+>
+> Os 7 foram entregues num PR próprio, da branch `feature/repositorios-fases-2-a-6` para a `sprint-4`. Foram copiados da referência e são iguais a ela byte a byte. O `ReposicaoRepository` já tinha entrado pela Fase 5 do Kauê e também é igual.
+>
+> **Resultado (`.\mvnw test` na branch):**
+> - com o Python real: **95 testes, 0 falhas, 0 erros, 0 pulados**;
+> - sem o `MF_PYTHON`: 95, com 7 pulados.
+>
+> Evidência: `docs/Sprint_4/evidencias/2026-11-11_diogo_repositorios_mvnw-test.txt`. Os testes usaram o PostgreSQL temporário do Testcontainers, e não o `mente-fria-db`.
+
 ### 5.2 O passo a passo (exemplo: Fase 2)
 
 **Onde:** a `<PASTA_DO_PROJETO>`, **sem** trabalho pendente.

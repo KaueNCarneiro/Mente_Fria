@@ -1,0 +1,65 @@
+==============================================================================
+EVIDENCIA - Tutorial do Diogo, Parte 5: os repositorios das Fases 2 a 6 no backend
+==============================================================================
+Gerado em: 2026-11-11 19:33   Executado por: Claude, a pedido do Diogo
+Branch: feature/repositorios-fases-2-a-6, a partir da sprint-4 a52a8a9 (mesmo conteudo da main d16fb93)
+Java: java version "25.0.2" 2026-01-20 LTS
+Banco dos testes: PostgreSQL 16 temporario do Testcontainers (recriado a partir do bd/Script_DDL.sql);
+                  o container mente-fria-db NAO foi usado.
+
+O que mudou: os 7 *Repository.java copiados de docs/Sprint_3/referencia/backend (iguais byte a byte;
+o ReposicaoRepository ja estava igual na sprint-4):
+   M backend/src/main/java/com/mentefria/backend/ingrediente/IngredienteRepository.java
+  ?? backend/src/main/java/com/mentefria/backend/dashboard/DashboardRepository.java
+  ?? backend/src/main/java/com/mentefria/backend/estoque/MovimentacaoRepository.java
+  ?? backend/src/main/java/com/mentefria/backend/pedido/PedidoRepository.java
+  ?? backend/src/main/java/com/mentefria/backend/produto/ProdutoRepository.java
+  ?? backend/src/main/java/com/mentefria/backend/unidade/UnidadeMedidaRepository.java
+  ?? backend/src/main/java/com/mentefria/backend/usuario/UsuarioRepository.java
+
+Antes desta branch, o backend da sprint-4/main NAO compilava: o codigo usava UsuarioRepository,
+UnidadeMedidaRepository, ProdutoRepository, MovimentacaoRepository, PedidoRepository e
+DashboardRepository, que nao existiam, e o IngredienteRepository era o da Sprint 1 (so listar()).
+
+==============================================================================
+1) ./mvnw test, com o Python real (MF_PYTHON = optimization\venv\Scripts\python.exe;
+   Python 3.14.0, gurobipy 13.0.3, licenca restrita do pip)
+==============================================================================
+[INFO] Running com.mentefria.backend.config.SegurancaEErrosTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.465 s -- in com.mentefria.backend.config.SegurancaEErrosTest
+[INFO] Running com.mentefria.backend.DashboardTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.31 s -- in com.mentefria.backend.DashboardTest
+[INFO] Running com.mentefria.backend.Fase2CrudTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.822 s -- in com.mentefria.backend.Fase2CrudTest
+[INFO] Running com.mentefria.backend.Fase3EstoquePedidoTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.480 s -- in com.mentefria.backend.Fase3EstoquePedidoTest
+[INFO] Running com.mentefria.backend.Fase4ProducaoTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.828 s -- in com.mentefria.backend.Fase4ProducaoTest
+[INFO] Running com.mentefria.backend.MarketingTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.078 s -- in com.mentefria.backend.MarketingTest
+[INFO] Running com.mentefria.backend.OtimizadorDesligadoTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.379 s -- in com.mentefria.backend.OtimizadorDesligadoTest
+[INFO] Running com.mentefria.backend.produto.RegraAcaiTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.113 s -- in com.mentefria.backend.produto.RegraAcaiTest
+[INFO] Running com.mentefria.backend.python.ProcessoPythonTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.433 s -- in com.mentefria.backend.python.ProcessoPythonTest
+[INFO] Running com.mentefria.backend.PythonRealTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.067 s -- in com.mentefria.backend.PythonRealTest
+[INFO] Running com.mentefria.backend.ReposicaoTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.804 s -- in com.mentefria.backend.ReposicaoTest
+[INFO] Results:
+[INFO] Tests run: 95, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  58.591 s
+
+==============================================================================
+2) ./mvnw test, sem o MF_PYTHON (os testes com o Python real se pulam sozinhos)
+==============================================================================
+[INFO] Tests run: 95, Failures: 0, Errors: 0, Skipped: 7
+[INFO] BUILD SUCCESS
+
+Notas:
+- As linhas 'ERROR ... GlobalExceptionHandler : Erro inesperado' do log completo sao esperadas: vem dos
+  testes que provocam um 500 de proposito (CT48) e dos erros simulados do Python.
+- O log completo nao vai aqui porque traz a senha aleatoria que o Spring gera a cada execucao.
+==============================================================================

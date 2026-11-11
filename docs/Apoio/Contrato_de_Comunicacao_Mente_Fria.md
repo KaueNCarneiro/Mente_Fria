@@ -4,7 +4,7 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-**Revisão:** **27/10/2026 — versão 2 (Sprint 3)**, aprovada pela equipe e autorizada pelo Kauê (histórico na seção 3). **28/10/2026:** nota de licença atualizada (A38); nenhum formato mudou. Versões anteriores: 20/09/2026 (revisão de consistência, aprovada pelo Kauê) e 08/10/2026 (itens B3, B5, B6 e D3 confirmados).
+**Revisão:** **27/10/2026 — versão 2 (Sprint 3)**, aprovada pela equipe e autorizada pelo Kauê (histórico na seção 3). **28/10/2026:** nota de licença atualizada (A38); nenhum formato mudou. **10/11/2026 (aprovada pelo Kauê em 10/11):** §2.11 nova, com o `POST` e o `PATCH` de `/api/unidades-medida` (US26, condicional, A40); nenhum formato existente mudou. Versões anteriores: 20/09/2026 (revisão de consistência, aprovada pelo Kauê) e 08/10/2026 (itens B3, B5, B6 e D3 confirmados).
 
 > **Fonte de verdade.** Este documento prevalece sobre a `docs/Apoio/Arquitetura.md` e sobre os roteiros nos **nomes de campo, nos valores de `status` e no formato de erro**.
 >
@@ -228,7 +228,7 @@ Casas: `orcamento` e `custo_unitario` com até 2; quantidades com até 3. `id` n
 | `403` | Perfil sem permissão (ex.: Funcionário tentando alterar preço) |
 | `404` | Recurso inexistente |
 | `405` | Método não suportado na rota |
-| `409` | Conflito de unicidade: e-mail já cadastrado e cadastro de Administrador quando já existe um |
+| `409` | Conflito de unicidade: e-mail já cadastrado, cadastro de Administrador quando já existe um e unidade de medida já cadastrada (US26, §2.11) |
 | `422` | Regra de negócio de uma operação com dados válidos (ex.: estoque insuficiente) ou `status: "erro"` vindo do Python |
 | `500` | Falha técnica (sem *stack trace* na resposta) |
 | `503` | Otimização desligada no servidor (`OTIMIZADOR_HABILITADO=false`, plano B1 da licença, A31) |
@@ -242,7 +242,7 @@ Casas: `orcamento` e `custo_unitario` com até 2; quantidades com até 3. `id` n
 | Perfil sem permissão | 403 | `{"mensagem":"Você não tem permissão para esta ação."}` |
 | JSON malformado, valor de rota com tipo errado (`/api/produtos/abc/preco`), parâmetro obrigatório ausente | 400 | `{"mensagem":"Requisição inválida."}` |
 | Rota inexistente (com token válido) | 404 | `{"mensagem":"Recurso não encontrado."}` |
-| Recurso pelo id inexistente (`PUT /api/ingredientes/{id}`, `PUT /api/produtos/{id}/preco`, `GET /api/estoque/{id}/linhas`) | 404 | `{"mensagem":"Ingrediente não encontrado."}` / `{"mensagem":"Produto não encontrado."}` |
+| Recurso pelo id inexistente (`PUT /api/ingredientes/{id}`, `PUT /api/produtos/{id}/preco`, `GET /api/estoque/{id}/linhas`; na US26, `PATCH /api/unidades-medida/{unidade_medida}`) | 404 | `{"mensagem":"Ingrediente não encontrado."}` / `{"mensagem":"Produto não encontrado."}` / `{"mensagem":"Unidade de medida não encontrada."}` |
 | Método não suportado | 405 | `{"mensagem":"Método não permitido."}` |
 | Produção ou reposição com a otimização desligada no servidor (A31) | 503 | `{"mensagem":"A recomendação está disponível só na demonstração local da equipe."}` |
 | Erro inesperado | 500 | `{"mensagem":"Não foi possível concluir a operação."}`, sem *stack trace* nem detalhe interno |
@@ -287,7 +287,7 @@ Erros: campos inválidos → `400` com todos de uma vez: `campos.nome` "Informe 
   { "unidade_medida": "un", "porcao_padrao": 1.000 }
 ]
 ```
-As unidades chegam ao banco pelo seed. Cadastrar uma unidade (`POST`) e alterar a porção padrão (`PATCH`) é a US26/UC20, fora da Sprint 3; desde 28/10, condicional na Sprint 4 (A40). Se ela entrar, o formato destas rotas é acrescentado a este contrato antes do código.
+As unidades chegam ao banco pelo seed. Cadastrar uma unidade (`POST`) e alterar a porção padrão (`PATCH`) é a US26/UC20, fora da Sprint 3; desde 28/10, condicional na Sprint 4 (A40). O formato dessas duas rotas está na §2.11.
 
 **`GET /api/ingredientes`** — Admin/Funcionário: o **registro completo**, `[{id, nome, unidade_medida, custo_unitario, porcao_padrao, quantidade_estoque, quantidade_minima}]`, ordenado por `nome`. (O `IngredienteResumo` de 3 campos da Sprint 1 deixa de existir: com ele, a tela de edição recusava editar.)
 
@@ -361,6 +361,8 @@ Se o banco estiver fora, a resposta é `500`.
 | Ingredientes | POST | `/api/ingredientes` | Admin | UC4 | 1 |
 | Ingredientes | PUT | `/api/ingredientes/{id}` | Admin | UC4 | 1 |
 | Unidades de medida | GET | `/api/unidades-medida` | Admin | UC4 (lista) | 1 |
+| Unidades de medida | POST | `/api/unidades-medida` | Admin | UC20/US26 (§2.11) | 4, condicional (A40) |
+| Unidades de medida | PATCH | `/api/unidades-medida/{unidade_medida}` | Admin | UC20/US26 (§2.11) | 4, condicional (A40) |
 | Produtos | GET | `/api/produtos` | Admin/Funcionário | UC5 | 1 |
 | Produtos | POST | `/api/produtos` | Admin | UC5 | 1 |
 | Produtos | PUT | `/api/produtos/{id}/preco` | Admin | UC6 | 1 |
@@ -376,12 +378,11 @@ Se o banco estiver fora, a resposta é `500`.
 | Marketing | GET | `/api/marketing/sugestoes` | Admin | UC18 | 3 |
 | Teste (eco) | GET | `/api/teste/python` | **Só no perfil `dev`** | — | 1 (Hello World) |
 
-**Fora da Sprint 3** (decisão A2b; os formatos propostos estão no roteiro v4.6, em `docs/Sprint_3/historico/`). **Desde 28/10 (A40):** a US26 pode entrar na Sprint 4, de forma condicional; as demais ficam fora do semestre:
+**Fora da Sprint 3** (decisão A2b; os formatos propostos estão no roteiro v4.6, em `docs/Sprint_3/historico/`). **Desde 28/10 (A40):** a US26 pode entrar na Sprint 4, de forma condicional; desde 10/11, as rotas dela estão na tabela acima e na §2.11. As demais ficam fora do semestre:
 
 | Recurso | Método | Rota | UC/US |
 |---|---|---|---|
 | Clientes | GET, POST | `/api/clientes` | UC13 |
-| Unidades de medida (cadastrar; alterar a porção padrão) | POST, PATCH | `/api/unidades-medida` e `/api/unidades-medida/{unidade_medida}` | UC20/US26 |
 | Estoque | GET | `/api/estoque/alertas-reposicao` | UC15 |
 | Estoque | GET | `/api/estoque/alertas-validade` | UC16 |
 | Dashboard | GET | `/api/dashboard/export-csv` | UC19 |
@@ -576,12 +577,59 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 | D3 | `POST` (e não `GET`) em `/api/producao/recomendacao` | **Confirmado por Lucas** (registro em 08/10/2026) |
 | v2 | Situação "abaixo do mínimo" calculada pelo frontend; `ENTRADA` com validade vencida aceita (§2.4) | Adotados na aprovação da v2 (27/10/2026) |
 
+### 2.11 Porção padrão por unidade de medida (UC20/US26) — Tela 19
+
+> **Situação:** proposta de 10/11/2026, **aprovada pelo Kauê em 10/11/2026** (PR #76). A US26 é **condicional** (A40). Pela A40, ela sairia se não estivesse na `main` até 04/11, às 18h; o PO (Lucas) a manteve em aberto depois desse prazo, ainda sujeita a corte, com as condições da **A46** (`docs/Sprint_4/sprint-4-decisoes-e-pendencias.md`): novo prazo-limite em **14/11/2026**. Se a US26 não for entregue, esta seção fica marcada como "não entregue na Sprint 4", sem apagar nada.
+
+**`POST /api/unidades-medida`** — Admin. Cadastra uma unidade nova com a sua porção padrão.
+
+```json
+// request
+{ "unidade_medida": "g", "porcao_padrao": 40.000 }
+// response 201
+{ "unidade_medida": "g", "porcao_padrao": 40.000 }
+```
+
+**`PATCH /api/unidades-medida/{unidade_medida}`** — Admin. Altera **só** a porção padrão; a unidade vem da URL.
+
+```json
+// request: PATCH /api/unidades-medida/kg
+{ "porcao_padrao": 0.050 }
+// response 200
+{ "unidade_medida": "kg", "porcao_padrao": 0.050 }
+```
+
+**A unidade é normalizada** (decisão de 10/11/2026, como já acontece com o e-mail): o backend tira os espaços das pontas e grava em **minúsculas**, tanto no corpo do `POST` quanto na URL do `PATCH`. Assim, `" G "` vira `g`, e `PATCH /api/unidades-medida/KG` altera a unidade `kg`. As 5 unidades do seed já são minúsculas (`kg`, `l`, `mg`, `ml`, `un`). O frontend monta a URL com `encodeURIComponent`.
+
+**Erros.** Os `400` e o `409` vêm no formato padrão (`{"mensagem":"Dados inválidos","campos":{…}}`); o `404` e o `403` trazem só `mensagem`. O serviço valida os campos **antes** de gravar; a unidade repetida é recusada pelo banco (`unidade_medida_porcao_padrao_pkey`) e traduzida pelo `GlobalExceptionHandler`. No `PATCH`, o corpo é validado **antes** de procurar a unidade: corpo inválido dá `400` mesmo que a unidade não exista.
+
+| Situação | HTTP | Campo | Mensagem |
+|---|---|---|---|
+| `unidade_medida` ausente, vazia ou só com espaços (depois de normalizar) ou com mais de 20 caracteres (`POST`) | 400 | `unidade_medida` | "Informe a unidade de medida (até 20 caracteres)." |
+| `porcao_padrao` ausente | 400 | `porcao_padrao` | "Informe a porção." (a mesma do ingrediente) |
+| `porcao_padrao` ≤ 0 | 400 | `porcao_padrao` | "A porção deve ser maior que zero." (o banco garante a mesma regra: `chk_unidade_porcao_padrao`) |
+| `porcao_padrao` com mais de 3 casas decimais significativas (zeros à direita não contam: `40.0000` vale), ou de 10.000.000 para cima (o máximo aceito é 9.999.999,999) | 400 | `porcao_padrao` | "Use no máximo 3 casas decimais e um valor menor que 10.000.000." |
+| Unidade já cadastrada (`POST`) | 409 | `unidade_medida` | "Esta unidade já está cadastrada." (`unidade_medida_porcao_padrao_pkey`) |
+| Unidade inexistente (`PATCH`) | 404 | — | `{"mensagem":"Unidade de medida não encontrada."}` |
+| Funcionário (`POST` ou `PATCH`) | 403 | — | Mensagem padrão de permissão |
+
+**Por que validar as casas decimais:** a coluna é `DECIMAL(10,3)`. O PostgreSQL **arredonda sem avisar** um valor com mais de 3 casas, e um valor grande demais dá `numeric field overflow`, que não é uma constraint: viraria `500`. Por isso o serviço recusa os dois antes.
+
+**Regras:**
+
+- **Alterar a porção padrão não muda os ingredientes já cadastrados** (critério 3 da US26). O padrão é só a **sugestão** do formulário de ingrediente; cada ingrediente guarda a sua própria `porcao_padrao`.
+- Os critérios 1 e 2 da US26 (sugerir a porção ao escolher a unidade; poder sobrescrever no ingrediente) já estão na tela de ingredientes (`frontend/js/app.js`, testada com a API simulada). O `GET /api/unidades-medida` real (§2.1) e o `POST /api/ingredientes` completo chegam com a Fase 2 do backend.
+- **No `PATCH`, a unidade vem só da URL:** um `unidade_medida` no corpo é ignorado. Uma URL com `/` codificado (`%2F`) é recusada pelo próprio Spring Security antes de chegar ao serviço.
+- **As mensagens novas** ("Informe a unidade de medida…", "Use no máximo 3 casas decimais…" e o `409` "Esta unidade já está cadastrada.") entram no `docs/Apoio/mapa_constraints.md` no PR do backend da US26, junto com o código (tutorial do Diogo, Parte 10.5).
+- **Excluir unidade fica de fora.** A FK `fk_ingrediente_unidade_medida` já impede excluir uma unidade em uso.
+
 ---
 
 ## 3. Histórico de revisões
 
 | Data | Alteração | Itens |
 |---|---|---|
+| 10/11/2026 | **Aprovada pelo Kauê em 10/11 (PR #76).** **§2.11** nova (US26/UC20, condicional): `POST /api/unidades-medida` e `PATCH /api/unidades-medida/{unidade_medida}`, com a unidade normalizada (minúsculas, sem espaços nas pontas), erros `400`, `404`, `409` e `403`. **§2.2:** as duas rotas saem da lista "fora" e entram na tabela de rotas. **§2:** `409` e `404` citam a unidade de medida. Nenhum formato existente mudou | A40, US26 |
 | 28/10/2026 (noite) | **Calendário (A39, A41):** a entrega passa a ser a da Sprint 4 oficial, em 06/11; o banco do Render é criado em 02/11 (antes: 31/10). Nenhum formato JSON mudou | A39, A41 |
 | 28/10/2026 | **Licença (A38):** a Gurobi autorizou por escrito a licença do `pip` no Render; `OTIMIZADOR_HABILITADO=true` no Render, sem `GRB_*`; o plano B1 (`503`) fica como reserva. Nenhum formato JSON mudou | A38 |
 | 27/10/2026 (noite, 2) | **Plano B1 da licença (A31):** `OTIMIZADOR_HABILITADO`; código `503` nas rotas de produção e reposição; `otimizador_habilitado` no dashboard; mensagem própria no marketing | A31 |

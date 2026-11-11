@@ -1,0 +1,31 @@
+﻿Parte 8.2 do tutorial do Kaue - teste parcial da imagem do deploy (passos 1, 2 e 4)
+Data: 2026-11-10 22:36 | Maquina: a do Diogo (execucao a pedido do Kaue) | Branch: chore/deploy-render (303aaf2 da sprint-4 + Dockerfile, .dockerignore e render.yaml)
+Limites do container: --memory=512m --cpus=0.1 | Banco: PostgreSQL 16 descartavel (mf-imagem-db), com o bd/Script_DDL.sql. O mente-fria-db nao foi usado.
+NAO coberto aqui (passo 3 / CT67 completo): recomendacao 151/1/0 e reposicao dentro da imagem. Dependem das Fases 2, 3, 4A e 5 na branch.
+
+--- docker build: exit 0 em 27 s (imagens-base ja baixadas) ---
+IMAGE                       ID             DISK USAGE   CONTENT SIZE   EXTRA
+mente-fria-backend:latest   70787fd6a604        584MB          152MB   U
+
+--- ddl exit: 0 ---
+--- log do container ---
+2026-11-11T01:36:29.095Z  INFO 1 --- [backend] [           main] c.mentefria.backend.BackendApplication   : Started BackendApplication in 33.303 seconds (process running for 40.436)
+
+--- GET /api/saude ---
+{"banco":"ok","status":"ok"}
+--- OOMKilled ---
+false
+--- docker stats --no-stream ---
+CONTAINER ID   NAME            CPU %     MEM USAGE / LIMIT   MEM %     NET I/O           BLOCK I/O     PIDS
+85460e8d6bc9   mf-imagem-app   1.14%     104.3MiB / 512MiB   20.37%    13.2kB / 12.2kB   0B / 45.1kB   31
+
+--- GET /api/teste/python (sem perfil dev, como no Render) ---
+status 401
+--- Preflight CORS (como o CT69, contra a imagem local) ---
+200 https://kauencarneiro.github.io
+outra origem: 403
+
+--- limpeza ---
+mf-imagem-app
+mf-imagem-db
+mf-imagem-rede

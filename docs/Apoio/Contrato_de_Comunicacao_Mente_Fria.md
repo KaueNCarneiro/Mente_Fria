@@ -4,7 +4,7 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-**Revisão:** **27/10/2026 — versão 2 (Sprint 3)**, aprovada pela equipe e autorizada pelo Kauê (histórico na seção 3). **28/10/2026:** nota de licença atualizada (A38); nenhum formato mudou. **10/11/2026 (proposta, aguardando a aprovação do Kauê):** §2.11 nova, com o `POST` e o `PATCH` de `/api/unidades-medida` (US26, condicional, A40); nenhum formato existente mudou. Versões anteriores: 20/09/2026 (revisão de consistência, aprovada pelo Kauê) e 08/10/2026 (itens B3, B5, B6 e D3 confirmados).
+**Revisão:** **27/10/2026 — versão 2 (Sprint 3)**, aprovada pela equipe e autorizada pelo Kauê (histórico na seção 3). **28/10/2026:** nota de licença atualizada (A38); nenhum formato mudou. **10/11/2026 (aprovada pelo Kauê em 10/11):** §2.11 nova, com o `POST` e o `PATCH` de `/api/unidades-medida` (US26, condicional, A40); nenhum formato existente mudou. Versões anteriores: 20/09/2026 (revisão de consistência, aprovada pelo Kauê) e 08/10/2026 (itens B3, B5, B6 e D3 confirmados).
 
 > **Fonte de verdade.** Este documento prevalece sobre a `docs/Apoio/Arquitetura.md` e sobre os roteiros nos **nomes de campo, nos valores de `status` e no formato de erro**.
 >
@@ -579,7 +579,7 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 
 ### 2.11 Porção padrão por unidade de medida (UC20/US26) — Tela 19
 
-> **Situação:** proposta de 10/11/2026, **aguardando a aprovação do Kauê**. A US26 é **condicional** (A40). Pela A40, ela sairia se não estivesse na `main` até 04/11, às 18h; o PO (Lucas) a manteve em aberto depois desse prazo, ainda sujeita a corte, com as condições da **A46** (`docs/Sprint_4/sprint-4-decisoes-e-pendencias.md`): novo prazo-limite em **14/11/2026**. Se a US26 não for entregue, esta seção fica marcada como "não entregue na Sprint 4", sem apagar nada.
+> **Situação:** proposta de 10/11/2026, **aprovada pelo Kauê em 10/11/2026** (PR #76). A US26 é **condicional** (A40). Pela A40, ela sairia se não estivesse na `main` até 04/11, às 18h; o PO (Lucas) a manteve em aberto depois desse prazo, ainda sujeita a corte, com as condições da **A46** (`docs/Sprint_4/sprint-4-decisoes-e-pendencias.md`): novo prazo-limite em **14/11/2026**. Se a US26 não for entregue, esta seção fica marcada como "não entregue na Sprint 4", sem apagar nada.
 
 **`POST /api/unidades-medida`** — Admin. Cadastra uma unidade nova com a sua porção padrão.
 
@@ -629,7 +629,7 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 
 | Data | Alteração | Itens |
 |---|---|---|
-| 10/11/2026 | **Proposta, aguardando a aprovação do Kauê.** **§2.11** nova (US26/UC20, condicional): `POST /api/unidades-medida` e `PATCH /api/unidades-medida/{unidade_medida}`, com a unidade normalizada (minúsculas, sem espaços nas pontas), erros `400`, `404`, `409` e `403`. **§2.2:** as duas rotas saem da lista "fora" e entram na tabela de rotas. **§2:** `409` e `404` citam a unidade de medida. Nenhum formato existente mudou | A40, US26 |
+| 10/11/2026 | **Aprovada pelo Kauê em 10/11 (PR #76).** **§2.11** nova (US26/UC20, condicional): `POST /api/unidades-medida` e `PATCH /api/unidades-medida/{unidade_medida}`, com a unidade normalizada (minúsculas, sem espaços nas pontas), erros `400`, `404`, `409` e `403`. **§2.2:** as duas rotas saem da lista "fora" e entram na tabela de rotas. **§2:** `409` e `404` citam a unidade de medida. Nenhum formato existente mudou | A40, US26 |
 | 28/10/2026 (noite) | **Calendário (A39, A41):** a entrega passa a ser a da Sprint 4 oficial, em 06/11; o banco do Render é criado em 02/11 (antes: 31/10). Nenhum formato JSON mudou | A39, A41 |
 | 28/10/2026 | **Licença (A38):** a Gurobi autorizou por escrito a licença do `pip` no Render; `OTIMIZADOR_HABILITADO=true` no Render, sem `GRB_*`; o plano B1 (`503`) fica como reserva. Nenhum formato JSON mudou | A38 |
 | 27/10/2026 (noite, 2) | **Plano B1 da licença (A31):** `OTIMIZADOR_HABILITADO`; código `503` nas rotas de produção e reposição; `otimizador_habilitado` no dashboard; mensagem própria no marketing | A31 |

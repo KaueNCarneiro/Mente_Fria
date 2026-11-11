@@ -4,7 +4,7 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-**Etapa:** E4 — Semana 4 (entrega 11/09/2026). **Atualizado em 27/10/2026** para a Sprint 3 (Adendo nº 1 ao Termo de Aceite aprovado): casos CT30–CT72, ajustes de CT23, CT24 e CT29, licença do Gurobi e ferramentas de teste. **28/10/2026:** CT68 e CT72 ajustados à autorização escrita da Gurobi para a licença do `pip` no Render (A38); os casos da Sprint 3 passam a ser executados na **Sprint 4** oficial (entrega em 06/11) e na semana de correção de bugs que vem depois (A39). **10/11/2026:** casos CT73–CT78 da US26 (condicional, A40), com o Contrato de Comunicação, §2.11 (proposta, aguardando a aprovação do Kauê).
+**Etapa:** E4 — Semana 4 (entrega 11/09/2026). **Atualizado em 27/10/2026** para a Sprint 3 (Adendo nº 1 ao Termo de Aceite aprovado): casos CT30–CT72, ajustes de CT23, CT24 e CT29, licença do Gurobi e ferramentas de teste. **28/10/2026:** CT68 e CT72 ajustados à autorização escrita da Gurobi para a licença do `pip` no Render (A38); os casos da Sprint 3 passam a ser executados na **Sprint 4** oficial (entrega em 06/11) e na semana de correção de bugs que vem depois (A39). **10/11/2026:** casos CT73–CT78 da US26 (condicional, A40), com o Contrato de Comunicação, §2.11 (aprovada pelo Kauê em 10/11).
 
 **Status:** este documento é a **estratégia** de testes e a lista de casos (seção 3), que cresce a cada sprint. As evidências de execução ficam nas pastas de cada sprint (`docs/Sprint_2/sprint-2-evidencias-teste.md`, `docs/Sprint_3/evidencias/`, `docs/Sprint_4/evidencias/`); o arquivo `E5-E8_evidencias_de_teste.md`, previsto antes, não foi criado.
 
@@ -205,7 +205,7 @@ Cenário de referência (conta à mão): 15/09 Dono 2× Tradicional; 05/10 Func 
 
 ### Sprint 4 — US26: porção padrão por unidade de medida (condicional, A40; CT73–CT78)
 
-Incluídos em 10/11/2026, com o Contrato de Comunicação, §2.11 (**proposta, aguardando a aprovação do Kauê**). A US26 é condicional: pela A40, sairia se não estivesse na `main` até 04/11, às 18h; o PO a manteve em aberto depois desse prazo, ainda sujeita a corte (**A46**: novo prazo-limite em 14/11/2026). Os critérios 1 e 2 (sugerir a porção ao escolher a unidade; sobrescrever no ingrediente) já estão na tela de ingredientes, testada com a API simulada; as rotas reais chegam com a Fase 2. Estes casos cobrem o cadastro e a alteração das unidades (Tela 19) e o critério 3.
+Incluídos em 10/11/2026, com o Contrato de Comunicação, §2.11 (**aprovada pelo Kauê em 10/11**). A US26 é condicional: pela A40, sairia se não estivesse na `main` até 04/11, às 18h; o PO a manteve em aberto depois desse prazo, ainda sujeita a corte (**A46**: novo prazo-limite em 14/11/2026). Os critérios 1 e 2 (sugerir a porção ao escolher a unidade; sobrescrever no ingrediente) já estão na tela de ingredientes, testada com a API simulada; as rotas reais chegam com a Fase 2. Estes casos cobrem o cadastro e a alteração das unidades (Tela 19) e o critério 3.
 
 | ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado |
 |---|---|---|---|---|---|---|

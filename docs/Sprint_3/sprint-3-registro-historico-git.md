@@ -10,6 +10,8 @@ Este registro junta **só o que pode ser conferido**: o que o Git e o GitHub mos
 
 Em **27/09/2026**, o repositório do projeto no GitHub foi **excluído e recriado** pelo Kauê (dono do repositório), a pedido do Lucas. Com a exclusão, **o histórico de commits e de Pull Requests do repositório anterior deixou de existir**.
 
+**O que é comprovado e o que é relato:** o GitHub e o Git comprovam a criação do repositório atual em 27/09 e que ele não tem nada anterior a essa data (§3). A exclusão do repositório anterior, quem a fez e a pedido de quem são **relato** dos documentos da Sprint 2 (relatório, T15; contribuições do Kauê e do Diogo): o GitHub não guarda registro público de um repositório excluído.
+
 ## 2. Por quê
 
 Motivo relatado nos documentos da Sprint 2: **conflitos de estrutura do projeto e na comunicação Java ↔ banco**. Na contribuição individual do Lucas: na Sprint 1, "o projeto não encontrava os caminhos corretos por causa da desorganização", e a conexão com o banco só funcionou depois da "reorganização da estrutura de diretórios".
@@ -39,11 +41,11 @@ Consequência registrada na Sprint 2 (contribuição do Diogo): os itens entregu
 
 ## 5. O que foi preservado
 
-- **O conteúdo final dos arquivos**, levado ao repositório novo:
-  - backend e documentos, no `9e02498` (o trabalho de backend do Lucas na Sprint 2 aparece inteiro nesse único commit);
-  - frontend, reorganizado no repositório recriado pelo Leonardo (PR #2).
-- **O módulo Python não foi preservado:** foi reescrito do zero no repositório novo (PR #1, branch `comunicacao_python`), como consta na contribuição do Kauê.
-- **Não existe cópia do repositório anterior:** nenhum clone antigo, print ou exportação do histórico foi localizado (confirmado pelo Diogo em 11/11/2026). O relatório da Sprint 2 pedia que fossem anexados "se existirem"; não existem.
+- **Documentos:** o conteúdo final foi preservado e está no `9e02498`. É o que a contribuição do Diogo na Sprint 2 registra: para os itens entregues antes da recriação, "a evidência que resta é o conteúdo final dos arquivos".
+- **Backend: não foi preservado.** Foi recriado do zero pelo Lucas, e todo esse trabalho aparece no mesmo `9e02498` (contribuição do Lucas na Sprint 2).
+- **Módulo Python: não foi preservado.** Foi reescrito do zero no repositório novo (PR #1, branch `comunicacao_python`), como consta na contribuição do Kauê.
+- **Frontend:** organizado pelo Leonardo no repositório novo (PR #2). Os documentos não dizem quanto dele veio do repositório anterior.
+- **Cópia do repositório anterior: nenhuma foi localizada** (clone antigo, print ou exportação do histórico), segundo o Diogo, em 11/11/2026. O Kauê e o Lucas ainda não confirmaram se têm alguma. O relatório da Sprint 2 pedia que fossem anexadas "se existirem".
 
 ## 6. Divergência entre os documentos
 
@@ -53,7 +55,7 @@ A data da recriação aparece como **27/09** no relatório e na retrospectiva da
 
 A retrospectiva da Sprint 2 registrou a ação: resolver conflitos por branches e PRs, e preservar cópias e o histórico antes de qualquer recriação. Desde então:
 
-- o trabalho passou a entrar por branch e Pull Request (do PR #1, de 01/10, ao #89, de 11/11/2026), com exceções pontuais de commits diretos, como os de 11/11 na `sprint-4`;
+- o trabalho passou a entrar por branch e Pull Request (do PR #1, mergeado em 01/10, ao #89, de 11/11/2026), com exceções pontuais de commits diretos, como os de 11/11 na `sprint-4`;
 - o repositório não foi recriado de novo: o histórico de 27/09 em diante está inteiro.
 
 ## 8. Fontes

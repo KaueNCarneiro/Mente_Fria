@@ -1486,6 +1486,8 @@ Lucas: pode trazer a main para a Fase 6. Leonardo: a Tela 13 já tem a rota real
 
 ## Parte 8 — Publicação no Render (US20)
 
+> **Mudança de 11/11/2026 (A47):** o deploy passou para o **Diogo, na conta dele**, a pedido do Lucas, que aprovou. Nesta parte, onde está "o Lucas", "a conta do Lucas" ou "o computador do Lucas", leia **o Diogo**. Continua com você (Kauê): autorizar o Render no repositório (só o dono pode) e testar a restauração do backup. As credenciais e a URL do banco ficam só com o Diogo.
+
 **Quem faz o quê (A43):**
 - **o Lucas** cria a conta (até sáb 31/10) e, na seg 02/11, faz os cliques no painel. As credenciais da conta são só dele: não as peça nem as use;
 - **você** prepara os arquivos, testa a imagem, autoriza o acesso ao repositório (é o dono), guia o Lucas, cria o Administrador, conduz a carga do schema, o seed e o backup, e roda os CTs do deploy;

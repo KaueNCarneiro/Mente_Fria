@@ -1,6 +1,6 @@
 # Decisões e pendências — Sprint 4 — Mente Fria
 
-**Revisão:** 10/11/2026 (A46: a US26 continua em aberto depois do prazo da A40, com novo prazo-limite em 14/11; confirmada pelo Lucas). Antes: 31/10/2026 (A45: A13 antecipada). Antes: 30/10/2026 (A44: tutoriais reescritos). Antes: 28/10/2026, noite (A43: respostas do grupo; antes: criação, A39–A42).
+**Revisão:** 11/11/2026 (situação das pendências do Kauê: e-mail da Gurobi, G8 e P2 feitos; sem decisão nova). Antes: 10/11/2026 (A46: a US26 continua em aberto depois do prazo da A40, com novo prazo-limite em 14/11; confirmada pelo Lucas). Antes: 31/10/2026 (A45: A13 antecipada). Antes: 30/10/2026 (A44: tutoriais reescritos). Antes: 28/10/2026, noite (A43: respostas do grupo; antes: criação, A39–A42).
 
 **Continua o registro da Sprint 3.** As decisões **A1–A38** estão em `docs/Sprint_3/sprint-3-decisoes-e-pendencias.md` e **continuam valendo**, salvo onde uma decisão abaixo diz que as substitui. A numeração segue a mesma: a próxima decisão é a **A47**.
 
@@ -29,11 +29,11 @@
 |---|---|---|---|---|
 | Mensagem | Enviar ao professor a mensagem da Sprint 4 (calendário, licença, US26) | Diogo envia; Lucas revisa | **Qui 29/10** | Rascunho em `sprint-4-mensagem-professor.md` |
 | Render (A43) | Criar a conta do Render (só a conta) | **Lucas** | **Sáb 31/10** | O deploy é na seg 02/11, na conta dele, com o Kauê (A41, A43) |
-| Gurobi (A38) | Encaminhar ao professor o e-mail de autorização da Gurobi | Kauê | **Qui 29/10** | No mesmo dia em que o Diogo envia a mensagem da Sprint 4, que cita esse e-mail |
-| **G8** (A15) | Juntar os dois `.env.example` no `backend/.env.example` | Kauê | Sex 30/10 | Com as variáveis da Sprint 3 e os comentários úteis do `backend/env.example`. **10/11: PR #82 aberto** (base `sprint-4`), esperando revisão; feito pelo Diogo a pedido do Kauê |
+| Gurobi (A38) | Encaminhar ao professor o e-mail de autorização da Gurobi | Kauê | **Qui 29/10** | No mesmo dia em que o Diogo envia a mensagem da Sprint 4, que cita esse e-mail. **Feito:** o e-mail foi encaminhado e o professor aprovou (informado pelo Diogo em 11/11) |
+| **G8** (A15) | Juntar os dois `.env.example` no `backend/.env.example` | Kauê | Sex 30/10 | Com as variáveis da Sprint 3 e os comentários úteis do `backend/env.example`. **10/11: PR #82 aberto** (base `sprint-4`), esperando revisão; feito pelo Diogo a pedido do Kauê. **Feito em 11/11:** na `main` pelos PRs #82 e #89 |
 | A12 | Botão "Descartar" por linha (opcional) | Leonardo | Seg 02/11, **se** aprovado no M3 (A42) | O backend vem na Fase 3. É o primeiro corte |
 | A13 | Teste de navegador instável | Leonardo | **Logo depois da divisão do `app.js`** (A45); prazo final qua 04/11 | **Causa achada na validação do tutorial (30/10):** a verificação 21 conta os campos antes de o `<dialog>` terminar de fechar. Com uma espera de uma linha no teste, 34 de 35 rodadas passaram (sem ela, 2 de 10). Passo a passo no tutorial novo do Leonardo, Parte 7 |
-| P2 | `optimization/requirements.txt` ainda em UTF-16 | Kauê | Qui 29/10, na Fase P | A versão 13.0.3 já está fixada; README e Arquitetura já atualizados (A37). **10/11: convertido para UTF-8 no PR #81** (Fase P + Q, base `sprint-4`), esperando revisão; feito pelo Diogo a pedido do Kauê |
+| P2 | `optimization/requirements.txt` ainda em UTF-16 | Kauê | Qui 29/10, na Fase P | A versão 13.0.3 já está fixada; README e Arquitetura já atualizados (A37). **10/11: convertido para UTF-8 no PR #81** (Fase P + Q, base `sprint-4`), esperando revisão; feito pelo Diogo a pedido do Kauê. **Feito em 11/11:** na `main` pelos PRs #81 e #85 |
 | **G5** | Apagar as branches antigas (as 10 já incorporadas e a `frontend_feito`) | Grupo | Depois de 06/11 | Nada urgente; não mexer durante a sprint |
 | **A46** | US26: na `main` com os testes até o prazo da A46, ou cortada; se entrar, avisar o professor | Diogo (US26); **Lucas** (PO) avisa o professor | **Sáb 14/11** | A46 confirmada pelo Lucas em 10/11, com o prazo. O aviso ao professor é necessário porque a mensagem da Sprint 4 dizia que a US26 só entraria com o obrigatório pronto em 02/11 |
 | **G6** | Destino de `docs/Sprint_3/referencia/` depois da cópia | Grupo | Retrospectiva (qui 05/11) | Recomendação: manter como registro congelado até o fim do semestre |

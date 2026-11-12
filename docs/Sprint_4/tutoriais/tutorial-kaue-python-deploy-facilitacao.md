@@ -184,7 +184,7 @@ Cada passo diz qual usar.
 > | 7.2 (repositório) | **Feito:** o `ReposicaoRepository` (consulta 9) entrou por commit do Diogo (`20748fd`, 39 linhas, igual ao da referência) | branch `feature/backend-reposicao` |
 > | 7.4 e 7.5 | **Pendente (Lucas):** a Fase 4A na `sprint-4`; só então a branch compila e vêm os testes, a evidência e o PR | — |
 > | 8.1 — arquivos do deploy | **Feito**, PR aberto esperando revisão | PR #83 |
-> | 8.2 — imagem local | **Feito em parte** (passos 1, 2 e 4): sobe com 512 MB e 0,1 CPU em 42 s, `saude` ok, 104 MiB, sem `OOMKilled`; CORS `200`/`403`. **Falta o passo 3** (CT67 completo), que depende das Fases 2 a 5 | `evidencias/2026-11-10_kaue_deploy_imagem-local-parcial.txt` (no PR #83) |
+> | 8.2 — imagem local | **Feito em parte** (passos 1, 2 e 4): sobe com 512 MB e 0,1 CPU em cerca de 40 s (no log: `Started BackendApplication in 33.303 seconds (process running for 40.436)`), `saude` ok, 104 MiB, sem `OOMKilled`; CORS `200`/`403`. **Falta o passo 3** (CT67 completo), que depende das Fases 2 a 5 | `evidencias/2026-11-10_kaue_deploy_imagem-local-parcial.txt` (no PR #83) |
 > | 8 (Pages e Render), 8.3 a 8.8 | **Pendente (Kauê e Lucas):** habilitar o Pages e autorizar o Render no repositório são do dono do repositório; o deploy, o schema, o Administrador, o seed e o backup são na conta do Lucas | — |
 > | 9.2 — `.env.example` único (G8) | **Feito**, PR aberto esperando revisão | PR #82 |
 > | 9.3 — registro da perda do histórico do Git | **Pendente (Kauê):** só quem viveu o episódio de 27/09 sabe o motivo e o que foi preservado | — |
@@ -206,6 +206,19 @@ Cada passo diz qual usar.
 > | 8.1, 8.3 a 8.8 — Render | **Pendente:** o PR #83 ainda não entrou, então a `main` não tem `Dockerfile` nem `render.yaml`; depois dele, o deploy é na conta do Lucas. O `config.js` do frontend ainda tem a URL provisória do Render | — |
 > | 9.2 — `.env.example` (G8) | **Pendente:** o PR #82 ainda não entrou | — |
 > | 5, 9.3, 9.4 e 10 (item 4) | **Sem mudança** | — |
+>
+> **Situação (11/11, noite), depois dos merges dos PRs #82, #83, #84 e #89:**
+>
+> | Parte | Situação | Onde |
+> |---|---|---|
+> | 8.1 — arquivos do deploy | **Na `main`** (PRs #83 e #89): o Render já encontra o `render.yaml` | — |
+> | 9.2 — `.env.example` (G8) | **Na `main`** (PRs #82 e #89) | — |
+> | 10, item 3 — modelo matemático | **Na `main`** (PRs #84 e #89) | — |
+> | 5 — e-mail da Gurobi ao professor | **Feito:** enviado, e o professor aprovou (informado pelo Diogo em 11/11) | — |
+> | 4.7 — 2ª máquina | **Dada por atendida** (decisão do Diogo em 11/11): o objetivo era provar que o Python não roda só no computador do Kauê, e ele rodou em dois ambientes que não são o dele: o Windows da máquina do Diogo (`47 passed`) e o container Linux do CT67, **nessa mesma máquina** (Gurobi dentro da imagem, em dois casos reais: 151/1/0 e 0,74 kg de morango; o `pytest` não rodou no container). **Limite:** é uma só máquina e uma só pessoa; a Parte 4.7 pedia os `47 passed` na máquina de outro integrante, e isso não foi feito (não há comentário de terceiro no PR #81). Quem quiser fechar roda os comandos da Parte 4.7 | `evidencias/2026-11-10_kaue_fasePQ_pytest.txt` e `2026-11-11_kaue_ct67.txt` |
+> | 9.3 — registro da perda do histórico do Git | **Feito**, com o que o Git, o GitHub e os documentos da Sprint 2 comprovam, separando o que é comprovado do que é relato. Nenhuma cópia do repositório anterior foi localizada (segundo o Diogo; o Kauê e o Lucas ainda não confirmaram) | `docs/Sprint_3/sprint-3-registro-historico-git.md` |
+> | 9.4 e 10 (item 4) — facilitação e contribuições | **Adiadas:** o grupo faz depois de terminar todas as partes dos tutoriais (informado pelo Diogo em 11/11). A nova data ainda não foi definida | — |
+> | 8.3 a 8.8 — Render; CT68, CT69, CT70 e CT72 | **Pendente (Lucas; o Kauê autoriza o Render no repositório, se o GitHub pedir):** é o que falta da parte técnica deste tutorial. Depois do deploy, o Leonardo troca a URL provisória do `frontend/js/config.js` pela URL real do serviço | — |
 
 ---
 

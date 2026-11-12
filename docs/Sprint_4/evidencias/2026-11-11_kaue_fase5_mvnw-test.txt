@@ -1,4 +1,9 @@
-﻿[INFO] Scanning for projects...
+﻿Fase 5 (tutorial do Kaue, Parte 7.5) - cabecalho acrescentado em 11/11/2026, depois da revisao; a saida abaixo nao foi alterada.
+Data: 2026-11-11, por volta das 20:15 | Maquina: a do Diogo (execucao a pedido do Kaue)
+Codigo: sprint-4 aaa73d0 (backend igual ao da main 931967b), num diretorio temporario. Banco: PostgreSQL 16 do Testcontainers. O mente-fria-db nao foi usado.
+Comando: .\mvnw test -Dtest=ReposicaoTest (sem MF_PYTHON; Python duble)
+
+[INFO] Scanning for projects...
 [INFO] 
 [INFO] -----------------------< com.mentefria:backend >------------------------
 [INFO] Building  0.0.1-SNAPSHOT

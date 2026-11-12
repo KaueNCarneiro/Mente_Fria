@@ -1,0 +1,108 @@
+==============================================================================
+EVIDENCIA - Deploy no Render (A47): servico, banco, schema, usuarios, seed e backup
+==============================================================================
+Data: 11/11/2026, entre 21h59 e 22h35 (horario de Brasilia)
+Executado por: Diogo, na conta dele do Render (A47), guiado pelo Claude.
+Conferencias externas (saude, CORS e registro fechado): Claude, por curl, as 22h40.
+A URL do banco (que contem a senha) NAO aparece neste arquivo.
+
+------------------------------------------------------------------------------
+1) Criacao pelo Blueprint
+------------------------------------------------------------------------------
+- Blueprint "mente-fria", criado a partir do repositorio publico
+  https://github.com/KaueNCarneiro/Mente_Fria, branch main, render.yaml da raiz.
+- Commit publicado: 99fa337 (merge do #91; inclui o #83 do deploy e o #87 dos repositorios).
+- Criados: o banco mente-fria-db (PostgreSQL 16, plano free) e o servico mente-fria-backend
+  (Docker, plano free), os dois na regiao virginia.
+- CORS_ALLOWED_ORIGIN informado na criacao: https://kauencarneiro.github.io
+- Banco criado em 11/11/2026, 21h59 -> o plano free vence 30 dias depois: 11/12/2026, 21h59
+  (depois de 30/11, data-limite do professor).
+- SEM deploy automatico: o repositorio entrou pelo endereco publico (o app do Render nao esta
+  instalado no repositorio). Depois de cada merge na main: painel do servico
+  mente-fria-backend -> Manual Deploy -> Deploy latest commit.
+
+------------------------------------------------------------------------------
+2) Primeiro build e inicializacao (trechos do log do Render)
+------------------------------------------------------------------------------
+==> Checking out commit 99fa3376add863fa6283118645316d8bb47990be in branch main
+#19 3.153 Successfully installed gurobipy-13.0.3
+#25 [build 7/7] RUN ./mvnw -q -B -Dmaven.test.skip=true package ... DONE 4.5s
+Started BackendApplication in 26.407 seconds (process running for 30.883)
+HikariPool-1 - Start completed.
+==> Your service is live
+==> Available at your primary URL https://mente-fria-backend.onrender.com
+
+URL do servico: https://mente-fria-backend.onrender.com
+-> e a mesma da constante PRODUCAO de frontend/js/config.js: o Pages nao precisa de mudanca.
+
+------------------------------------------------------------------------------
+3) Schema (Parte 8.4 do tutorial do Kaue)
+------------------------------------------------------------------------------
+psql (container descartavel) -f bd/Script_DDL.sql da main 99fa337, com sslmode=require
+SELECT nome, quantidade_estoque FROM ingrediente WHERE id = 1;
+Açaí (polpa)|0.000
+
+------------------------------------------------------------------------------
+4) Administrador e Funcionario (Parte 8.5), com um incidente corrigido na hora
+------------------------------------------------------------------------------
+Incidente: na primeira tentativa, os marcadores <NOME_DO_ADMIN> e <EMAIL_DO_ADMIN> foram
+enviados sem troca. O cadastro deu 400 (e-mail invalido) e o cadastro de TESTE seguinte, que
+deveria provar o 409, criou o Administrador teste@exemplo.com com a senha publica do tutorial.
+Correcao imediata, antes de qualquer outro dado no banco:
+  DELETE FROM usuario WHERE email = 'teste@exemplo.com' AND perfil = 'ADMINISTRADOR';  -> DELETE 1
+  SELECT count(*) FROM usuario;                                                        -> 0
+Depois, com os dados digitados no Read-Host:
+  POST /api/auth/registro (Administrador real) ............ 201
+  POST /api/auth/registro (teste, provando a porta fechada)  409
+  POST /api/usuarios (Funcionario, com o token do Admin) ... 201
+  SELECT id, perfil FROM usuario ORDER BY id;  -> 2 | ADMINISTRADOR ; 3 | FUNCIONARIO (2 rows)
+(Os ids comecam em 2 porque o 1 era o usuario de teste apagado.)
+Licao para o tutorial: so seguir para o cadastro de teste se o primeiro registro der 201.
+
+------------------------------------------------------------------------------
+5) Seed de demonstracao (Parte 9 do tutorial do Diogo)
+------------------------------------------------------------------------------
+Ver 2026-11-11_diogo_seed-render.txt: (0 rows) e COMMIT; estoque igual ao de 03/11
+(morango 1.980; granola com 6.000 vencidos); faturamento 2026-10 | 3 | 271.50 e
+2026-11 | 3 | 326.40.
+
+------------------------------------------------------------------------------
+6) Backup e restauracao (Parte 8.7; adendo, item 5)
+------------------------------------------------------------------------------
+pg_dump -Fc --no-owner --no-privileges -> mente_fria_2026-11-11.dump, 23.469 bytes,
+guardado FORA do repositorio (pasta do usuario). O .dump nunca vai para o Git.
+Restauracao num PostgreSQL 16 descartavel (mf-restore, apagado no fim; nao o mente-fria-db):
+  pg_restore exit: 0
+  pedidos no banco restaurado: 6
+  pedidos no Render:           6
+  ingrediente 1 restaurado:    Açaí (polpa)
+
+------------------------------------------------------------------------------
+7) Conferencias externas, de fora do Render (Claude, curl)
+------------------------------------------------------------------------------
+GET /api/saude -> HTTP 200 {"status":"ok","banco":"ok"}
+CT69 - preflight OPTIONS /api/auth/login, Origin https://kauencarneiro.github.io:
+  HTTP/1.1 200 OK
+  access-control-allow-origin: https://kauencarneiro.github.io
+  access-control-allow-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+CT69 - mesma chamada com Origin https://exemplo.com -> HTTP 403
+Registro de Administrador depois do cadastro real -> HTTP 409
+  {"mensagem":"O cadastro do Administrador já foi realizado."}
+
+------------------------------------------------------------------------------
+8) Seguranca
+------------------------------------------------------------------------------
+- Na carga do schema, a URL do banco foi digitada uma vez como parte de um comando (uso errado
+  do Read-Host) e removida em seguida do historico do PowerShell. Ela tambem apareceu,
+  parcialmente riscada, num print enviado ao suporte (nao publicado). Recomendacao: se o painel
+  do banco oferecer trocar as credenciais, trocar.
+- Senhas do Administrador e do Funcionario: fortes, fora do repositorio, digitadas no Read-Host.
+
+------------------------------------------------------------------------------
+Pendente (A47 e A41)
+------------------------------------------------------------------------------
+- Backups: fim da semana de bugs (13/11), semanal e 29/11 (Diogo); restauracao testada pelo Kaue
+  ou pelo Diogo.
+- CT68, CT70 e CT72 no ambiente publicado (tutorial do Kaue, Parte 8.6).
+- URL do servico e datas do banco no README (Parte 8.8 do tutorial do Kaue).
+==============================================================================

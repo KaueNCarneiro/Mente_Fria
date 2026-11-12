@@ -4,7 +4,7 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-**Última atualização:** 19/09/2026 (conteúdo da Sprint 1). **Nota de 27/10/2026, atualizada em 04/11/2026:** os SQLs da Sprint 3 (estoque por linhas, pedido com baixa, reposição, dashboard) estão em [`sql_repositorios_sprint3.md`](sql_repositorios_sprint3.md), que também lista o que mudou no SQL dos métodos abaixo (§8 dele).
+**Última atualização:** 11/11/2026 (US26: `inserir` e `atualizarPorcao` do `UnidadeMedidaRepository`, PR #88). Conteúdo da Sprint 1: 19/09/2026. **Nota de 27/10/2026, atualizada em 04/11/2026:** os SQLs da Sprint 3 (estoque por linhas, pedido com baixa, reposição, dashboard) estão em [`sql_repositorios_sprint3.md`](sql_repositorios_sprint3.md), que também lista o que mudou no SQL dos métodos abaixo (§8 dele).
 
 > **Status:** todos os SQLs abaixo foram executados no PostgreSQL 16, sobre o `Script_DDL.sql` entregue, com parâmetros reais (37 verificações, incluindo os erros esperados conferidos por SQLSTATE e nome de constraint). A regra do açaí foi testada em Java 21 (15 casos). **Os trechos de código Spring (seção "Padrões de código") ainda não foram executados** — a equipe valida ao implementar. Itens marcados como **proposta** dependem de confirmação.
 

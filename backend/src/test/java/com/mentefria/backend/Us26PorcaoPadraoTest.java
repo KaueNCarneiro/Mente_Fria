@@ -37,6 +37,7 @@ class Us26PorcaoPadraoTest extends IntegracaoBase {
         for (String repetida : new String[] {"g", "G"}) {
             var r = chamar("POST", "/api/unidades-medida", admin, Map.of("unidade_medida", repetida, "porcao_padrao", 50));
             assertThat(r.status()).isEqualTo(409);
+            assertThat(r.corpo().get("mensagem").asString()).isEqualTo("Dados inválidos");
             assertThat(campo(r, "unidade_medida")).isEqualTo("Esta unidade já está cadastrada.");
         }
         assertThat(quantasUnidades()).isEqualTo(6);
@@ -46,7 +47,8 @@ class Us26PorcaoPadraoTest extends IntegracaoBase {
     @Test void dadosInvalidosNosLimitesDao400() throws Exception {                                  // CT75
         // POST: porção inválida, com a mensagem certa para cada entrada
         Object[][] porcoes = {{0, "A porção deve ser maior que zero."}, {-1, "A porção deve ser maior que zero."},
-                {new BigDecimal("0.0001"), MSG_FORMATO}, {new BigDecimal("10000000"), MSG_FORMATO}};
+                {new BigDecimal("0.0001"), MSG_FORMATO}, {new BigDecimal("10000000"), MSG_FORMATO},
+                {new BigDecimal("1E+7"), MSG_FORMATO}};                                            // notação científica também
         for (Object[] caso : porcoes) {
             var r = chamar("POST", "/api/unidades-medida", admin, Map.of("unidade_medida", "cx", "porcao_padrao", caso[0]));
             assertThat(r.status()).as("porção %s", caso[0]).isEqualTo(400);
@@ -54,6 +56,11 @@ class Us26PorcaoPadraoTest extends IntegracaoBase {
         }
         var ausente = chamar("POST", "/api/unidades-medida", admin, Map.of("unidade_medida", "cx"));
         assertThat(campo(ausente, "porcao_padrao")).isEqualTo("Informe a porção.");
+        var semUnidade = chamar("POST", "/api/unidades-medida", admin, Map.of("porcao_padrao", 1));
+        assertThat(campo(semUnidade, "unidade_medida")).isEqualTo(MSG_UNIDADE);
+        var osDois = chamar("POST", "/api/unidades-medida", admin, Map.of("unidade_medida", "", "porcao_padrao", 0));   // US7
+        assertThat(campo(osDois, "unidade_medida")).isEqualTo(MSG_UNIDADE);
+        assertThat(campo(osDois, "porcao_padrao")).isEqualTo("A porção deve ser maior que zero.");
         // POST: unidade inválida (vazia, só espaços, 21 caracteres)
         for (String unidade : new String[] {"", "   ", "a".repeat(21)}) {
             var r = chamar("POST", "/api/unidades-medida", admin, Map.of("unidade_medida", unidade, "porcao_padrao", 1));
@@ -75,12 +82,16 @@ class Us26PorcaoPadraoTest extends IntegracaoBase {
     }
 
     @Test void alterarPorcaoPadraoNaoMudaOsIngredientes() throws Exception {                        // CT76, critério 3
+        // Todos os ingredientes, inclusive os que tinham porção IGUAL ao padrão antigo do kg (Granola e Morango, 0,040):
+        // um bug que "propagasse" o padrão novo para eles também tem de ser pego.
+        var antes = jdbc.queryForList("SELECT id, porcao_padrao FROM ingrediente ORDER BY id");
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM ingrediente WHERE unidade_medida = 'kg' AND porcao_padrao = 0.040",
+                Integer.class)).isGreaterThan(0);                                                   // o caso existe no seed
         var r = chamar("PATCH", "/api/unidades-medida/kg", admin, Map.of("porcao_padrao", new BigDecimal("0.050")));
         assertThat(r.status()).isEqualTo(200);
         assertThat(r.corpo().get("unidade_medida").asString()).isEqualTo("kg");
         assertThat(r.corpo().get("porcao_padrao").decimalValue()).isEqualByComparingTo("0.050");
-        assertThat(jdbc.queryForObject("SELECT porcao_padrao FROM ingrediente WHERE id = 1", BigDecimal.class))
-                .isEqualByComparingTo("0.150");                                                    // o Açaí continua com a dele
+        assertThat(jdbc.queryForList("SELECT id, porcao_padrao FROM ingrediente ORDER BY id")).isEqualTo(antes);   // nenhum muda
         var maiuscula = chamar("PATCH", "/api/unidades-medida/KG", admin, Map.of("porcao_padrao", new BigDecimal("0.060")));
         assertThat(maiuscula.status()).isEqualTo(200);                                             // a URL também é normalizada
         assertThat(maiuscula.corpo().get("unidade_medida").asString()).isEqualTo("kg");
@@ -100,6 +111,8 @@ class Us26PorcaoPadraoTest extends IntegracaoBase {
                 .isEqualTo(403);
         assertThat(chamar("PATCH", "/api/unidades-medida/kg", funcionario, Map.of("porcao_padrao", 1)).status()).isEqualTo(403);
         assertThat(chamar("GET", "/api/unidades-medida", funcionario, null).status()).isEqualTo(403);
+        assertThat(chamar("POST", "/api/unidades-medida", null, Map.of("unidade_medida", "g", "porcao_padrao", 40)).status())
+                .isEqualTo(401);                                                                   // sem token
         assertThat(quantasUnidades()).isEqualTo(5);
         assertThat(porcaoDaUnidade("kg")).isEqualByComparingTo("0.040");
     }

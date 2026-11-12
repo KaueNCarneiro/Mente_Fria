@@ -1048,14 +1048,14 @@ UPDATE 0
 
 ### 10.5 O backend (ter 03/11, branch `feature/us26-backend`)
 
-> **Situação (11/11):** **feito**, na branch `feature/us26-backend` (PR para a `sprint-4`), dentro do prazo da A46 (14/11). O que entrou:
+> **Situação (11/11):** **feito**, na branch `feature/us26-backend` (PR #88, para a `sprint-4`), dentro do prazo da A46 (14/11). O que entrou:
 > - **`UnidadeMedidaRepository`:** `inserir` e `atualizarPorcao` (o SQL da 10.4), com o `RowMapper` numa constante;
 > - **`UnidadeMedida`:** os `record`s `Nova` e `NovaPorcao`;
 > - **`UnidadeMedidaService`** (novo): normalização e validações da §2.11, com o `404`;
 > - **`UnidadeMedidaController`:** passa a usar o serviço e ganha o `POST` e o `PATCH`;
 > - **`Us26PorcaoPadraoTest`:** um teste por CT, do CT73 ao CT78.
 >
-> **Resultado do `.\mvnw test` completo, com o Python real:** **101 testes, 0 falhas** (os 95 de antes e os 6 novos). Quebrando de propósito a normalização e a checagem das casas decimais, 4 dos 6 testes falham.
+> **Resultado do `.\mvnw test` completo, com o Python real:** **101 testes, 0 falhas** (os 95 de antes e os 6 novos). Quebrando de propósito a normalização e a checagem das casas decimais, 4 dos 6 testes falham. Depois da revisão independente de 11/11, o CT76 passou a comparar **todos** os ingredientes (antes conferia só o Açaí, e um bug que propagasse o padrão novo para a Granola e o Morango passaria), e o CT74, o CT75 e o CT78 ganharam casos (mensagem do `409`, unidade ausente, os dois campos inválidos juntos, `1E+7` e `401` sem token).
 >
 > Também foram atualizados o `mapa_constraints.md`, o `sql_repositorios.md`, a coluna "Validado" do CT73 ao CT78 e duas frases da §2.11. Evidência: `docs/Sprint_4/evidencias/2026-11-11_diogo_us26-backend_mvnw-test.txt`.
 
@@ -1100,7 +1100,7 @@ O molde é a tela-exemplo de Estoque do tutorial do Leonardo (`docs/Sprint_4/tut
 |---|---|---|
 | `POST` dá `500`, e no log `DuplicateKeyException` sem tradução | O mapa do `GlobalExceptionHandler` não pegou a constraint | Confira o nome `unidade_medida_porcao_padrao_pkey` |
 | `PATCH` dá `403` no navegador, mas funciona no teste | Você está logado como Funcionário, ou a página não está em `http://127.0.0.1:5500` (outra origem recebe `403` "Invalid CORS request" do Spring) | Entre como Administrador, na porta 5500 |
-| `PATCH` dá `404` para `kg` | A unidade foi para a URL com espaço ou maiúscula | Use `encodeURIComponent` e a mesma regra de minúsculas do contrato |
+| `PATCH` dá `404` para uma unidade que existe | A unidade foi para a URL com caracteres que mudam o caminho (ex.: `/`). Espaços nas pontas e maiúsculas não são o problema: o backend normaliza a URL desde o PR #88 | Use `encodeURIComponent` e confira a unidade exata no `GET /api/unidades-medida` |
 | O teste do CT76 falha | O `PATCH` está mexendo na tabela `ingrediente` | O `UPDATE` deve tocar **só** a `unidade_medida_porcao_padrao` |
 
 ### 10.8 Perguntas para a Review

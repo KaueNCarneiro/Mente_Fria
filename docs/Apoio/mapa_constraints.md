@@ -2,11 +2,11 @@
 
 > **Atualizado em 11/11/2026 (US26):** as duas linhas de `unidade_medida_porcao_padrao` passam de "só seed" para as mensagens da Tela 19 (`400` e `409`), e as validações do serviço da US26 entram nas regras de negócio.
 >
-> **Atualizado em 27/10/2026 (Sprint 3):** acrescentadas as constraints de `cliente`, `pedido`, `pedido_produto` e `movimentacao_estoque` (estoque por linhas, `motivo`, status do pedido), com os testes T33–T73 de `constraints_sprint3_teste.sql`. Essas constraints existem no `Script_DDL.sql` de referência (`docs/Sprint_3/referencia/bd/`) e entram em `bd/` pelo PR do banco da Sprint 3; até lá, o `bd/Script_DDL.sql` da `main` ainda é o da Sprint 1.
+> **Atualizado em 27/10/2026 (Sprint 3):** acrescentadas as constraints de `cliente`, `pedido`, `pedido_produto` e `movimentacao_estoque` (estoque por linhas, `motivo`, status do pedido), com os testes T33–T73 de `constraints_sprint3_teste.sql`. Essas constraints entraram em `bd/Script_DDL.sql` pelo PR do banco da Sprint 3 (#44, 29/10/2026).
 
 **Uso:** referência para o backend traduzir violações do banco em mensagens claras por campo (US7) e para o frontend exibi-las.
 As colunas **Campo na API** e **HTTP** ligam este mapa ao *Contrato de Comunicação* (§2): a chave de `campos` usa os mesmos nomes de campo do contrato (snake_case), e os códigos HTTP seguem o Contrato de Comunicação (§2), aprovado pelo Kauê em 20/09/2026.
-Cada linha tem um teste correspondente: T01–T32 em `bd/constraints_teste.sql` (antes chamado `constraints_sprint1_teste.sql`) e T33–T73 em `constraints_sprint3_teste.sql` (Sprint 3; hoje em `docs/Sprint_3/referencia/bd/`). Todos validados no PostgreSQL 16.
+Cada linha tem um teste correspondente: T01–T32 em `bd/constraints_teste.sql` (antes chamado `constraints_sprint1_teste.sql`) e T33–T73 em `bd/constraints_sprint3_teste.sql` (Sprint 3, desde o #44). Todos validados no PostgreSQL 16.
 
 ## Regras de convivência entre aplicação e banco
 

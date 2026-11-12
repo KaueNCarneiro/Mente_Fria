@@ -629,6 +629,7 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 
 | Data | Alteração | Itens |
 |---|---|---|
+| 11/11/2026 | **§2.11:** duas frases atualizadas com o backend da US26 (PR #88): os critérios 1 e 2 apontam para `frontend/js/screens/ingredientes.js` e para a Fase 2 já na `main`, e as mensagens novas passam a constar do `mapa_constraints.md`. Nenhum formato, mensagem ou regra mudou | US26 |
 | 10/11/2026 | **Aprovada pelo Kauê em 10/11 (PR #76).** **§2.11** nova (US26/UC20, condicional): `POST /api/unidades-medida` e `PATCH /api/unidades-medida/{unidade_medida}`, com a unidade normalizada (minúsculas, sem espaços nas pontas), erros `400`, `404`, `409` e `403`. **§2.2:** as duas rotas saem da lista "fora" e entram na tabela de rotas. **§2:** `409` e `404` citam a unidade de medida. Nenhum formato existente mudou | A40, US26 |
 | 28/10/2026 (noite) | **Calendário (A39, A41):** a entrega passa a ser a da Sprint 4 oficial, em 06/11; o banco do Render é criado em 02/11 (antes: 31/10). Nenhum formato JSON mudou | A39, A41 |
 | 28/10/2026 | **Licença (A38):** a Gurobi autorizou por escrito a licença do `pip` no Render; `OTIMIZADOR_HABILITADO=true` no Render, sem `GRB_*`; o plano B1 (`503`) fica como reserva. Nenhum formato JSON mudou | A38 |

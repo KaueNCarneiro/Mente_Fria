@@ -850,6 +850,19 @@ Abra o PR, com o Kauê (facilitação) como revisor.
 
 ## Parte 9 — Seg 02/11 à tarde: o seed no banco publicado, com o Kauê
 
+> **Mudança de 11/11/2026 (A47):** o deploy inteiro passou para você, **na sua conta do Render**: o serviço, o schema, o Administrador e o Funcionário, o seed e os backups. Nesta parte, onde está "o computador do Lucas" ou "a conta do Lucas", leia **o seu**. O passo a passo é o da Parte 8 do tutorial do Kauê. O Kauê continua autorizando o Render no repositório e testando a restauração do backup. A URL do banco (com a senha) não sai do seu computador.
+
+> **Situação (11/11, à noite):** **feito.** O serviço está no ar em `https://mente-fria-backend.onrender.com`, a mesma URL do `config.js`. O banco foi criado às 21h59 e vence em 11/12/2026. O que foi feito, na ordem:
+> 1. schema;
+> 2. Administrador e Funcionário (um Administrador de teste criado por engano foi apagado antes de qualquer dado);
+> 3. seed, com os números iguais aos de 03/11;
+> 4. backup e restauração testada (6 pedidos dos dois lados);
+> 5. CORS conferido (CT69).
+>
+> **Deploy manual:** o repositório entrou pelo endereço público, então, depois de cada merge na `main`, você publica no painel (*Manual Deploy* → *Deploy latest commit*).
+>
+> Evidências: `2026-11-11_diogo_deploy-render.txt` e `2026-11-11_diogo_seed-render.txt`.
+
 **Quem faz o quê** (tutorial do Kauê, Partes 8.4 e 8.5):
 - a URL do banco do Render tem a senha e não sai da conta do Lucas: o comando roda **no computador do Lucas**, com o Kauê guiando;
 - o **seed é seu**: você confere a saída e os números.

@@ -1,0 +1,139 @@
+==============================================================================
+EVIDENCIA - Deploy no Render (A47): servico, banco, schema, usuarios, seed e backup
+==============================================================================
+Data: 11/11/2026, entre 21h59 e 22h35 (horario de Brasilia)
+Executado por: Diogo, na conta dele do Render (A47), guiado pelo Claude.
+Conferencias externas (saude, CORS e registro fechado): Claude, por curl, entre 22h32 e 22h36
+(antes do commit deste arquivo, as 22h36).
+A URL do banco (que contem a senha) NAO aparece neste arquivo.
+
+------------------------------------------------------------------------------
+1) Criacao pelo Blueprint
+------------------------------------------------------------------------------
+- Blueprint "mente-fria", criado a partir do repositorio publico
+  https://github.com/KaueNCarneiro/Mente_Fria, branch main, render.yaml da raiz.
+- Commit publicado: 99fa337 (merge do #91; inclui o #83 do deploy e o #87 dos repositorios).
+- Criados: o banco mente-fria-db (PostgreSQL 16, plano free) e o servico mente-fria-backend
+  (Docker, plano free), os dois na regiao virginia.
+- CORS_ALLOWED_ORIGIN informado na criacao: https://kauencarneiro.github.io
+- Banco criado em 11/11/2026, 21h59 -> o plano free vence 30 dias depois: 11/12/2026, 21h59
+  (depois de 30/11, data-limite do professor).
+- SEM deploy automatico: o repositorio entrou pelo endereco publico (o app do Render nao esta
+  instalado no repositorio). Depois de cada merge na main: painel do servico
+  mente-fria-backend -> Manual Deploy -> Deploy latest commit.
+
+------------------------------------------------------------------------------
+2) Primeiro build e inicializacao (trechos do log do Render)
+------------------------------------------------------------------------------
+==> Checking out commit 99fa3376add863fa6283118645316d8bb47990be in branch main
+#19 3.153 Successfully installed gurobipy-13.0.3
+#25 [build 7/7] RUN ./mvnw -q -B -Dmaven.test.skip=true package ... DONE 4.5s
+Started BackendApplication in 26.407 seconds (process running for 30.883)
+HikariPool-1 - Start completed.
+==> Your service is live
+==> Available at your primary URL https://mente-fria-backend.onrender.com
+
+URL do servico: https://mente-fria-backend.onrender.com
+-> e a mesma da constante PRODUCAO de frontend/js/config.js: o Pages nao precisa de mudanca.
+
+------------------------------------------------------------------------------
+3) Schema (Parte 8.4 do tutorial do Kaue)
+------------------------------------------------------------------------------
+psql (container descartavel) -f bd/Script_DDL.sql da main 99fa337, com sslmode=require
+SELECT nome, quantidade_estoque FROM ingrediente WHERE id = 1;
+Açaí (polpa)|0.000
+
+------------------------------------------------------------------------------
+4) Administrador e Funcionario (Parte 8.5), com um incidente corrigido na hora
+------------------------------------------------------------------------------
+Incidente: na primeira tentativa, os marcadores <NOME_DO_ADMIN> e <EMAIL_DO_ADMIN> foram
+enviados sem troca. O cadastro deu 400 (e-mail invalido) e o cadastro de TESTE seguinte, que
+deveria provar o 409, criou o Administrador teste@exemplo.com com a senha publica do tutorial.
+Correcao imediata, antes de qualquer outro dado no banco:
+  DELETE FROM usuario WHERE email = 'teste@exemplo.com' AND perfil = 'ADMINISTRADOR';  -> DELETE 1
+  SELECT count(*) FROM usuario;                                                        -> 0
+Depois, com os dados digitados no Read-Host:
+  POST /api/auth/registro (Administrador real) ............ 201
+  POST /api/auth/registro (teste, provando a porta fechada)  409
+  POST /api/usuarios (Funcionario, com o token do Admin) ... 201
+  SELECT id, perfil FROM usuario ORDER BY id;  -> 2 | ADMINISTRADOR ; 3 | FUNCIONARIO (2 rows)
+(Os ids comecam em 2 porque o 1 era o usuario de teste apagado.)
+Duracao e tokens: o usuario de teste existiu por poucos minutos (a hora exata nao foi anotada) e
+foi apagado antes de qualquer outro dado. O Diogo nao fez login com ele: o login seguinte usou o
+marcador <EMAIL_DO_ADMIN> e falhou. Nao da para provar que ninguem mais fez login nesses minutos
+(a URL do servico ja estava no config.js publico). O token JWT vale 2 h e o filtro nao consulta o
+banco, entao um token eventual valeria ate ~2 h depois da exclusao. Para zerar esse risco de vez:
+gerar um novo JWT_SECRET no painel do Render (derruba todos os tokens; e so entrar de novo).
+Atualizacao (12/11): deixou de ser necessario. O token valia 2 h e o usuario de teste foi apagado
+em 11/11, a noite: qualquer token dele ja expirou.
+Licao: a Parte 8.5 do tutorial do Kaue foi corrigida em 11/11 (dados pelo Read-Host, bloco do
+Administrador separado, e a prova da porta fechada com corpo vazio, que nunca cria ninguem).
+A conferencia do registro fechado feita depois por curl usou senha invalida ("curta"): com a porta
+aberta, teria dado 400 sem criar ninguem.
+
+------------------------------------------------------------------------------
+5) Seed de demonstracao (Parte 9 do tutorial do Diogo)
+------------------------------------------------------------------------------
+Ver 2026-11-11_diogo_seed-render.txt: (0 rows) e COMMIT; estoque igual ao de 03/11
+(morango 1.980; granola com 6.000 vencidos); faturamento 2026-10 | 3 | 271.50 e
+2026-11 | 3 | 326.40.
+
+------------------------------------------------------------------------------
+6) Backup e restauracao (Parte 8.7; adendo, item 5)
+------------------------------------------------------------------------------
+pg_dump -Fc --no-owner --no-privileges -> mente_fria_2026-11-11.dump, 23.469 bytes,
+guardado FORA do repositorio (pasta do usuario). O .dump nunca vai para o Git.
+Restauracao num PostgreSQL 16 descartavel (mf-restore, apagado no fim; nao o mente-fria-db):
+  pg_restore exit: 0
+  pedidos no banco restaurado: 6
+  pedidos no Render:           6
+  ingrediente 1 restaurado:    Açaí (polpa)
+
+------------------------------------------------------------------------------
+7) Conferencias externas, de fora do Render (Claude, curl)
+------------------------------------------------------------------------------
+GET /api/saude -> HTTP 200 {"status":"ok","banco":"ok"}
+CT69 - preflight OPTIONS /api/auth/login, Origin https://kauencarneiro.github.io:
+  HTTP/1.1 200 OK
+  access-control-allow-origin: https://kauencarneiro.github.io
+  access-control-allow-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+CT69 - mesma chamada com Origin https://exemplo.com -> HTTP 403
+Registro de Administrador depois do cadastro real -> HTTP 409
+  {"mensagem":"O cadastro do Administrador já foi realizado."}
+
+------------------------------------------------------------------------------
+8) Seguranca
+------------------------------------------------------------------------------
+- Na carga do schema, a URL do banco foi digitada uma vez como parte de um comando (uso errado
+  do Read-Host) e removida em seguida do historico do PowerShell (conferido: 0 linhas com o host
+  do banco no arquivo de historico). Ela tambem apareceu, parcialmente riscada, num print enviado
+  ao suporte (nao publicado). Pendencia com dono e prazo (Diogo, 12/11): trocar as credenciais do
+  banco, se o painel permitir; se nao permitir e a senha estava legivel no print, recriar o banco
+  e restaurar o backup de 11/11 (caminho da Parte 8.7, ja testado); se houver, restringir os IPs
+  de entrada do banco.
+- RESOLVIDA em 12/11 (decisao do Diogo), pela restricao de IP: em 12/11 o Diogo restringiu o
+  acesso externo do banco ao IP da rede dele (painel do banco, Info > Networking). A URL externa
+  so aceita conexao dessa rede, mesmo com a senha; o servico continua usando a conexao interna,
+  que vale so para os servicos do mesmo workspace. A senha NAO foi trocada (seria um reforco).
+  Conferencia (Diogo, 12/11): da rede dele, o psql pela URL externa respondeu (count(*) de pedido
+  = 6) e o /api/saude continuou "banco ok" (o servico usa a conexao interna). Que uma rede de
+  FORA da lista e recusada nao foi testado (o teste exigiria a URL com a senha em outra rede).
+  Limites, registrados para quem mexer no banco depois:
+  (1) A protecao vale enquanto a lista estiver restrita. Reabrir para 0.0.0.0/0 torna a senha
+      antiga valida de fora outra vez. Antes de reabrir, trocar a credencial: banco > Info >
+      Credentials > New default credential; Blueprints > mente-fria > Manual Sync; servico >
+      Manual Deploy; conferir /api/saude; so entao apagar a credencial antiga (lixeira).
+  (2) Se o IP da rede do Diogo for compartilhado ou mudar, quem estiver atras do mesmo IP (ou
+      receber o IP antigo) poderia se conectar. Risco baixo.
+  (3) Backups e comandos pela URL externa (Parte 8.7) so funcionam da rede do Diogo; de outra
+      rede, atualizar a lista antes.
+- Senhas do Administrador e do Funcionario: fortes, fora do repositorio, digitadas no Read-Host.
+
+------------------------------------------------------------------------------
+Pendente (A47 e A41)
+------------------------------------------------------------------------------
+- Backups: fim da semana de bugs (13/11), semanal e 29/11 (Diogo); restauracao testada pelo Kaue
+  ou pelo Diogo.
+- CT68, CT70 e CT72 no ambiente publicado (tutorial do Kaue, Parte 8.6).
+- URL do servico e datas do banco no README (Parte 8.8 do tutorial do Kaue).
+==============================================================================

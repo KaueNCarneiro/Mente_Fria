@@ -1486,6 +1486,12 @@ Lucas: pode trazer a main para a Fase 6. Leonardo: a Tela 13 já tem a rota real
 
 ## Parte 8 — Publicação no Render (US20)
 
+> **Mudança de 11/11/2026 (A47):** o deploy passou para o **Diogo, na conta dele**, a pedido do Lucas, que aprovou. Nesta parte, onde está "o Lucas", "a conta do Lucas" ou "o computador do Lucas", leia **o Diogo**. Continua com você (Kauê): autorizar o Render no repositório (só o dono pode) e testar a restauração do backup. As credenciais e a URL do banco ficam só com o Diogo.
+>
+> **Feito em 11/11, à noite** (evidência `docs/Sprint_4/evidencias/2026-11-11_diogo_deploy-render.txt`). Duas diferenças em relação ao texto abaixo:
+> - **Não há deploy automático.** O Blueprint foi criado pelo endereço público do repositório, porque o app do Render não está instalado nele. Depois de cada merge na `main` que mexa no `backend/`, o Diogo publica à mão: *Manual Deploy* → *Deploy latest commit* → esperar *live* → `GET /api/saude`. O Pages, ao contrário, publica sozinho. Por isso, **o backend tem de ir ao ar antes** de uma tela que dependa dele chegar à `main` (ex.: a Tela 19 da US26).
+> - **Na 8.5, um passo perigoso causou um incidente** (ver o aviso ali).
+
 **Quem faz o quê (A43):**
 - **o Lucas** cria a conta (até sáb 31/10) e, na seg 02/11, faz os cliques no painel. As credenciais da conta são só dele: não as peça nem as use;
 - **você** prepara os arquivos, testa a imagem, autoriza o acesso ao repositório (é o dono), guia o Lucas, cria o Administrador, conduz a carga do schema, o seed e o backup, e roda os CTs do deploy;
@@ -1775,7 +1781,7 @@ Esses passos seguem a documentação do Render (*blueprint*, lida em 26/10). **N
 
 6. **Assim que o serviço estiver no ar, mande a `<URL_DO_SERVICO>` ao Leonardo.** Ele a põe na constante `PRODUCAO` do `config.js` (tutorial dele, Parte 8.3), num PR, e o Pages publica as telas apontando para o Render.
 
-**Deploy automático:** por padrão, cada merge na `main` publica de novo. O que entrar depois (a US26, se passar no *gate*, e as correções da semana de bugs) aparece sozinho no Render.
+**Deploy automático:** por padrão, cada merge na `main` publica de novo. O que entrar depois (a US26, se passar no *gate*, e as correções da semana de bugs) aparece sozinho no Render. **Não vale para o deploy de 11/11 (A47):** ele foi criado pelo endereço público, sem o app do Render, então o deploy é manual (ver o aviso no início desta parte).
 
 **Agora, sem demora, as Partes 8.4 e 8.5** (schema e Administrador). Não divulgue a URL do serviço a ninguém fora do grupo antes disso.
 
@@ -1839,39 +1845,50 @@ Açaí (polpa)|0.000
 
 **Senhas:** fortes, que **não estão em nenhum arquivo do repositório**. O repositório é público: **nunca** use no Render a `senha1234` nem a `senha-local-1234` dos tutoriais. Guarde as duas senhas num gerenciador de senhas e passe ao grupo só por mensagem privada.
 
+> ⚠️ **Corrigido em 11/11/2026, depois de um incidente no deploy.** A versão anterior deste bloco tinha os marcadores `<NOME_DO_ADMIN>` e `<EMAIL_DO_ADMIN>` na própria linha e rodava um "cadastro de teste" com uma senha escrita no próprio tutorial (público) **mesmo que o primeiro cadastro falhasse**. Os marcadores não foram trocados, o primeiro deu `400`, e o cadastro de teste virou o Administrador do Render (apagado em seguida; `2026-11-11_diogo_deploy-render.txt`). Agora os dados entram pelo `Read-Host` e a prova de que a porta fechou **nunca cria ninguém**.
+
+**Bloco 1: o Administrador.** Rode e confira o resultado antes de seguir:
+
 ```powershell
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $api = "<URL_DO_SERVICO>/api"
+$nomeAdmin  = Read-Host "Nome do Administrador"
+$emailAdmin = Read-Host "E-mail do Administrador"
 $senhaAdmin = Read-Host "Senha do Administrador"
-(Chamar POST "$api/auth/registro" @{ nome = "<NOME_DO_ADMIN>"; email = "<EMAIL_DO_ADMIN>"; senha = $senhaAdmin }).status
-(Chamar POST "$api/auth/registro" @{ nome = "Teste"; email = "teste@exemplo.com"; senha = "qualquer-coisa-1234" }).status
-$tokAdmin = (Chamar POST "$api/auth/login" @{ email = "<EMAIL_DO_ADMIN>"; senha = $senhaAdmin }).corpo.token
+$r = Chamar POST "$api/auth/registro" @{ nome = $nomeAdmin; email = $emailAdmin; senha = $senhaAdmin }
+"registro: $($r.status)"; if ($r.status -ne 201) { $r.corpo | ConvertTo-Json -Compress }
+```
+
+**Só se apareceu `registro: 201`**, o bloco 2: a prova de que a porta fechou e o Funcionário.
+
+```powershell
+"porta: $((Chamar POST "$api/auth/registro" @{ nome = ""; email = ""; senha = "" }).status)"
+$tokAdmin = (Chamar POST "$api/auth/login" @{ email = $emailAdmin; senha = $senhaAdmin }).corpo.token
+if (-not $tokAdmin) { "login falhou: pare" }
+$nomeFunc  = Read-Host "Nome do Funcionário"
+$emailFunc = Read-Host "E-mail do Funcionário"
 $senhaFunc = Read-Host "Senha do Funcionário"
-(Chamar POST "$api/usuarios" @{ nome = "<NOME_DO_FUNC>"; email = "<EMAIL_DO_FUNC>"; senha = $senhaFunc } $tokAdmin).status
+"funcionario: $((Chamar POST "$api/usuarios" @{ nome = $nomeFunc; email = $emailFunc; senha = $senhaFunc } $tokAdmin).status)"
 ```
 
 | Linha | O que faz |
 |---|---|
 | `[Net.ServicePointManager]…Tls12` | Obriga o PowerShell 5.1 a usar TLS 1.2, que o Render exige em HTTPS |
-| `$senhaAdmin = Read-Host …` | Pede a senha sem deixá-la no histórico de comandos. Ela aparece na tela enquanto você digita: confira que ninguém está olhando |
-| O primeiro `registro` | Cria o Administrador |
-| O segundo `registro` | A prova de que a porta fechou: ninguém mais vira Administrador |
+| `Read-Host "…"` | Pede o dado sem deixá-lo no histórico de comandos. **O texto entre aspas é só a pergunta:** aperte Enter e digite (ou cole) o dado quando a janela perguntar. A senha aparece na tela enquanto você digita: confira que ninguém está olhando |
+| `$r = Chamar POST …/auth/registro` | Cria o Administrador. Se não der `201`, a linha seguinte mostra o motivo, e você **para** |
+| `porta:` | Um cadastro com o corpo **vazio**. Como o backend confere se já existe Administrador **antes** de validar o corpo (`UsuarioService.registrarAdministrador`, CT01B), ele responde `409` com a porta fechada e `400` com ela aberta, e em nenhum dos dois casos cria alguém |
 | `login` e `usuarios` | O Administrador cria o Funcionário |
 
-**Você deve ver:**
+**Você deve ver:** `registro: 201`, depois `porta: 409` e `funcionario: 201`.
 
-```
-201
-409
-201
-```
-
-O `201` e o `409` do registro foram validados no tutorial do Lucas (Parte 4, CT01B); o `201` do Funcionário, na imagem local (Parte 8.2). Contra o Render, não foi testado. A primeira chamada pode levar ~1 minuto se o serviço estiver "dormindo".
+O `201` e o `409` do registro foram validados no tutorial do Lucas (Parte 4, CT01B), e o fluxo completo, no Render, em 11/11. A primeira chamada pode levar ~1 minuto se o serviço estiver "dormindo".
 
 | Se der errado | O que fazer |
 |---|---|
-| O **primeiro** registro dá `409` | Alguém se cadastrou como Administrador antes de você. **Pare**, avise o grupo e chame o Diogo: o banco do Render ainda não tem nada de valor, então ele o limpa e vocês repetem as Partes 8.4 e 8.5 |
-| `400` | A senha ou o e-mail não passou na validação: veja a mensagem em `(Chamar …).corpo.campos` |
+| `registro: 409` | Alguém se cadastrou como Administrador antes de você. **Pare**, avise o grupo e chame o Diogo: o banco do Render ainda não tem nada de valor, então ele o limpa e vocês repetem as Partes 8.4 e 8.5 |
+| `registro: 400` | O nome, o e-mail ou a senha não passou na validação: a mensagem aparece logo abaixo. Corrija e repita **só o bloco 1** |
+| `porta: 400` | A porta **ainda está aberta**: o Administrador não foi criado. **Pare** e volte ao bloco 1 |
+| `login falhou: pare` | O e-mail ou a senha do Administrador foi digitado diferente no bloco 1. Defina `$emailAdmin` e `$senhaAdmin` de novo e repita o bloco 2 |
 | `Could not create SSL/TLS secure channel` | Faltou a primeira linha |
 
 **O seed de demonstração** (do Diogo; roda no **computador do Lucas**, na janela da Parte 8.4, com o Diogo conferindo a saída). Ele precisa do Administrador e do Funcionário já cadastrados:

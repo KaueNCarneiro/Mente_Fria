@@ -64,6 +64,8 @@ marcador <EMAIL_DO_ADMIN> e falhou. Nao da para provar que ninguem mais fez logi
 (a URL do servico ja estava no config.js publico). O token JWT vale 2 h e o filtro nao consulta o
 banco, entao um token eventual valeria ate ~2 h depois da exclusao. Para zerar esse risco de vez:
 gerar um novo JWT_SECRET no painel do Render (derruba todos os tokens; e so entrar de novo).
+Atualizacao (12/11): deixou de ser necessario. O token valia 2 h e o usuario de teste foi apagado
+em 11/11, a noite: qualquer token dele ja expirou.
 Licao: a Parte 8.5 do tutorial do Kaue foi corrigida em 11/11 (dados pelo Read-Host, bloco do
 Administrador separado, e a prova da porta fechada com corpo vazio, que nunca cria ninguem).
 A conferencia do registro fechado feita depois por curl usou senha invalida ("curta"): com a porta
@@ -109,6 +111,22 @@ Registro de Administrador depois do cadastro real -> HTTP 409
   banco, se o painel permitir; se nao permitir e a senha estava legivel no print, recriar o banco
   e restaurar o backup de 11/11 (caminho da Parte 8.7, ja testado); se houver, restringir os IPs
   de entrada do banco.
+- RESOLVIDA em 12/11 (decisao do Diogo), pela restricao de IP: em 12/11 o Diogo restringiu o
+  acesso externo do banco ao IP da rede dele (painel do banco, Info > Networking). A URL externa
+  so aceita conexao dessa rede, mesmo com a senha; o servico continua usando a conexao interna,
+  que vale so para os servicos do mesmo workspace. A senha NAO foi trocada (seria um reforco).
+  Conferencia (Diogo, 12/11): da rede dele, o psql pela URL externa respondeu (count(*) de pedido
+  = 6) e o /api/saude continuou "banco ok" (o servico usa a conexao interna). Que uma rede de
+  FORA da lista e recusada nao foi testado (o teste exigiria a URL com a senha em outra rede).
+  Limites, registrados para quem mexer no banco depois:
+  (1) A protecao vale enquanto a lista estiver restrita. Reabrir para 0.0.0.0/0 torna a senha
+      antiga valida de fora outra vez. Antes de reabrir, trocar a credencial: banco > Info >
+      Credentials > New default credential; Blueprints > mente-fria > Manual Sync; servico >
+      Manual Deploy; conferir /api/saude; so entao apagar a credencial antiga (lixeira).
+  (2) Se o IP da rede do Diogo for compartilhado ou mudar, quem estiver atras do mesmo IP (ou
+      receber o IP antigo) poderia se conectar. Risco baixo.
+  (3) Backups e comandos pela URL externa (Parte 8.7) so funcionam da rede do Diogo; de outra
+      rede, atualizar a lista antes.
 - Senhas do Administrador e do Funcionario: fortes, fora do repositorio, digitadas no Read-Host.
 
 ------------------------------------------------------------------------------

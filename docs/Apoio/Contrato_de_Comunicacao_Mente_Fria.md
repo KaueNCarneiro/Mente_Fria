@@ -618,9 +618,9 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 **Regras:**
 
 - **Alterar a porção padrão não muda os ingredientes já cadastrados** (critério 3 da US26). O padrão é só a **sugestão** do formulário de ingrediente; cada ingrediente guarda a sua própria `porcao_padrao`.
-- Os critérios 1 e 2 da US26 (sugerir a porção ao escolher a unidade; poder sobrescrever no ingrediente) já estão na tela de ingredientes (`frontend/js/app.js`, testada com a API simulada). O `GET /api/unidades-medida` real (§2.1) e o `POST /api/ingredientes` completo chegam com a Fase 2 do backend.
+- Os critérios 1 e 2 da US26 (sugerir a porção ao escolher a unidade; poder sobrescrever no ingrediente) já estão na tela de ingredientes (`frontend/js/screens/ingredientes.js`), e o `GET /api/unidades-medida` real (§2.1) e o `POST /api/ingredientes` completo entraram com a Fase 2 do backend (11/11/2026).
 - **No `PATCH`, a unidade vem só da URL:** um `unidade_medida` no corpo é ignorado. Uma URL com `/` codificado (`%2F`) é recusada pelo próprio Spring Security antes de chegar ao serviço.
-- **As mensagens novas** ("Informe a unidade de medida…", "Use no máximo 3 casas decimais…" e o `409` "Esta unidade já está cadastrada.") entram no `docs/Apoio/mapa_constraints.md` no PR do backend da US26, junto com o código (tutorial do Diogo, Parte 10.5).
+- **As mensagens novas** ("Informe a unidade de medida…", "Use no máximo 3 casas decimais…" e o `409` "Esta unidade já está cadastrada.") estão no `docs/Apoio/mapa_constraints.md` desde o PR do backend da US26 (11/11/2026; tutorial do Diogo, Parte 10.5).
 - **Excluir unidade fica de fora.** A FK `fk_ingrediente_unidade_medida` já impede excluir uma unidade em uso.
 
 ---
@@ -629,6 +629,7 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 
 | Data | Alteração | Itens |
 |---|---|---|
+| 11/11/2026 | **§2.11:** duas frases atualizadas com o backend da US26 (PR #88): os critérios 1 e 2 apontam para `frontend/js/screens/ingredientes.js` e para a Fase 2 já na `main`, e as mensagens novas passam a constar do `mapa_constraints.md`. Nenhum formato, mensagem ou regra mudou | US26 |
 | 10/11/2026 | **Aprovada pelo Kauê em 10/11 (PR #76).** **§2.11** nova (US26/UC20, condicional): `POST /api/unidades-medida` e `PATCH /api/unidades-medida/{unidade_medida}`, com a unidade normalizada (minúsculas, sem espaços nas pontas), erros `400`, `404`, `409` e `403`. **§2.2:** as duas rotas saem da lista "fora" e entram na tabela de rotas. **§2:** `409` e `404` citam a unidade de medida. Nenhum formato existente mudou | A40, US26 |
 | 28/10/2026 (noite) | **Calendário (A39, A41):** a entrega passa a ser a da Sprint 4 oficial, em 06/11; o banco do Render é criado em 02/11 (antes: 31/10). Nenhum formato JSON mudou | A39, A41 |
 | 28/10/2026 | **Licença (A38):** a Gurobi autorizou por escrito a licença do `pip` no Render; `OTIMIZADOR_HABILITADO=true` no Render, sem `GRB_*`; o plano B1 (`503`) fica como reserva. Nenhum formato JSON mudou | A38 |

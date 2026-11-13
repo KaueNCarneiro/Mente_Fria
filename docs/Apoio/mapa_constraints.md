@@ -1,10 +1,12 @@
 # Mapa de constraints → mensagens (Sprints 1 e 3)
 
-> **Atualizado em 27/10/2026 (Sprint 3):** acrescentadas as constraints de `cliente`, `pedido`, `pedido_produto` e `movimentacao_estoque` (estoque por linhas, `motivo`, status do pedido), com os testes T33–T73 de `constraints_sprint3_teste.sql`. Essas constraints existem no `Script_DDL.sql` de referência (`docs/Sprint_3/referencia/bd/`) e entram em `bd/` pelo PR do banco da Sprint 3; até lá, o `bd/Script_DDL.sql` da `main` ainda é o da Sprint 1.
+> **Atualizado em 11/11/2026 (US26):** as duas linhas de `unidade_medida_porcao_padrao` passam de "só seed" para as mensagens da Tela 19 (`400` e `409`), e as validações do serviço da US26 entram nas regras de negócio.
+>
+> **Atualizado em 27/10/2026 (Sprint 3):** acrescentadas as constraints de `cliente`, `pedido`, `pedido_produto` e `movimentacao_estoque` (estoque por linhas, `motivo`, status do pedido), com os testes T33–T73 de `constraints_sprint3_teste.sql`. Essas constraints entraram em `bd/Script_DDL.sql` pelo PR do banco da Sprint 3 (#44, 29/10/2026).
 
 **Uso:** referência para o backend traduzir violações do banco em mensagens claras por campo (US7) e para o frontend exibi-las.
 As colunas **Campo na API** e **HTTP** ligam este mapa ao *Contrato de Comunicação* (§2): a chave de `campos` usa os mesmos nomes de campo do contrato (snake_case), e os códigos HTTP seguem o Contrato de Comunicação (§2), aprovado pelo Kauê em 20/09/2026.
-Cada linha tem um teste correspondente: T01–T32 em `bd/constraints_teste.sql` (antes chamado `constraints_sprint1_teste.sql`) e T33–T73 em `constraints_sprint3_teste.sql` (Sprint 3; hoje em `docs/Sprint_3/referencia/bd/`). Todos validados no PostgreSQL 16.
+Cada linha tem um teste correspondente: T01–T32 em `bd/constraints_teste.sql` (antes chamado `constraints_sprint1_teste.sql`) e T33–T73 em `bd/constraints_sprint3_teste.sql` (Sprint 3, desde o #44). Todos validados no PostgreSQL 16.
 
 ## Regras de convivência entre aplicação e banco
 
@@ -46,8 +48,8 @@ Cada linha tem um teste correspondente: T01–T32 em `bd/constraints_teste.sql` 
 | `produto_ingrediente` | `produto_ingrediente_pkey` | composição | `composicao` | Este ingrediente já foi adicionado ao produto. | 400 | T28 |
 | `produto_ingrediente` | `fk_produto_ingrediente_ingrediente` | composição | `composicao` | Ingrediente não encontrado. | 400 | T29 |
 | `produto_ingrediente` | `fk_produto_ingrediente_produto` | composição | `composicao` | Produto não encontrado. | 400 | T30 |
-| `unidade_medida_porcao_padrao` | `chk_unidade_porcao_padrao` | (só seed na Sprint 1) | — | — | — | T31 |
-| `unidade_medida_porcao_padrao` | `unidade_medida_porcao_padrao_pkey` | (só seed na Sprint 1) | — | — | — | T32 |
+| `unidade_medida_porcao_padrao` | `chk_unidade_porcao_padrao` | porção padrão (Tela 19, US26) | `porcao_padrao` | A porção deve ser maior que zero. | 400 | T31, T73 (CT75). Na Sprint 1, só seed |
+| `unidade_medida_porcao_padrao` | `unidade_medida_porcao_padrao_pkey` | unidade de medida (Tela 19, US26) | `unidade_medida` | Esta unidade já está cadastrada. | 409 | T32 (CT74). Na Sprint 1, só seed |
 | `cliente` | NOT NULL `nome`, `contato`, `endereco` | nome, contato, endereço | `nome`, `contato`, `endereco` | Informe o nome. / Informe o contato. / Informe o endereço. | 400 | T34–T36 |
 | `pedido` | `fk_pedido_cliente` | cliente | `cliente_id` | Cliente não encontrado. | 400 | T40 |
 | `pedido` | NOT NULL `usuario_id`, `fk_pedido_usuario`, `chk_pedido_valor_total`, `chk_pedido_status`, `chk_pedido_cancelamento`, `fk_pedido_usuario_cancelamento` | — | — | (erro interno: quem preenche é o backend) | 500 | T38, T39, T41–T46 |
@@ -62,7 +64,7 @@ Cada linha tem um teste correspondente: T01–T32 em `bd/constraints_teste.sql` 
 | `movimentacao_estoque` | `fk_movimentacao_ingrediente` | ingrediente | `ingrediente_id` | Ingrediente não encontrado. | 400 | T68 |
 | `movimentacao_estoque` | `chk_movimentacao_restante`, `fk_movimentacao_usuario` | — | — | (erro interno: quem preenche é o backend) | 500 | T55–T57, T64, T69 |
 | `ingrediente` | `chk_ingrediente_quantidade_estoque` (numa baixa) | — | — | Estoque insuficiente para o ingrediente <nome> / para o produto <nome>. | **422** | T71 (CT21, CT25) |
-| `unidade_medida_porcao_padrao` | `chk_unidade_porcao_padrao` (na alteração, US26) | porção padrão | `porcao_padrao` | A porção deve ser maior que zero. | 400 | T73 (US26: fora da Sprint 3; condicional na Sprint 4, A40) |
+| `unidade_medida_porcao_padrao` | `chk_unidade_porcao_padrao` (na alteração, US26) | porção padrão | `porcao_padrao` | A porção deve ser maior que zero. | 400 | T73 (CT75; US26 condicional na Sprint 4, A40/A46) |
 
 ## Como a API devolve isso (definido no Contrato de Comunicação, §2)
 
@@ -101,11 +103,18 @@ Erros que não pertencem a um campo (ex.: estoque insuficiente) trazem só `mens
 - **Estoque por linhas (Sprint 3, D10):** a baixa consome as linhas **válidas** da validade mais próxima para a mais distante; **estoque vencido nunca é vendido**; o descarte consome só linhas vencidas. O banco garante `quantidade_restante` entre 0 e a quantidade, mas a escolha das linhas e a invariante "saldo = soma dos restantes" são da aplicação.
 - **O motivo `PEDIDO`** só o backend grava: vindo do cliente, é `400` ("Motivo de saída inválido.").
 - **Datas** de pedido e de movimentação vêm do relógio do Java em `America/Sao_Paulo` (A9), não do `DEFAULT CURRENT_TIMESTAMP` do banco (que roda em UTC no Render).
+- **US26 (porção padrão por unidade, Contrato §2.11, 11/11/2026):** o serviço valida **antes** do banco e responde `400` por campo:
+  - `unidade_medida` ausente, vazia ou com mais de 20 caracteres → "Informe a unidade de medida (até 20 caracteres).";
+  - `porcao_padrao` ausente → "Informe a porção.";
+  - `porcao_padrao` ≤ 0 → "A porção deve ser maior que zero.";
+  - `porcao_padrao` com mais de 3 casas decimais significativas, ou de 10.000.000 para cima → "Use no máximo 3 casas decimais e um valor menor que 10.000.000.". A coluna é `DECIMAL(10,3)`: sem essa checagem, o PostgreSQL arredondaria sem avisar, ou daria `numeric field overflow` (sem constraint, viraria `500`).
+
+  A unidade é gravada sem espaços nas pontas e em minúsculas, como o e-mail, porque a FK diferencia maiúsculas (T14). Unidade inexistente no `PATCH` → `404` "Unidade de medida não encontrada.". Casos: CT73–CT78 (`Us26PorcaoPadraoTest`).
 - **E-mail sem diferenciar maiúsculas:** o `UNIQUE` do PostgreSQL trata `Dono@Acai.com` e `dono@acai.com` como e-mails diferentes (verificado). **Proposta:** o backend grava e consulta o e-mail já normalizado (sem espaços nas pontas, em minúsculas).
 
 ## Necessidade que a FK cria para o backend e o frontend
 
-`ingrediente.unidade_medida` só aceita unidades já cadastradas em `unidade_medida_porcao_padrao`, e a tela de gestão de unidades (US26) ficou **fora da Sprint 3** (Adendo nº 1); desde 28/10, ela só entra na Sprint 4 se passar no *gate* de seg 02/11 (A40). Na Sprint 1, o campo "unidade de medida" da tela de ingredientes deve ser uma **lista de seleção alimentada pelo banco** (nunca texto livre), o que exige um endpoint de leitura. Consulta sugerida:
+`ingrediente.unidade_medida` só aceita unidades já cadastradas em `unidade_medida_porcao_padrao`, e a tela de gestão de unidades (US26) ficou **fora da Sprint 3** (Adendo nº 1); desde 28/10, ela é condicional na Sprint 4 (A40; prazo de 14/11 pela A46). O backend dela (`POST` e `PATCH /api/unidades-medida`) é de 11/11/2026. Na Sprint 1, o campo "unidade de medida" da tela de ingredientes deve ser uma **lista de seleção alimentada pelo banco** (nunca texto livre), o que exige um endpoint de leitura. Consulta sugerida:
 
 ```sql
 SELECT unidade_medida, porcao_padrao

@@ -1,0 +1,60 @@
+==============================================================================
+EVIDENCIA - Tutorial do Diogo, Parte 10.6: a Tela 19 (Porcao Padrao, US26)
+==============================================================================
+Gerado em: 2026-11-12 23:39   Executado por: Claude, a pedido do Diogo
+Branch: feature/us26-tela19, a partir da main a000ac2
+Node v24.15.0, Playwright 1.62.1, Google Chrome (canal 'chrome'); API simulada (o teste intercepta
+http://localhost:8080/**).
+
+==============================================================================
+1) As 4 verificacoes novas (tests/browser.cjs), dentro da suite completa
+==============================================================================
+OK porção padrão: lista, aviso do critério 3 e link no menu do Administrador
+OK nova unidade: erros por campo, payload normalizado e 409 no campo
+OK alterar porção: PATCH só da linha, URL codificada, payload exato e erro por linha
+OK Funcionário não abre a Porção Padrão nem vê o link
+43 verificações passaram. Integração HTTP simulada.
+
+==============================================================================
+2) Estabilidade: 10 rodadas seguidas da suite completa (servidor estatico em Node, porta 5502)
+==============================================================================
+node rodada 1: OK   43 verificações passaram. Integração HTTP simulada.
+node rodada 2: OK   43 verificações passaram. Integração HTTP simulada.
+node rodada 3: OK   43 verificações passaram. Integração HTTP simulada.
+node rodada 4: OK   43 verificações passaram. Integração HTTP simulada.
+node rodada 5: OK   43 verificações passaram. Integração HTTP simulada.
+node rodada 6: OK   43 verificações passaram. Integração HTTP simulada.
+node rodada 7: OK   43 verificações passaram. Integração HTTP simulada.
+node rodada 8: OK   43 verificações passaram. Integração HTTP simulada.
+node rodada 9: OK   43 verificações passaram. Integração HTTP simulada.
+node rodada 10: OK   43 verificações passaram. Integração HTTP simulada.
+
+==============================================================================
+3) Quebrar de proposito (alteracao temporaria em js/screens/porcao.js, desfeita logo depois)
+==============================================================================
+a) Sem encodeURIComponent na URL do PATCH (unidade 'saco #2'):
+   AssertionError: actual '/api/unidades-medida/saco%20'  expected '/api/unidades-medida/saco%20%232'
+b) Sem a normalizacao da unidade (trim + minusculas):
+     - waiting for getByText('Informe a unidade de medida (até 20 caracteres).').first() to be visible
+   -> a verificacao 'nova unidade' falha (a unidade so com espacos nao e recusada).
+
+==============================================================================
+4) Achado: o servidor 'python -m http.server' deixa a suite instavel nesta maquina
+==============================================================================
+Mesma maquina, 5 rodadas cada, falhas sempre do tipo 'a pagina nao terminou de carregar', em
+verificacoes sorteadas e antigas (login, ingredientes, pedidos, producao):
+  main rodada 1: OK   39 verificações passaram. Integração HTTP simulada.
+  main rodada 2: OK   39 verificações passaram. Integração HTTP simulada.
+  main rodada 3: FALHA depois de: OK produção mostra "Calculando", a tabela, os motivos do zero e nenhum termo técnico
+  main rodada 4: FALHA depois de: OK movimentação: validade só na entrada, descarte só com vencido e payload exato
+  main rodada 5: FALHA na 1a verificacao (a pagina de login nao carregou)
+  tela19 rodada 1: FALHA depois de: OK criação e login automático sem persistir senha
+  tela19 rodada 2: FALHA depois de: OK edição preserva porção e usa PUT sem GET opcional
+  tela19 rodada 3: OK   43 verificações passaram. Integração HTTP simulada.
+  tela19 rodada 4: FALHA depois de: OK pedido: sem itens bloqueia, sem repetir, total 44,70 e payload exato
+  tela19 rodada 5: FALHA depois de: OK produção sem nada a produzir e 503 como aviso informativo
+  (main = frontend da main, sem a Tela 19; tela19 = esta branch; os dois com python -m http.server)
+Com um servidor estatico em Node (secao 2), a mesma branch passou 10 de 10.
+Conclusao: a instabilidade ja existia e vem do servidor de arquivos, nao das telas.
+Sugestao ao Leonardo: trocar o servidor do 'npm test' (ou repetir as rodadas na maquina dele).
+==============================================================================

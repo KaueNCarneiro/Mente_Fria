@@ -14,6 +14,7 @@ import {production} from './screens/producao.js';
 import {dashboard} from './screens/dashboard.js';
 import {restock} from './screens/reposicao.js';
 import {marketing} from './screens/marketing.js';
+import {porcaoPadrao} from './screens/porcao.js';
 async function render() {
   state.revision++;root.replaceChildren();document.title='Mente Fria';
   const path=location.hash.replace(/^#\/?/,'')||'login', [section,action,id]=path.split('/');
@@ -31,6 +32,7 @@ async function render() {
   else if(section==='dashboard'&&!action)await dashboard(main);
   else if(section==='reposicao'&&!action)restock(main);
   else if(section==='marketing'&&!action)await marketing(main);
+  else if(section==='porcao-padrao'&&!action)await porcaoPadrao(main);
   else if(section==='inicio'){
     heading(main,'Bem-vindo ao Mente Fria','Consulte os ingredientes e produtos disponíveis.');
     const cards = ['Ingredientes','Produtos'].map(title => node('a', {href:'#/'+title.toLowerCase(),class:'card'}, node('h2',{},title), node('p',{class:'muted'},'Consultar '+title.toLowerCase())));

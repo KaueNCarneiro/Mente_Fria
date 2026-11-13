@@ -35,9 +35,10 @@ O backend é escolhido em `js/config.js`, pelo endereço da página:
 | **Reposição** (13) | `#/reposicao` | Admin | `POST /api/reposicao/recomendacao` (2.7) |
 | **Dashboard** (03) | `#/dashboard` | Admin | `GET /api/dashboard` (2.8) |
 | **Marketing** (14) | `#/marketing` | Admin | `GET /api/marketing/sugestoes` (2.9) |
+| **Porção Padrão** (19, US26) | `#/porcao-padrao` | Admin | `GET`, `POST` e `PATCH /api/unidades-medida` (2.11) |
 | Teste de comunicação | `#/comunicacao` | Público | `/api/saude`, `/api/ingredientes` |
 
-Ficam fora do semestre (decisões A2b e A40): Clientes (US13), Porção Padrão (US26, com o Diogo), alertas completos (US15/US16), CSV do dashboard (US19) e cancelamento de pedido (US27). No menu, aparecem apagados.
+Ficam fora do semestre (decisões A2b e A40): Clientes (US13), alertas completos (US15/US16), CSV do dashboard (US19) e cancelamento de pedido (US27). No menu, aparecem apagados. A Porção Padrão (US26) entrou pela A46 (Tela 19, feita pelo Diogo em 12/11).
 
 ## Regras que valem para todas as telas
 
@@ -64,7 +65,8 @@ js/
   validation.js     cálculos puros (decimal, porções, açaí)
   apoio_telas_novas.js   funções puras das Telas 03, 13 e 14 (filtros, resumo, termos técnicos)
   screens/          um módulo por tela: auth, shell, funcionarios, ingredientes, produtos,
-                    comunicacao, estoque, pedidos, producao, dashboard, reposicao, marketing
+                    comunicacao, estoque, pedidos, producao, dashboard, reposicao, marketing,
+                    porcao (Tela 19)
 css/styles.css      estilos responsivos
 assets/             logo, ícones e a fonte Inter (com licença)
 tests/browser.cjs   testes de navegador com a API simulada
@@ -79,7 +81,7 @@ npm install
 npm test
 ```
 
-Com o servidor do frontend na porta 5500 e o Google Chrome instalado. **Resultado esperado: `39 verificações passaram.`** (10 de 10 rodadas em 06/11/2026). As verificações usam a API simulada: o teste intercepta `http://localhost:8080/**` e falha com "Rota inesperada" se uma tela chamar uma rota que ele não conhece.
+Com o servidor do frontend na porta 5500 e o Google Chrome instalado. **Resultado esperado: `43 verificações passaram.`** (39 até 06/11/2026, 10 de 10 rodadas; 43 com a Tela 19, 10 de 10 rodadas em 12/11/2026). **Atenção:** nesta máquina do Diogo, com o `python -m http.server`, a suíte falhou de forma intermitente (a página não terminava de carregar), inclusive na `main` sem a Tela 19; com um servidor estático em Node, 10 de 10. Se acontecer na sua, repita a rodada ou troque o servidor (evidência `2026-11-12_diogo_us26-tela19_npm-test.txt`). As verificações usam a API simulada: o teste intercepta `http://localhost:8080/**` e falha com "Rota inesperada" se uma tela chamar uma rota que ele não conhece.
 
 - `PLAYWRIGHT_CHANNEL` escolhe outro navegador instalado; `FRONTEND_URL`, outro endereço.
 - As imagens de cada rodada vão para `tests/artifacts` (ignorada pelo Git).

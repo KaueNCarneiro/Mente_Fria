@@ -1,0 +1,67 @@
+==============================================================================
+EVIDENCIA - Tutorial do Diogo, Parte 10.5: o backend da US26 (POST e PATCH /api/unidades-medida)
+==============================================================================
+Gerado em: 2026-11-11 19:48   Executado por: Claude, a pedido do Diogo
+Branch: feature/us26-backend, a partir da sprint-4 aaa73d0
+Java: java version "25.0.2" 2026-01-20 LTS
+Banco dos testes: PostgreSQL 16 temporario do Testcontainers (bd/Script_DDL.sql); o mente-fria-db NAO foi usado.
+Python real: optimization\venv\Scripts\python.exe (Python 3.14.0, gurobipy 13.0.3).
+
+==============================================================================
+1) Os 6 testes novos: Us26PorcaoPadraoTest, um por caso do Plano de Testes
+==============================================================================
+   cadastraUnidadeNovaNormalizada .............. CT73
+   unidadeRepetidaDa409InclusiveComMaiuscula ... CT74
+   dadosInvalidosNosLimitesDao400 .............. CT75
+   alterarPorcaoPadraoNaoMudaOsIngredientes .... CT76 (criterio 3 da US26)
+   alterarUnidadeInexistenteDa404 .............. CT77
+   soOAdministradorCadastraEAltera ............. CT78
+
+==============================================================================
+2) Quebrar de proposito: sem a normalizacao da unidade e sem a checagem das casas decimais
+   (alteracao temporaria no UnidadeMedidaService, desfeita logo depois)
+==============================================================================
+[ERROR] Tests run: 6, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 25.41 s <<< FAILURE! -- in com.mentefria.backend.Us26PorcaoPadraoTest
+[ERROR]   Us26PorcaoPadraoTest.alterarPorcaoPadraoNaoMudaOsIngredientes:85 
+[ERROR]   Us26PorcaoPadraoTest.cadastraUnidadeNovaNormalizada:28 
+[ERROR]   Us26PorcaoPadraoTest.dadosInvalidosNosLimitesDao400:53 
+[ERROR]   Us26PorcaoPadraoTest.unidadeRepetidaDa409InclusiveComMaiuscula:39 
+[ERROR] Tests run: 6, Failures: 4, Errors: 0, Skipped: 0
+   -> 4 testes falham (CT73, CT74, CT75, CT76): os testes detectam as duas regras.
+
+==============================================================================
+3) ./mvnw test completo, com o codigo correto e o Python real
+==============================================================================
+[INFO] Running com.mentefria.backend.config.SegurancaEErrosTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.278 s -- in com.mentefria.backend.config.SegurancaEErrosTest
+[INFO] Running com.mentefria.backend.DashboardTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.870 s -- in com.mentefria.backend.DashboardTest
+[INFO] Running com.mentefria.backend.Fase2CrudTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.285 s -- in com.mentefria.backend.Fase2CrudTest
+[INFO] Running com.mentefria.backend.Fase3EstoquePedidoTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.320 s -- in com.mentefria.backend.Fase3EstoquePedidoTest
+[INFO] Running com.mentefria.backend.Fase4ProducaoTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.809 s -- in com.mentefria.backend.Fase4ProducaoTest
+[INFO] Running com.mentefria.backend.MarketingTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.026 s -- in com.mentefria.backend.MarketingTest
+[INFO] Running com.mentefria.backend.OtimizadorDesligadoTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.276 s -- in com.mentefria.backend.OtimizadorDesligadoTest
+[INFO] Running com.mentefria.backend.produto.RegraAcaiTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s -- in com.mentefria.backend.produto.RegraAcaiTest
+[INFO] Running com.mentefria.backend.python.ProcessoPythonTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.922 s -- in com.mentefria.backend.python.ProcessoPythonTest
+[INFO] Running com.mentefria.backend.PythonRealTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.308 s -- in com.mentefria.backend.PythonRealTest
+[INFO] Running com.mentefria.backend.ReposicaoTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.210 s -- in com.mentefria.backend.ReposicaoTest
+[INFO] Running com.mentefria.backend.Us26PorcaoPadraoTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.555 s -- in com.mentefria.backend.Us26PorcaoPadraoTest
+[INFO] Results:
+[INFO] Tests run: 101, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  52.726 s
+
+Notas:
+- As linhas 'Erro inesperado' do log completo sao esperadas (testes que provocam 500 de proposito).
+- O log completo nao vai aqui porque traz a senha aleatoria que o Spring gera a cada execucao.
+==============================================================================

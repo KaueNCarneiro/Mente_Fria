@@ -480,7 +480,7 @@ SELECT i.id FROM ingrediente i WHERE i.quantidade_estoque <>
 - **US13 (clientes):** as constraints de `cliente` existem e têm testes (T33–T36), mas o SQL dos repositórios não entra no semestre (A40).
 - **US15/US16 completas (alertas):** o Adendo nº 1 (item 4) trata os alertas pela tela de estoque (consultas 1 e 2) e pelo resumo do dashboard, sem consultas próprias.
 - **US27 (cancelar pedido):** o schema já tem `status`, `data_cancelamento` e `usuario_cancelamento_id`, e as consultas já filtram por `status`, mas o `UPDATE` de cancelamento fica fora do semestre (A40).
-- **US26 (porção padrão por unidade):** condicional (A40). Se entrar, os métodos `inserir` e `atualizarPorcao` do `UnidadeMedidaRepository` vão para o `sql_repositorios.md` (tutorial do Diogo, Parte 10.5).
+- **US26 (porção padrão por unidade):** condicional (A40; prazo de 14/11 pela A46). Os métodos `inserir` e `atualizarPorcao` do `UnidadeMedidaRepository` estão no `sql_repositorios.md` desde o backend da US26 (PR #88, 11/11/2026).
 
 ---
 

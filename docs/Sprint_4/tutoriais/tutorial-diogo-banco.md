@@ -1097,6 +1097,24 @@ O CT78 é exatamente esse molde, com `/api/unidades-medida`. O CT76 confere, dep
 
 ### 10.6 A Tela 19 (qua 04/11, até 18h, branch `feature/us26-tela19`)
 
+> **Situação (12/11):** **feita**, na branch `feature/us26-tela19` (PR para a `sprint-4`), seguindo os seis passos do molde do Leonardo:
+> - **`frontend/js/screens/porcao.js`** (novo):
+>   - a lista das unidades, com a porção atual e um "Salvar" por linha, que faz o `PATCH` só daquela unidade, com `encodeURIComponent` na URL;
+>   - o formulário "Nova unidade" (`POST`, com a unidade normalizada e o `409` no campo);
+>   - a frase do critério 3;
+>   - as mesmas mensagens da §2.11;
+> - **`router.js`:** a rota `#/porcao-padrao`;
+> - **`shell.js`:** o link no menu do Administrador (antes, apagado com "S3");
+> - **`nav.js`:** sem mudança. A guarda já tinha `porcao-padrao` só para o Administrador.
+>
+> **Testes (`tests/browser.cjs`):**
+> - 4 verificações novas: lista e aviso; nova unidade com erros, payload e `409`; `PATCH` com URL codificada e `404`; o Funcionário bloqueado;
+> - a API simulada passou a separar o `GET` do `POST` e ganhou o `PATCH`;
+> - resultado: **43 verificações, 10 de 10 rodadas**;
+> - quebrando de propósito a codificação da URL e a normalização, as verificações falham.
+>
+> **Achado:** nesta máquina, o `python -m http.server` deixava a suíte instável, inclusive na `main`; com um servidor estático em Node, a suíte ficou estável. Evidência: `docs/Sprint_4/evidencias/2026-11-12_diogo_us26-tela19_npm-test.txt`. O backend da US26 já está na `main` e no Render (#88/#93), então a tela funciona de ponta a ponta assim que chegar à `main` e o Pages publicar.
+
 O molde é a tela-exemplo de Estoque do tutorial do Leonardo (`docs/Sprint_4/tutoriais/tutorial-leonardo-frontend.md`, Parte 11): os mesmos seis passos.
 
 **Antes, o ambiente do frontend** (tutorial do Leonardo): o Node e o `npm install` (Parte 1.2); o servidor dos arquivos em `127.0.0.1:5500` (Parte 1.3); e o backend rodando com o `backend\.env` (Parte 9). As verificações novas só rodam de forma confiável depois da correção da A13 (Parte 7 dele).

@@ -2370,7 +2370,7 @@ O passo a passo técnico do Render está no **tutorial do Kauê**, Parte 8 (`doc
 ### 8.1 Sáb 31/10: criar a conta (só a conta)
 
 1. Acesse `https://render.com` → **Get Started**. Crie a conta com o seu e-mail ou com o GitHub.
-2. **Não crie** banco nem serviço ainda: o banco gratuito **vence 30 dias depois de criado**. Criando na seg 02/11, ele vale até 02/12, depois da data-limite de 30/11 do professor (A41).
+2. **Não crie** banco nem serviço ainda: o banco gratuito **vence 30 dias depois de criado**. Criando na seg 02/11, ele valeria até 02/12, depois da data-limite de 30/11 do professor (A41). **Na prática (A47),** o deploy passou para o Diogo, na conta dele: o banco foi criado em 11/11, às 21h59, e vence em **11/12/2026, às 21h59**, também depois de 30/11.
 3. **Confira com o Kauê ainda no sábado** se o Render consegue enxergar o repositório `KaueNCarneiro/Mente_Fria`. O repositório é da conta do Kauê. Se o Render pedir autorização no GitHub para acessá-lo, quem autoriza é o dono, o Kauê. **Não verificado aqui:** descubra no sábado, e não na segunda.
 
 ### 8.2 Seg 02/11, à tarde: deploy definitivo, com o Kauê
@@ -2397,7 +2397,7 @@ Durante o deploy:
   A primeira linha obriga o PowerShell 5.1 a usar TLS 1.2, que o Render exige em HTTPS (sem ela, algumas máquinas dão `Could not create SSL/TLS secure channel`). Esperado: `200` com `"banco":"ok"` e `401` em JSON. A primeira chamada pode levar até 1 minuto (o serviço "acorda").
 - **O Administrador e o Funcionário do sistema publicado são criados logo depois da carga do schema**, pela API (tutorial do Kauê, Parte 8.5), com **senhas que não estão em nenhum arquivo do repositório**. É logo depois porque o primeiro cadastro em `/api/auth/registro` vira Administrador: não divulgue a URL antes disso. **Nunca** use no Render a senha `senha1234` deste tutorial: o repositório é público, e qualquer pessoa entraria como Administrador.
 
-- **Anote no README:** a URL e a **data de expiração do banco** (02/12, no mesmo horário da criação).
+- **Anote no README:** a URL e a **data de expiração do banco**: **11/12/2026, às 21h59** (o banco foi criado em 11/11, às 21h59, na conta do Diogo; A47).
 
 **O que já foi simulado na máquina** (container com 512 MB e 0,1 CPU, como no plano gratuito): subida em 83 s; primeiro login em cerca de 7 s; recomendação em 3,1 s; pico de 133 MiB de memória. O Render de verdade ainda não foi testado. Há folga até qua 04/11 para corrigir.
 

@@ -1512,7 +1512,7 @@ Lucas: pode trazer a main para a Fase 6. Leonardo: a Tela 13 já tem a rota real
 - o serviço "dorme" depois de 15 minutos sem uso e leva cerca de 1 minuto para voltar;
 - 512 MB de memória e 0,1 de CPU, para o Java e o Python juntos.
 
-**Por isso o deploy definitivo é na seg 02/11 (A41):** o banco vale até **02/12**, depois de 30/11 (a data-limite do professor) e da semana de bugs.
+**Por isso o deploy definitivo foi marcado para a seg 02/11 (A41):** o banco valeria até 02/12, depois de 30/11 (a data-limite do professor) e da semana de bugs. **Na prática (A47),** o banco foi criado pelo Diogo em 11/11, às 21h59, e vence em **11/12/2026, às 21h59**, também depois de 30/11 e da semana de bugs.
 
 ### 8.1 O PR dos arquivos de deploy (sáb 31/10)
 
@@ -1771,7 +1771,7 @@ O `-v` apaga também o volume com os dados do banco descartável. Sem ele, cada 
 2. No painel: **New** → **Blueprint** → escolher o repositório `KaueNCarneiro/Mente_Fria`. O Render encontra o `render.yaml` na raiz.
 3. Quando ele perguntar o `CORS_ALLOWED_ORIGIN`, informar `<ORIGEM_DO_PAGES>` (**sem barra no fim e sem caminho**).
 4. Revisar a lista do que será criado (um serviço web e um banco) e confirmar.
-5. **Anotar a hora exata em que o banco foi criado.** Ele expira 30 dias depois, no mesmo horário (02/12).
+5. **Anotar a hora exata em que o banco foi criado.** Ele expira 30 dias depois, no mesmo horário. No deploy real, o banco foi criado em 11/11, às 21h59, e vence em **11/12/2026, às 21h59** (A47).
 
 Esses passos seguem a documentação do Render (*blueprint*, lida em 26/10). **Não foram executados aqui**, porque dependem da conta. A tela real pode ter nomes um pouco diferentes.
 
@@ -1975,7 +1975,7 @@ Guarde as saídas e os prints em `docs/Sprint_4/evidencias/`, com os nomes da ta
 
 ### 8.7 Backup e restauração (pedido do professor, A32)
 
-**Por quê:** o professor pediu um backup **com a restauração testada**. O banco gratuito expira em 02/12; o backup é o que permite recriar tudo se algo der errado.
+**Por quê:** o professor pediu um backup **com a restauração testada**. O banco gratuito expira em **11/12/2026, às 21h59** (criado em 11/11, A47); o backup é o que permite recriar tudo se algo der errado.
 
 **Quando (A41):**
 - logo depois do seed (seg 02/11);

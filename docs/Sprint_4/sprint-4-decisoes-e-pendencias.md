@@ -1,6 +1,6 @@
 # Decisões e pendências — Sprint 4 — Mente Fria
 
-**Revisão:** 12/11/2026 (segurança do deploy resolvida pela restrição de IP; sem decisão nova). Antes: 11/11/2026, noite (A47: o deploy no Render passa para o Diogo, na conta dele; aprovada pelo Lucas). Antes: 11/11/2026 (situação das pendências do Kauê: e-mail da Gurobi, G8 e P2 feitos; sem decisão nova). Antes: 10/11/2026 (A46: a US26 continua em aberto depois do prazo da A40, com novo prazo-limite em 14/11; confirmada pelo Lucas). Antes: 31/10/2026 (A45: A13 antecipada). Antes: 30/10/2026 (A44: tutoriais reescritos). Antes: 28/10/2026, noite (A43: respostas do grupo; antes: criação, A39–A42).
+**Revisão:** 13/11/2026 (pendências atualizadas com a situação de 13/11: US26 entregue, encerradas as que estavam feitas e acrescentadas as do fim do projeto; sem decisão nova). Antes: 12/11/2026 (segurança do deploy resolvida pela restrição de IP; sem decisão nova). Antes: 11/11/2026, noite (A47: o deploy no Render passa para o Diogo, na conta dele; aprovada pelo Lucas). Antes: 11/11/2026 (situação das pendências do Kauê: e-mail da Gurobi, G8 e P2 feitos; sem decisão nova). Antes: 10/11/2026 (A46: a US26 continua em aberto depois do prazo da A40, com novo prazo-limite em 14/11; confirmada pelo Lucas). Antes: 31/10/2026 (A45: A13 antecipada). Antes: 30/10/2026 (A44: tutoriais reescritos). Antes: 28/10/2026, noite (A43: respostas do grupo; antes: criação, A39–A42).
 
 **Continua o registro da Sprint 3.** As decisões **A1–A38** estão em `docs/Sprint_3/sprint-3-decisoes-e-pendencias.md` e **continuam valendo**, salvo onde uma decisão abaixo diz que as substitui. A numeração segue a mesma: a próxima decisão é a **A48**.
 
@@ -26,22 +26,39 @@
 
 ## 2. Pendências abertas
 
+**Situação em 13/11/2026.** A parte técnica está completa: Fases 1 a 6, P + Q, repositórios, as seis telas obrigatórias e a US26 estão na `main`, no Render (*Manual Deploy*) e no GitHub Pages. O que falta é teste no ambiente publicado, documentação e encerramento.
+
 | # | Pendência | Dono | Prazo | Situação / recomendação |
 |---|---|---|---|---|
-| Mensagem | Enviar ao professor a mensagem da Sprint 4 (calendário, licença, US26) | Diogo envia; Lucas revisa | **Qui 29/10** | Rascunho em `sprint-4-mensagem-professor.md` |
-| Render (**A47**) | ~~Deploy no Render: conta, serviço, schema, Administrador e Funcionário, seed, primeiro backup e conferência da URL no `config.js`~~ **Feito em 11/11** | **Diogo** | — | No ar em `https://mente-fria-backend.onrender.com` (a URL do `config.js`); banco vence em 11/12/2026, 21h59. Evidência: `2026-11-11_diogo_deploy-render.txt` |
-| Render — depois (A41, A47) | Backups (fim da semana de bugs, semanal e 29/11); *Manual Deploy* depois de cada merge na `main`; CT68, CT70 e CT72 no ambiente publicado; URL do serviço e datas do banco no README | Diogo (backups e deploy); Kauê (CTs e teste de restauração); README: a combinar | 13/11, semanal e 29/11 | Sem deploy automático, porque o app do Render não está no repositório. Se o Kauê o instalar depois, dá para ligar o deploy automático |
-| Gurobi (A38) | Encaminhar ao professor o e-mail de autorização da Gurobi | Kauê | **Qui 29/10** | No mesmo dia em que o Diogo envia a mensagem da Sprint 4, que cita esse e-mail. **Feito:** o e-mail foi encaminhado e o professor aprovou (informado pelo Diogo em 11/11) |
-| **G8** (A15) | Juntar os dois `.env.example` no `backend/.env.example` | Kauê | Sex 30/10 | Com as variáveis da Sprint 3 e os comentários úteis do `backend/env.example`. **10/11: PR #82 aberto** (base `sprint-4`), esperando revisão; feito pelo Diogo a pedido do Kauê. **Feito em 11/11:** na `main` pelos PRs #82 e #89 |
-| A12 | Botão "Descartar" por linha (opcional) | Leonardo | Seg 02/11, **se** aprovado no M3 (A42) | O backend vem na Fase 3. É o primeiro corte |
-| A13 | Teste de navegador instável | Leonardo | **Logo depois da divisão do `app.js`** (A45); prazo final qua 04/11 | **Causa achada na validação do tutorial (30/10):** a verificação 21 conta os campos antes de o `<dialog>` terminar de fechar. Com uma espera de uma linha no teste, 34 de 35 rodadas passaram (sem ela, 2 de 10). Passo a passo no tutorial novo do Leonardo, Parte 7 |
-| P2 | `optimization/requirements.txt` ainda em UTF-16 | Kauê | Qui 29/10, na Fase P | A versão 13.0.3 já está fixada; README e Arquitetura já atualizados (A37). **10/11: convertido para UTF-8 no PR #81** (Fase P + Q, base `sprint-4`), esperando revisão; feito pelo Diogo a pedido do Kauê. **Feito em 11/11:** na `main` pelos PRs #81 e #85 |
-| **G5** | Apagar as branches antigas (as 10 já incorporadas e a `frontend_feito`) | Grupo | Depois de 06/11 | Nada urgente; não mexer durante a sprint |
-| **A46** | US26: na `main` com os testes até o prazo da A46, ou cortada; se entrar, avisar o professor | Diogo (US26); **Lucas** (PO) avisa o professor | **Sáb 14/11** | A46 confirmada pelo Lucas em 10/11, com o prazo. O aviso ao professor é necessário porque a mensagem da Sprint 4 dizia que a US26 só entraria com o obrigatório pronto em 02/11. **Situação (11/11):** contrato e CT73–CT78 na `main`; backend no PR #88 (aberto, revisão do Lucas); **falta a Tela 19** (Parte 10.6). Ordem para não quebrar o sistema publicado: merge do #88 → `sprint-4` → `main` → *Manual Deploy* no Render → só então a Tela 19 na `main` (o Pages publica sozinho; o Render, não). Antes do merge na `main`, o PO confirma a condição (1) da A46 |
-| Segurança do deploy (A47) | ~~Trocar as credenciais do banco do Render, se o painel permitir (a URL apareceu parcialmente num print); se não permitir e a senha estava legível, recriar o banco e restaurar o backup de 11/11; se houver, restringir os IPs de entrada. Opcional: gerar um novo `JWT_SECRET` (invalida um token eventual do Administrador de teste apagado em 11/11)~~ **Resolvida em 12/11 pela restrição de IP** (decisão do Diogo) | **Diogo** | — | Em 12/11, o Diogo restringiu o acesso externo do banco ao IP da rede dele: a senha vazada não serve de fora dessa rede. A senha não foi trocada (seria um reforço). O `JWT_SECRET` não precisa mais mudar: o token do usuário de teste valia 2 h e já expirou. **Limites:** a proteção vale enquanto a lista estiver restrita (antes de reabrir para `0.0.0.0/0`, trocar a credencial); IP compartilhado ou que muda é um risco baixo; backups pela URL externa só da rede do Diogo. Ver `2026-11-11_diogo_deploy-render.txt`, seções 4 e 8 |
-| **G6** | Destino de `docs/Sprint_3/referencia/` depois da cópia | Grupo | Retrospectiva (qui 05/11) | Recomendação: manter como registro congelado até o fim do semestre |
+| **Encerramento** (A43) | Definir a nova data do encerramento e fazer: relatório da Sprint 4 (não existe), revisão do relatório da Sprint 3 (rascunho de 28/10), retrospectiva das Sprints 2, 3 e 4, CT20 | Kauê (facilitação); todos | **A definir** | Adiado em 11/11, sem data nova ("depois de terminar todas as partes dos tutoriais"). É a pendência que segura as outras do fim. O roteiro previa tudo para qui 05/11 |
+| Contribuições individuais | Contribuições das Sprints 3 e 4, no padrão de `docs/Sprint_2/sprint-2-contribuicao-*.md` | Cada um (Diogo, Kauê, Leonardo, Lucas) | Junto com o encerramento | Nenhuma no repositório em 13/11 |
+| **Aviso da US26** (A46) | Avisar o professor que a US26 entrou | **Lucas** (PO) | O quanto antes | Necessário porque a mensagem da Sprint 4 dizia que a US26 só entraria com o obrigatório pronto em 02/11 |
+| Testes no ambiente publicado (A41, A47) | CT68 (fluxo completo, dois perfis), CT69 (CORS), CT70 (serviço "dormindo") e CT72 (chave de reserva) na URL publicada | **Kauê**; no CT72, o **Diogo** troca a variável no painel (a conta é dele) | Com a semana de bugs (até 13/11) | Nenhum registrado em 13/11. O CT67 (imagem local) está feito: `2026-11-11_kaue_ct67.txt` |
+| Aceite na URL publicada | Aceite nos dois perfis, incluindo a Tela 19 (tutorial do Leonardo, Parte 16): primeiro o que só lê, depois o que grava | **Leonardo** (combinar com o Diogo para refazer o seed depois) | Com a semana de bugs (até 13/11) | Não registrado em 13/11. As evidências do *gate* da Fase 2 também não estão no repositório: o aceite publicado pode cobrir esse papel, com nota no relatório |
+| Semana de bugs (A43) | Registro do que foi testado e dos bugs achados, com o fluxo `fix/…` → PR | Kauê (organiza); todos | **Termina em 13/11** | Nenhum registro (tabela de execução ou bugs) no repositório em 13/11 |
+| Backups (A41, A47) | Backup do fim da semana de bugs, semanais e o de 29/11; teste de restauração | **Diogo** (backups); Kauê ou Diogo (restauração) | **13/11**, semanal e 29/11 | Banco vence em 11/12/2026, 21h59. Backups pela URL externa só da rede do Diogo (restrição de IP, 12/11) |
+| Deploy manual (A47) | *Manual Deploy* no Render depois de cada merge na `main` | **Diogo** | A cada merge | Sem deploy automático, porque o app do Render não está no repositório. Se o Kauê o instalar, dá para ligar o deploy automático |
+| README | Tirar "Deploy: ainda não publicado", o rótulo "Planejadas" e o bloco "Estado atual (Sprint 2)"; pôr as URLs do backend e do Pages, a data em que o banco vence e o aviso do deploy manual (tutorial do Lucas, Parte 10) | **Lucas** | Junto com o encerramento | Desatualizado em 13/11 |
+| `frontend/README.md` | Preencher "Publicado em" (`https://kauencarneiro.github.io/Mente_Fria/`) e atualizar a "Situação" (06/11, sem a Tela 19). Anotar o achado da Tela 19: o `py -m http.server` deixou o `npm test` instável numa máquina, e um servidor em Node ficou estável | **Leonardo** | Junto com o encerramento | Desatualizado em 13/11 |
+| Evidências das fases do Lucas | Só a Fase 1 tem evidência própria; as Fases 2, 3, 4A e 6 entraram direto na `sprint-4`, sem PR | **Lucas** | Junto com o encerramento | A suíte inteira (95 testes) está em `2026-11-11_diogo_repositorios_mvnw-test.txt` e pode ser citada no relatório |
+| **G5** | Apagar as branches antigas (as já incorporadas e a `frontend_feito`, a única com commits fora da `main`) | Grupo | Depois do encerramento | Nada urgente |
+| **G6** | Destino de `docs/Sprint_3/referencia/` depois da cópia | Grupo | Na retrospectiva | Recomendação: manter como registro congelado até o fim do semestre |
 
-**Encerradas nesta revisão:**
+**Encerradas nesta revisão (13/11):**
+
+| # | Era | Situação |
+|---|---|---|
+| **A46** | US26 na `main` até 14/11, ou cortada | **Entregue em 12/11:** backend (PRs #88 e #93), publicado no Render por *Manual Deploy*, e Tela 19 (PRs #96 e #97), publicada no Pages; contrato §2.11 e CT73–CT78. Evidências: `2026-11-11_diogo_us26-backend_mvnw-test.txt` e `2026-11-12_diogo_us26-tela19_npm-test.txt`. Falta só o aviso ao professor (pendência "Aviso da US26") |
+| Mensagem | Enviar ao professor a mensagem da Sprint 4 | **Feito:** enviada (confirmado pelo Diogo em 31/10) |
+| Gurobi (A38) | Encaminhar ao professor o e-mail de autorização da Gurobi | **Feito:** encaminhado, e o professor aprovou (informado pelo Diogo em 11/11) |
+| Render (A47) | Deploy no Render | **Feito em 11/11** (Diogo, na conta dele). No ar em `https://mente-fria-backend.onrender.com`. Evidência: `2026-11-11_diogo_deploy-render.txt` |
+| Segurança do deploy (A47) | Trocar as credenciais do banco do Render | **Resolvida em 12/11 pela restrição de IP** (decisão do Diogo; a senha não foi trocada). Limites: a proteção vale enquanto a lista estiver restrita (antes de reabrir para `0.0.0.0/0`, trocar a credencial); IP compartilhado ou que muda é um risco baixo. Ver `2026-11-11_diogo_deploy-render.txt`, seções 4 e 8 |
+| **G8** (A15) | Juntar os dois `.env.example` | **Feito em 11/11** (PRs #82 e #89) |
+| P2 | `requirements.txt` em UTF-16 | **Feito em 11/11:** convertido para UTF-8 (PRs #81 e #85) |
+| A12 | Botão "Descartar" por linha (opcional) | **Feito:** entrou com a tela de Estoque (PR #68) |
+| A13 | Teste de navegador instável | **Feito:** a correção do teste entrou pelo PR #65 (A45) |
+
+**Encerradas em revisões anteriores:**
 
 | # | Era | Situação |
 |---|---|---|

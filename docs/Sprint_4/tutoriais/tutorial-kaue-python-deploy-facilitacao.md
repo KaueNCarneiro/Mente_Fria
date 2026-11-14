@@ -1985,9 +1985,11 @@ Guarde as saídas e os prints em `docs/Sprint_4/evidencias/`, com os nomes da ta
 
 **Onde:** na seg 02/11, no **computador do Lucas**, na janela da Parte 8.4. Nos backups seguintes, conforme o combinado do sábado (início da Parte 8): ou o Lucas faz o backup e entrega o arquivo a você para a restauração, ou você roda tudo com a URL que ele compartilhou.
 
+**Desde 12/11, o banco só aceita conexões externas da rede do Diogo** (restrição de IP; evidência `2026-11-11_diogo_deploy-render.txt`, seção 8). Por isso, os backups são feitos pelo Diogo, dono da conta (A47), da rede de casa dele. **Antes de cada backup**, ele confere se o IP da rede ainda é o da regra: o IP de uma internet residencial pode mudar. O passo a passo está na última linha do "Se der errado" desta parte.
+
 **Onde guardar:** **fora** da pasta do projeto. O arquivo tem os dados e os hashes das senhas, e o `.gitignore` não tem uma regra para ele: dentro do repositório, um `git add .` descuidado o publicaria.
 
-> **Validado** com o banco de teste que exige SSL (o mesmo da Parte 8.4, com o DDL e o seed): backup, restauração num banco descartável e restauração num banco novo de **outro dono**. Na validação, a pasta ficou na área temporária, e não em `$HOME`. **Contra o Render, não foi testado.**
+> **Validado** com o banco de teste que exige SSL (o mesmo da Parte 8.4, com o DDL e o seed): backup, restauração num banco descartável e restauração num banco novo de **outro dono**. Na validação, a pasta ficou na área temporária, e não em `$HOME`. **Contra o Render:** backup e restauração num banco descartável, feitos pelo Diogo em 11/11 e 14/11 (`2026-11-11_diogo_deploy-render.txt` e `2026-11-14_diogo_backup-render.txt`). A restauração num banco novo do Render não foi testada.
 
 **Fazer o backup:**
 
@@ -2010,6 +2012,8 @@ Get-ChildItem $pasta
 | `--no-owner --no-privileges` | Não grava quem é o dono nem as permissões: um banco novo do Render terá outro usuário |
 
 **Você deve ver** (validado): o `pg_dump` não mostra nada, e o `Get-ChildItem` lista o arquivo do dia, com cerca de 22 KB (com os dados de demonstração).
+
+Se o `pg_dump` mostrar `SSL connection has been closed unexpectedly`, ou se o arquivo do dia ficar com **0 bytes**, o backup falhou: **não siga para a restauração**. Veja a última linha do "Se der errado" mais abaixo.
 
 **Testar a restauração** num banco local descartável (**não** use o `mente-fria-db`), na mesma janela (usa `$pasta`, `$arq` e `$URL`):
 
@@ -2043,6 +2047,7 @@ O `pg_restore` sem erro, o **mesmo número de pedidos** nas duas consultas (a re
 | `Conflict. The container name "/mf-restore" is already in use` | Sobrou de um teste anterior: `docker rm -f -v mf-restore` e rode o bloco de novo |
 | `connection to server on socket … failed` | O banco descartável ainda estava iniciando. Espere uns segundos e rode de novo só o `pg_restore` e o que vem depois |
 | `Cannot find path` no `docker cp` | `$pasta` ou `$arq` vazios (janela nova): defina os dois de novo |
+| `SSL connection has been closed unexpectedly` no `pg_dump` ou no `psql $URL` | **Causa mais provável:** desde 12/11, o banco só aceita conexões externas dos IPs liberados (restrição de IP), e o IP da rede mudou ou a conexão vem de outra rede (aconteceu em 14/11). **Quem resolve:** o Diogo, dono da conta (A47). **1.** No mesmo PowerShell, veja o IP atual com `(Invoke-WebRequest -UseBasicParsing https://api.ipify.org).Content` (validado em 14/11): aparece só o IP, por exemplo `203.0.113.45`. **2.** No painel do Render, abra o banco `mente-fria-db` → **Info** → **Networking** → *PostgreSQL Inbound IP Rules* e, na regra da rede do Diogo, **troque** o IP antigo pelo novo, com `/32` no fim (`203.0.113.45/32`), e salve. Não acrescente uma regra nova ao lado da antiga, porque o IP antigo pode passar a ser de outra pessoa, e **nunca** use `0.0.0.0/0`. **3.** Rode de novo o bloco "Fazer o backup". O `pg_dump` que falhou deixa um arquivo de 0 bytes: no mesmo dia, a nova tentativa o sobrescreve; em outro dia, apague esse arquivo vazio |
 
 **Restaurar num banco novo do Render** (se o banco expirar ou for recriado): crie o banco, pegue a nova URL e rode o `pg_restore` com `-d` apontando para ela, em vez do DDL e do seed:
 

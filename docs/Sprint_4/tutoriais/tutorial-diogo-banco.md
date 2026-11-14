@@ -863,6 +863,8 @@ Abra o PR, com o Kauê (facilitação) como revisor.
 >
 > Evidências: `2026-11-11_diogo_deploy-render.txt` e `2026-11-11_diogo_seed-render.txt`.
 
+> **Situação (14/11):** **backup do fim da semana de bugs feito**, com a restauração testada (8 pedidos dos dois lados). A primeira tentativa foi recusada pela restrição de IP (`SSL connection has been closed unexpectedly`), porque o IP da sua rede tinha mudado; a solução está na última linha do "Se der errado" da Parte 8.7 do tutorial do Kauê. **Antes de cada backup**, confira se o IP da sua rede ainda é o da regra. Evidência: `2026-11-14_diogo_backup-render.txt`. Faltam os backups semanais e o de 29/11.
+
 **Quem faz o quê** (tutorial do Kauê, Partes 8.4 e 8.5):
 - a URL do banco do Render tem a senha e não sai da conta do Lucas: o comando roda **no computador do Lucas**, com o Kauê guiando;
 - o **seed é seu**: você confere a saída e os números.

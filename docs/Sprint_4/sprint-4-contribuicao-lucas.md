@@ -15,19 +15,24 @@
 | Testes das fases (95 testes, 0 falhas, com os repositórios do Diogo; 101 com a US26) e conferência das 23 rotas com o Contrato | evidência `2026-11-15_lucas_fases-2-3-4a-6_testes-e-contrato.txt` | Feito |
 | README atualizado com o sistema publicado, as variáveis e os testes (tutorial, Parte 10) | commit `092f39b` | Feito |
 | Decisões de PO: US26 mantida em aberto com condições e prazo (A46, 04/11 e 10/11); deploy no Render passado ao Diogo (A47, 11/11) | `docs/Sprint_4/sprint-4-decisoes-e-pendencias.md` | Feito |
-| [PREENCHER: outras decisões de PO (botão "Descartar", cortes), revisão da mensagem ao professor, aviso da US26 ao professor] | — | — |
 
 ## 2. Rituais que participei
-- [PREENCHER] Dailies/weeklies (x de y)
-- [PREENCHER] Sprint Review (06/11)
-- [PREENCHER] Retrospectiva
+- [X] Dailies/weeklies
+- [ ] Sprint Review (06/11)
+- [ ] Retrospectiva (das Sprints 2, 3 e 4, no encerramento)
 
 ## 3. PRs de colegas que revisei
 | PR | Autor | Comentário resumido |
 |---|---|---|
-| #48 — `feature/seed-demo` (seed de demonstração) | Diogo | [PREENCHER] |
-| #49 — `docs/sql-repositorios-sprint3` | Diogo | [PREENCHER] |
-| [PREENCHER: outros PRs revisados, como os da US26] | | |
+| #47 — `fix/cabecalho-constraints-teste` | sixtxxn | Revisor indicado no PR: correção do cabeçalho dos testes de constraints e da evidência do banco |
+| #48 — `feature/seed-demo` | sixtxxn | Revisor indicado no PR; integrei o seed de demonstração para a Review (merge `8facce8`) |
+| #49 — `docs/sql-repositorios-sprint3` | sixtxxn | Revisor indicado no PR; integrei o SQL dos repositórios da Sprint 3 (merge `4909d23`) |
+| #88 — `feature/us26-backend` | sixtxxn | Revisor indicado no PR (A43: o PO revisa os PRs da US26): `POST` e `PATCH /api/unidades-medida` |
+| #92 — decisão A47 | sixtxxn | Revisor indicado no PR: registro da passagem do deploy no Render para o Diogo |
 
 ## 4. Dificuldades e o que aprendi
-[PREENCHER com as suas palavras.]
+A maior dificuldade da Sprint 4 foi o tempo. A Fase 1 (segurança) ficou pronta em 29/10, mas só entrou na `main` em 05/11, e as Fases 2, 3, 4A e 6 só entraram em 11/11, depois da entrega de 06/11. Como as fases dependiam umas das outras e do trabalho dos colegas (os repositórios do Diogo e a Fase 5 do Kauê), o atraso no meu caminho crítico segurou também as telas e o deploy. Sem tempo naquela semana, pedi que o deploy no Render passasse para o Diogo (A47), e o sistema foi publicado em 11/11.
+
+Na parte técnica, aprendi como o Spring Security protege as rotas com um token JWT, como o CORS libera só o frontend, e como um tratamento global de erros faz toda resposta de erro sair em JSON, com os campos que o frontend precisa. Também aprendi a rodar testes de integração com um PostgreSQL temporário (Testcontainers) e a chamar o módulo Python como subprocesso a partir do Java.
+
+Como PO, aprendi que uma exceção de escopo (manter a US26 em aberto, A46) precisa de condições e prazo escritos, para não tirar tempo do obrigatório. A lição para os próximos projetos é publicar a branch cedo, para os colegas poderem entrar nela, e não deixar o caminho crítico para o fim da sprint.

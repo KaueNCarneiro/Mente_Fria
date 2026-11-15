@@ -1,0 +1,30 @@
+Deploy automatico ligado no Render (decisao A47; tutorial do Kaue, Parte 8)
+Data: 2026-11-15 | Kaue (app do Render no GitHub) e Diogo (painel do Render); registro escrito pelo Claude, a pedido do Diogo
+Backend: https://mente-fria-backend.onrender.com | Repositorio: KaueNCarneiro/Mente_Fria, branch main
+Registro em texto, a partir de dois prints enviados pelo Diogo e de uma chamada ao backend. Sem credenciais nem URL do banco.
+
+--- Antes (11/11 a 15/11) ---
+O servico foi criado pelo endereco publico do repositorio, sem o app do Render. Nao havia deploy automatico:
+depois de cada merge na main, o Diogo publicava a mao (Manual Deploy -> Deploy latest commit).
+Registro: 2026-11-11_diogo_deploy-render.txt.
+
+--- 1) Kaue: app do Render no GitHub ---
+Print da pagina "Installed GitHub Apps" da conta do Kaue: o app "Render" (desenvolvido por renderinc) aparece instalado.
+Nao aparece no print: a lista de repositorios liberados para o app (Repository access).
+
+--- 2) Diogo: painel do Render ---
+O Diogo ligou a conta do GitHub dele ao Render e o deploy automatico do servico mente-fria-backend.
+Os cliques foram feitos por ele e nao foram acompanhados aqui.
+
+--- 3) Primeiro deploy com o gatilho "Auto-Deploy" ---
+Print da lista de deploys do servico:
+  commit a2dd42a - "Merge pull request #104 from KaueNCarneiro/sprint-4 ..." | Trigger: Auto-Deploy | Duration: 1m 14s | "Deployed 10m ago"
+
+--- 4) Backend depois do deploy ---
+GET https://mente-fria-backend.onrender.com/api/saude -> HTTP 200, {"status":"ok","banco":"ok"} (0,49 s)
+
+=== RESULTADO ===
+O deploy automatico esta ligado: o Render publicou o commit a2dd42a sozinho, e o backend responde.
+Nao conferido: um merge novo na main disparando o deploy. O PR #104 foi mesclado antes de o app ser instalado, entao este
+deploy saiu quando o repositorio foi ligado ao servico, e nao por causa de um merge. A conferencia fica para o proximo merge na main.
+Efeito a lembrar: todo merge na main agora reinicia o backend, inclusive os que so tem documentacao.

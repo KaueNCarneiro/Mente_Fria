@@ -1,0 +1,73 @@
+==============================================================================
+EVIDENCIA - Fases 2, 3, 4A e 6 do backend (tutorial do Lucas) e conferencia do contrato (Parte 10.2)
+==============================================================================
+Gerado em: 2026-11-15   Por: Claude, a pedido do Lucas
+Branch: sprint-4
+
+IMPORTANTE: este arquivo NAO e uma execucao nova dos testes. Ele liga cada fase do Lucas
+aos resultados ja registrados por outros integrantes, como recomenda a pendencia
+"Evidencias das fases do Lucas" (docs/Sprint_4/sprint-4-decisoes-e-pendencias.md, 13/11).
+
+------------------------------------------------------------------------------
+1) Como as fases entraram
+------------------------------------------------------------------------------
+As Fases 2, 3, 4A e 6 entraram direto na branch sprint-4 em 11/11/2026, um commit por fase,
+copiando o codigo de docs/Sprint_3/referencia/backend (conferido arquivo por arquivo: iguais a
+referencia, ignorando o fim de linha). Os *Repository.java ficaram com o Diogo (A44) e entraram
+depois, na mesma branch.
+
+  e490355  feat: cadastros, login e infraestrutura da Fase 2 (parte do Lucas)     US1-US7
+  298f1d2  feat: estoque por linhas e pedido com baixa automatica (parte do Lucas) US9, US12
+  0ed86eb  feat: recomendacao de producao (ponte Java-Python)                      US10, US11
+  7eaec94  feat: dashboard do mes e sugestoes de campanha (parte do Lucas)         US17, US18
+  (e40f16d e 7957b05: merges da Fase P+Q e da Fase 5 do Kaue na sprint-4)
+
+Sem os repositorios, o backend nao compilava (registrado em 2026-11-11_diogo_repositorios_mvnw-test.txt).
+
+------------------------------------------------------------------------------
+2) Resultado dos testes de cada fase
+------------------------------------------------------------------------------
+Fonte: docs/Sprint_4/evidencias/2026-11-11_diogo_repositorios_mvnw-test.txt
+       (./mvnw test com o Python real; Java 25.0.2; PostgreSQL do Testcontainers)
+
+  Fase   Classe de teste                      Esperado (tutorial)   Registrado
+  -----  -----------------------------------  --------------------  ---------------------------
+  1      config.SegurancaEErrosTest            18                    18, 0 falhas (e 29/10, Lucas)
+  2      Fase2CrudTest                         15                    15, 0 falhas
+  2      produto.RegraAcaiTest                 13                    13, 0 falhas
+  3      Fase3EstoquePedidoTest                15                    15, 0 falhas
+  4A     Fase4ProducaoTest                     7                     7, 0 falhas
+  4A     python.ProcessoPythonTest (real)      4                     4, 0 falhas
+  4A     PythonRealTest (real)                 2 (checklist)         3, 0 falhas
+  6      DashboardTest                         5                     5, 0 falhas
+  6      MarketingTest                         4                     4, 0 falhas
+  6      OtimizadorDesligadoTest               3                     3, 0 falhas
+  5      ReposicaoTest (Kaue)                  8                     8, 0 falhas
+
+  Suite completa: Tests run: 95, Failures: 0, Errors: 0, Skipped: 0 -> BUILD SUCCESS
+
+Depois da US26 (Diogo), a suite passou a ter 101 testes, 0 falhas:
+docs/Sprint_4/evidencias/2026-11-11_diogo_us26-backend_mvnw-test.txt
+
+No ambiente publicado, o fluxo das fases foi exercitado pelos CT68, CT69, CT70 e CT72
+(2026-11-14_kaue_ct68.txt, _ct69.txt, _ct70.txt e _ct72.txt): os quatro passaram.
+
+------------------------------------------------------------------------------
+3) Conferencia do contrato (tutorial do Lucas, Parte 10.2)
+------------------------------------------------------------------------------
+Comparadas as rotas dos controllers (backend/src/main/java) com as rotas citadas em
+docs/Apoio/Contrato_de_Comunicacao_Mente_Fria.md. As 23 rotas do contrato existem no codigo,
+com o mesmo metodo HTTP, e o codigo nao tem rota fora do contrato:
+
+  GET  /api/saude                         POST /api/auth/registro, /api/auth/login
+  GET, POST /api/usuarios                 GET, POST /api/unidades-medida
+  PATCH /api/unidades-medida/{unidade}    GET, POST /api/ingredientes
+  PUT  /api/ingredientes/{id}             GET, POST /api/produtos
+  PUT  /api/produtos/{id}/preco           GET  /api/estoque
+  GET  /api/estoque/{id}/linhas           POST /api/estoque/movimentacoes
+  POST /api/estoque/linhas/{id}/descarte  GET, POST /api/pedidos
+  POST /api/producao/recomendacao         POST /api/reposicao/recomendacao
+  GET  /api/dashboard                     GET  /api/marketing/sugestoes
+  GET  /api/teste/python (so no perfil dev)
+
+Diferencas encontradas: nenhuma.

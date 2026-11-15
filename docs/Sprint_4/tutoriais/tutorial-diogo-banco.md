@@ -1152,6 +1152,8 @@ O molde é a tela-exemplo de Estoque do tutorial do Leonardo (`docs/Sprint_4/tut
 2. **O Backlog (`.docx`):** foi editado em 28/10 sem o Word (commit `97cc39d`). Abra no Word e confira a formatação antes da entrega. A Visão você já conferiu em 27/10 (A37).
 3. **Contribuições individuais** das Sprints 3 e 4, no padrão de `docs/Sprint_2/sprint-2-contribuicao-diogo.md`.
 
+> **Situação (15/11):** **feito.** As contribuições das Sprints 3 e 4 estão em `docs/Sprint_3/sprint-3-contribuicao-diogo.md` e `docs/Sprint_4/sprint-4-contribuicao-diogo.md` (PR #118). O Backlog foi conferido no Word: as mudanças de 28/10 (o parágrafo "Atualizado em 28/10/2026" e a coluna "Sprint alvo") estavam com a formatação certa. Na mesma conferência, a linha da US26 deixou de dizer "condicional (A40); se não entrar até 04/11, fora do semestre" e passou a dizer "Sprint 3 → Sprint 4 (entregue em 12/11, A46)".
+
 ---
 
 ## Problemas comuns

@@ -1,0 +1,57 @@
+Aceite na URL publicada, nos dois perfis, com prints (tutorial do Leonardo, Parte 16)
+Data: 2026-11-15, das 20h40 as 20h52 | Maquina: a do Leonardo | Navegador: Chrome, DevTools fechado
+URL: https://kauencarneiro.github.io/Mente_Fria/ (backend: https://mente-fria-backend.onrender.com)
+Versao publicada: a main depois dos PRs #103, #107 e #113 (o menu mostra o selo "Futuro" em Clientes e a
+Tela 12 mostra o texto novo da quantidade 0).
+Prints: 2026-11-15_leonardo_aceite-pages_NN_*.png (17 arquivos, na ordem em que foram feitos).
+
+Resultado: todas as telas abriram com os dados do backend real, nos dois perfis, sem erro e sem a palavra
+"null". As duas operacoes que gravam (entrada de estoque e pedido) foram aceitas.
+
+--- 1) Administrador, so leitura (usuario "Diogo Pereira Miranda") ---
+01 Tela 12, Producao: calculado em 15/11/2026, 20:40:29. Lucro potencial R$ 982,72 e receita estimada
+   R$ 1.909,20. Tradicional 300ml: 148; Especial 500ml e Premium 700ml: 0, com "O estoque nao da ou
+   rende mais em outro copo" (texto do PR #107). Nenhum "null" e nenhum termo tecnico.
+02 Tela 14, Marketing: "Sugestoes com base no calculo de 15/11/2026, 20:40:29" (o mesmo calculo da
+   Tela 12). 1 cartao, do Tradicional 300ml, com o selo "Produto priorizado" e o lucro por copo
+   R$ 6,64. Nenhum botao de publicar.
+03 Tela 13, Reposicao: 60 dias e R$ 100. Resumo "O orcamento cobre tudo o que falta: R$ 0,00." e 7
+   ingredientes com "Nao precisa comprar".
+04 e 05 Tela 03, Dashboard: novembro de 2026. Faturamento R$ 384,00, 7 pedidos; 0 ingredientes abaixo do
+   minimo e 1 com quantidade vencida; plano de producao com os valores da Tela 12; mais vendidos,
+   ingredientes mais utilizados (com unidade) e ranking de vendas com 2 usuarios.
+06 Tela 10, Estoque: 7 ingredientes, com total, valido, vencido (Granola: 6 kg) e validade mais proxima.
+07 Tela 16, linhas do Acai (polpa): 2 linhas, as duas "Dentro da validade".
+08 Tela 19, Porcao Padrao: 5 unidades (kg, L, mg, ml, un), o aviso do criterio 3 e o formulario
+   "Nova unidade".
+
+--- 2) Funcionario (usuario "Joao Pedro Silva") ---
+09 Estoque: a mesma lista do Administrador; o menu so tem Inicio, Ingredientes, Produtos, Estoque e Pedidos.
+10 Linhas do Acai (polpa): as mesmas 2 linhas.
+11 Pedidos: lista do mais recente (#10) para o mais antigo, com itens, quem registrou e total.
+12 e 13 Rota do Administrador: ao digitar https://kauencarneiro.github.io/Mente_Fria/#/dashboard, a tela
+   volta ao Inicio com "Esta area e exclusiva do Administrador.". O print 12 e o unico com a barra de
+   endereco visivel.
+
+--- 3) O que grava, como Funcionario ---
+14 e 15 Entrada de estoque: Acai (polpa), 10 kg, validade 15/11/2026, observacao "Lote 5". Resultado:
+   "Movimentacao registrada.", e o total do Acai passou de 44,4 kg para 54,4 kg.
+16 e 17 Pedido: 1 Acai Especial 500ml (R$ 18,90) e 1 Acai Premium 700ml (R$ 24,90), total R$ 43,80.
+   Resultado: "Pedido registrado. Total: R$ 43,80.", e a tela foi limpa.
+
+--- Diferencas para o texto da Parte 16 ---
+- A Parte 16 espera 151/1/0 na Tela 12, 2 cartoes na Tela 14 e 0,74 kg de morango na Tela 13. O banco
+  publicado ja nao e o do seed (no CT68 de 14/11 a recomendacao deu 150/0/0), entao os numeros sao outros.
+  O formato e os textos das telas sao os esperados.
+- So o print 12 mostra a barra de endereco; os outros 16 mostram so a pagina.
+- Nao houve print do estoque depois do pedido (a baixa) nem da lista com o pedido novo.
+- Nao foram testados nesta rodada: cadastros (funcionario, ingrediente, produto, unidade), o botao
+  "Descartar" e a saida de estoque.
+
+--- Dados que ficaram no banco publicado ---
+- Uma linha de entrada de 10 kg de Acai (polpa), com validade 15/11/2026 e observacao "Lote 5". A partir
+  de 16/11 ela conta como vencida: o estoque valido do Acai volta a 44,4 kg e o Dashboard passa a mostrar
+  2 ingredientes com quantidade vencida.
+- Um pedido de R$ 43,80 (1 Especial 500ml e 1 Premium 700ml), do usuario Joao Pedro Silva, com a baixa
+  dos ingredientes. Ele entra no faturamento de novembro, nos mais vendidos e no ranking.
+O Diogo decide se desfaz (seed ou backup de 15/11) ou se os dois ficam.

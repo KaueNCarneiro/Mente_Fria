@@ -5,11 +5,12 @@ export function shell(path) {
   const current=session();
   const header=node('header',{class:'topbar'},node('div',{class:'brand'},logo(),node('strong',{},'Mente Fria'),node('small',{},'· Gestão de Açaiteria')),node('div',{class:'row'},node('span',{class:'badge'},'Perfil: '+(admin()?'Administrador':'Funcionário')),button('Sair',()=>{logout();go('login');},'link-button')));
   const sidebar=node('nav',{class:'sidebar','aria-label':'Menu principal'});
-  const entries=admin() ? [['Dashboard','dashboard'],['Funcionários','funcionarios'],['Ingredientes','ingredientes'],['Porção Padrão','porcao-padrao'],['Produtos','produtos'],['Estoque','estoque'],['Produção','producao'],['Pedidos','pedidos'],['Clientes',null,2],['Reposição','reposicao'],['Marketing','marketing']] : [['Início','inicio'],['Ingredientes','ingredientes'],['Produtos','produtos'],['Estoque','estoque'],['Pedidos','pedidos']];
-  for(const [label,route,sprint] of entries){
+  const entries=admin() ? [['Dashboard','dashboard'],['Funcionários','funcionarios'],['Ingredientes','ingredientes'],['Porção Padrão','porcao-padrao'],['Produtos','produtos'],['Estoque','estoque'],['Produção','producao'],['Pedidos','pedidos'],['Clientes',null],['Reposição','reposicao'],['Marketing','marketing']] : [['Início','inicio'],['Ingredientes','ingredientes'],['Produtos','produtos'],['Estoque','estoque'],['Pedidos','pedidos']];
+  // Item sem rota = história fora do semestre (hoje só Clientes, US13; decisões A2b e A40): aparece apagado, sem link, com o selo "Futuro".
+  for(const [label,route] of entries){
     const selected=path.split('/')[0]===route;
     const dot=node('img',{src:`assets/nav-dot${selected?'-active':''}.svg`,alt:''});
-    sidebar.append(route?node('a',{href:'#/'+route,class:selected?'selected':'','aria-current':selected?'page':null},dot,label):node('span',{class:'future',title:'Disponível na Sprint '+sprint},dot,label,node('small',{},'S'+sprint)));
+    sidebar.append(route?node('a',{href:'#/'+route,class:selected?'selected':'','aria-current':selected?'page':null},dot,label):node('span',{class:'future',title:'Fora deste semestre'},dot,label,node('small',{},'Futuro')));
   }
   sidebar.append(node('p',{class:'footnote muted'},current.nome));
   const main=node('main',{id:'main',class:'content'});

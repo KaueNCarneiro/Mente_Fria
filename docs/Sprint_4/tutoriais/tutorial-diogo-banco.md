@@ -859,7 +859,9 @@ Abra o PR, com o Kauê (facilitação) como revisor.
 > 4. backup e restauração testada (6 pedidos dos dois lados);
 > 5. CORS conferido (CT69).
 >
-> **Deploy manual:** o repositório entrou pelo endereço público, então, depois de cada merge na `main`, você publica no painel (*Manual Deploy* → *Deploy latest commit*).
+> **Deploy manual (de 11/11 a 15/11):** o repositório entrou pelo endereço público, então, depois de cada merge na `main`, você publicava no painel (*Manual Deploy* → *Deploy latest commit*).
+>
+> **Deploy automático (desde 15/11):** o Kauê instalou o app do Render no repositório e você ligou o *Auto-Deploy*. Cada merge na `main` publica o backend sozinho e reinicia o serviço por alguns minutos. No primeiro merge depois de 15/11, confira na aba *Events* se o deploy saiu com o gatilho *Auto-Deploy*. Evidência: `2026-11-15_diogo_deploy-automatico-render.txt`.
 >
 > Evidências: `2026-11-11_diogo_deploy-render.txt` e `2026-11-11_diogo_seed-render.txt`.
 

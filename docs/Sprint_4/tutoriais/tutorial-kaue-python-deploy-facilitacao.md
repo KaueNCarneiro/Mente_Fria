@@ -1490,7 +1490,8 @@ Lucas: pode trazer a main para a Fase 6. Leonardo: a Tela 13 já tem a rota real
 > **Mudança de 11/11/2026 (A47):** o deploy passou para o **Diogo, na conta dele**, a pedido do Lucas, que aprovou. Nesta parte, onde está "o Lucas", "a conta do Lucas" ou "o computador do Lucas", leia **o Diogo**. Continua com você (Kauê): autorizar o Render no repositório (só o dono pode) e testar a restauração do backup. As credenciais e a URL do banco ficam só com o Diogo.
 >
 > **Feito em 11/11, à noite** (evidência `docs/Sprint_4/evidencias/2026-11-11_diogo_deploy-render.txt`). Duas diferenças em relação ao texto abaixo:
-> - **Não há deploy automático.** O Blueprint foi criado pelo endereço público do repositório, porque o app do Render não está instalado nele. Depois de cada merge na `main` que mexa no `backend/`, o Diogo publica à mão: *Manual Deploy* → *Deploy latest commit* → esperar *live* → `GET /api/saude`. O Pages, ao contrário, publica sozinho. Por isso, **o backend tem de ir ao ar antes** de uma tela que dependa dele chegar à `main` (ex.: a Tela 19 da US26).
+> - **Desde 15/11, o deploy é automático.** Você instalou o app do Render no repositório e o Diogo ligou o *Auto-Deploy*: cada merge na `main` publica o backend sozinho, e ninguém precisa mais clicar em *Manual Deploy*. Cada merge também reinicia o serviço por alguns minutos, mesmo os que só têm documentação. Continua valendo: **o backend tem de estar no ar antes** de uma tela que dependa dele chegar à `main`. Evidência: `docs/Sprint_4/evidencias/2026-11-15_diogo_deploy-automatico-render.txt`. O item abaixo fica como registro de 11/11 a 15/11.
+> - **Não havia deploy automático (11/11 a 15/11).** O Blueprint foi criado pelo endereço público do repositório, porque o app do Render não está instalado nele. Depois de cada merge na `main` que mexa no `backend/`, o Diogo publica à mão: *Manual Deploy* → *Deploy latest commit* → esperar *live* → `GET /api/saude`. O Pages, ao contrário, publica sozinho. Por isso, **o backend tem de ir ao ar antes** de uma tela que dependa dele chegar à `main` (ex.: a Tela 19 da US26).
 > - **Na 8.5, um passo perigoso causou um incidente** (ver o aviso ali).
 
 **Quem faz o quê (A43):**
@@ -1782,7 +1783,7 @@ Esses passos seguem a documentação do Render (*blueprint*, lida em 26/10). **N
 
 6. **Assim que o serviço estiver no ar, mande a `<URL_DO_SERVICO>` ao Leonardo.** Ele a põe na constante `PRODUCAO` do `config.js` (tutorial dele, Parte 8.3), num PR, e o Pages publica as telas apontando para o Render.
 
-**Deploy automático:** por padrão, cada merge na `main` publica de novo. O que entrar depois (a US26, se passar no *gate*, e as correções da semana de bugs) aparece sozinho no Render. **Não vale para o deploy de 11/11 (A47):** ele foi criado pelo endereço público, sem o app do Render, então o deploy é manual (ver o aviso no início desta parte).
+**Deploy automático:** por padrão, cada merge na `main` publica de novo. O que entrar depois (a US26, se passar no *gate*, e as correções da semana de bugs) aparece sozinho no Render. **Não vale para o deploy de 11/11 (A47):** ele foi criado pelo endereço público, sem o app do Render, então o deploy foi manual até 15/11, quando o app do Render foi instalado e o deploy automático foi ligado (ver o aviso no início desta parte).
 
 **Agora, sem demora, as Partes 8.4 e 8.5** (schema e Administrador). Não divulgue a URL do serviço a ninguém fora do grupo antes disso.
 

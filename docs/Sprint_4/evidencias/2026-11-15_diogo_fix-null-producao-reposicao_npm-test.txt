@@ -1,0 +1,72 @@
+Correcao do "null" nas telas de Producao e de Reposicao - achado do CT68 no ambiente publicado (14/11)
+Data: 2026-11-15 | Maquina: a do Diogo | Branch: fix/frontend-producao-null, a partir da sprint-4 3a2a018
+Teste: node tests/browser.cjs (o mesmo do npm test), com a API simulada, Chrome pelo Playwright 1.62.1,
+       e o frontend servido por um servidor estatico em Node na porta 5511 (FRONTEND_URL).
+
+Defeito: quando nao ha aviso geral (Producao) ou nao ha itens (Reposicao), o codigo passava null para o
+replaceChildren, e o navegador escrevia a palavra "null" na tela. No ambiente publicado, aparecia em toda
+recomendacao de producao normal (ver 2026-11-14_kaue_ct68.txt, achado 1).
+
+--- 1) ANTES da correcao, so com a verificacao nova no teste (semNull) ---
+exit: 1
+AssertionError [ERR_ASSERTION]: apareceu "null" na tela
+    na verificacao 'producao mostra "Calculando", a tabela, os motivos do zero e nenhum termo tecnico'
+
+--- 2) So a Producao corrigida (Reposicao ainda com o defeito) ---
+exit: 1
+OK produção mostra "Calculando", a tabela, os motivos do zero e nenhum termo técnico
+OK produção sem nada a produzir e 503 como aviso informativo
+OK reposição: erros por campo, "Calculando", payload, resumo e ordem da tabela
+AssertionError [ERR_ASSERTION]: apareceu "null" na tela
+    na verificacao 'reposicao: resumo nos outros 3 casos e 503 como aviso' (caso "sem pedidos no periodo", itens vazios)
+
+--- 3) As duas corrigidas: 3 rodadas seguidas ---
+rodada 1 exit: 0 | 43 verificações passaram. Integração HTTP simulada.
+rodada 2 exit: 0 | 43 verificações passaram. Integração HTTP simulada.
+rodada 3 exit: 0 | 43 verificações passaram. Integração HTTP simulada.
+
+--- Saida completa da rodada 3 ---
+OK login visual e campos obrigatórios
+OK registro valida senha e confirmação
+OK registro 409 mantém erro de campo
+OK criação e login automático sem persistir senha
+OK funcionário enviado sem perfil ou ativo
+OK ingrediente sugere porção e valida custo/porção
+OK ingrediente envia porção personalizada sem estoque
+OK edição preserva porção e usa PUT sem GET opcional
+OK produto exige composição e açaí
+OK produto impede duplicação e converte porções
+OK alteração de preço valida zero e envia rota específica
+OK erros da API exibem múltiplos campos
+OK 401 encerra sessão
+OK funcionário é bloqueado ao abrir URL administrativa
+OK saída remove sessão e protege rotas
+OK falha de rede é distinta de login inválido
+OK teste de infraestrutura independente
+OK dados da API são texto, nunca HTML executável
+OK 403 preserva sessão e mostra falta de permissão
+OK API de resumo não permite editar com valores inventados
+OK porções zeradas e remoção com confirmação
+OK estoque mostra válido, vencido e abaixo do mínimo, e o detalhe por linha
+OK movimentação: validade só na entrada, descarte só com vencido e payload exato
+OK movimentação: entrada com validade e 422 como mensagem geral
+OK descartar só em linha vencida com saldo, com confirmação e uma chamada
+OK descarte recusado mostra a mensagem do backend
+OK pedidos lista do mais recente com total
+OK pedido: sem itens bloqueia, sem repetir, total 44,70 e payload exato
+OK pedido: 422 mostra a mensagem e mantém os itens; remover pede confirmação
+OK produção mostra "Calculando", a tabela, os motivos do zero e nenhum termo técnico
+OK produção sem nada a produzir e 503 como aviso informativo
+OK dashboard abre no mês atual com faturamento, ranking e plano de produção
+OK dashboard: filtros viram a URL certa e erros por campo
+OK dashboard sem plano mostra o link para Produção
+OK reposição: erros por campo, "Calculando", payload, resumo e ordem da tabela
+OK reposição: resumo nos outros 3 casos e 503 como aviso
+OK marketing mostra até 3 cartões e nenhum botão de publicar
+OK marketing sem cálculo mostra o aviso e o link para Produção
+OK porção padrão: lista, aviso do critério 3 e link no menu do Administrador
+OK nova unidade: erros por campo, payload normalizado e 409 no campo
+OK alterar porção: PATCH só da linha, URL codificada, payload exato e erro por linha
+OK Funcionário não abre a Porção Padrão nem vê o link
+OK screenshots desktop e mobile sem overflow
+43 verificações passaram. Integração HTTP simulada.

@@ -28,3 +28,14 @@ O deploy automatico esta ligado: o Render publicou o commit a2dd42a sozinho, e o
 Nao conferido: um merge novo na main disparando o deploy. O PR #104 foi mesclado antes de o app ser instalado, entao este
 deploy saiu quando o repositorio foi ligado ao servico, e nao por causa de um merge. A conferencia fica para o proximo merge na main.
 Efeito a lembrar: todo merge na main agora reinicia o backend, inclusive os que so tem documentacao.
+
+--- 5) Atualizacao (15/11, depois): um merge novo disparou o deploy ---
+Os PRs #105 (docs/deploy-automatico -> sprint-4) e #106 (sprint-4 -> main) foram mesclados em 15/11.
+Print da lista de deploys do servico, enviado pelo Diogo:
+  commit 4ba34b1 - "Merge pull request #106 from KaueNCarneiro/sprint-4" | Trigger: Auto-Deploy | Duration: 55,7 s
+Conferido pelo Claude: 4ba34b1 era o commit no topo da main naquele momento, e
+GET https://mente-fria-backend.onrender.com/api/saude -> {"status":"ok","banco":"ok"}
+
+=== RESULTADO (atualizado) ===
+Conferido: um merge na main dispara sozinho o deploy no Render (merge do #106 -> deploy 4ba34b1, gatilho Auto-Deploy).
+O Manual Deploy deixou de ser necessario. A pendencia "Deploy (A47)" foi encerrada na revisao de 15/11.

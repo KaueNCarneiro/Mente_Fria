@@ -1,0 +1,69 @@
+CT20 - setup do zero a partir do README (US8; Plano de Testes, CT20)
+Data: 2026-11-15, 18:37 a 18:41 | Maquina: a do Diogo | Executado pelo Claude, a pedido do Diogo
+Codigo: main 3acf6af (PR #123), clonado do GitHub numa pasta temporaria nova. Nenhuma branch foi alterada.
+Ferramentas ja instaladas na maquina: Git 2.53.0, JDK 25.0.2, Python 3.14.0, Node 24.15.0, Docker 29.8.0.
+Sem senhas nem tokens neste arquivo: o .env e o Administrador foram criados so para o teste, com valores temporarios,
+e apagados no fim.
+
+Esperado pelo caso: "Projeto sobe localmente sem etapa nao documentada".
+
+--- Passo 1 (README): clonar ---
+git clone https://github.com/KaueNCarneiro/Mente_Fria.git -> ok (main 3acf6af)
+
+--- Passo 2: dependencias ---
+optimization: python -m venv venv; venv\Scripts\activate; pip install -r requirements.txt -> ok
+  python -c "import gurobipy; print(gurobipy.gurobi.version())" -> (13, 0, 3)
+backend: baixadas pelo Maven Wrapper no primeiro .\mvnw (o cache ~\.m2 desta maquina ja existia: ver "Limites")
+frontend: nada para producao (npm install so para os testes, nao rodado aqui)
+
+--- Passo 3: .env ---
+backend\.env copiado do backend\.env.example (o proprio .example diz "NA MESMA PASTA (backend)"), em UTF-8 sem BOM.
+Preenchidos: DB_PASSWORD (a mesma do container) e JWT_SECRET (48 caracteres aleatorios). DB_PORT=55433 (ver "Desvio").
+git status --short depois de criar o .env: vazio (o .env e ignorado pelo Git).
+
+--- Passos 4 e 5: banco e schema ---
+DESVIO do README (de proposito): o container do README se chama mente-fria-db, na porta 5432. Esse nome ja existe
+nesta maquina e nao pode ser tocado. Foi usado o mesmo comando com outro nome e outra porta:
+  docker run --name mf-ct20-db -e POSTGRES_PASSWORD=... -e POSTGRES_DB=mente_fria -p 55433:5432 -d postgres:16
+  docker cp bd/Script_DDL.sql mf-ct20-db:/tmp/Script_DDL.sql
+  docker exec mf-ct20-db psql -U postgres -d mente_fria -f /tmp/Script_DDL.sql
+  -> 9 CREATE TABLE, 1 CREATE INDEX, INSERT 0 5 / 0 7 / 0 3 / 0 13; nenhum ERROR
+Conferencia do passo 5: 7 ingredientes, de "Acai (polpa)" (kg) a "Copo descartavel 500ml" (un), com o acento correto.
+
+--- Passo 6: subir ---
+backend: .\mvnw spring-boot:run (na pasta backend) -> "Tomcat started on port 8080", "Started BackendApplication in 1.963 seconds".
+  Log sem ERROR. Unico WARN: o aviso padrao do Spring sobre a senha gerada (UserDetailsServiceAutoConfiguration),
+  o mesmo que aparece nos testes.
+frontend: py -m http.server 5500 --bind 127.0.0.1 (na pasta frontend) -> ok
+
+--- Passo 7: acessar e conferir ---
+GET http://127.0.0.1:5500/index.html -> 200 (tela "Entrar no sistema de gestao")
+GET http://localhost:8080/api/saude -> {"status":"ok","banco":"ok"} (respondeu ~15 s depois do comando de subir)
+GET http://localhost:8080/api/ingredientes sem token -> 401 {"mensagem":"Sua sessao expirou ou voce nao esta autenticado."}
+OPTIONS /api/auth/login, Origin http://127.0.0.1:5500 -> 200, Access-Control-Allow-Origin: http://127.0.0.1:5500
+Cadastro do Administrador pela tela (#/cadastro, "Criar conta e entrar") -> entrou como "Perfil: Administrador",
+  com o menu completo (Dashboard, Funcionarios, Ingredientes, Porcao Padrao, Produtos, Estoque, Producao, Pedidos,
+  Clientes "Futuro", Reposicao, Marketing).
+Producao -> "Gerar recomendacao" (o backend chamou o Python do optimization\venv pelo PYTHON_CMD do .env):
+  "Estoque insuficiente para produzir agora.", lucro R$ 0,00, os tres copos com 0 e a observacao
+  "O estoque nao da ou rende mais em outro copo". Esperado com o banco novo, que tem estoque zero (passo 5 do README).
+
+=== RESULTADO DO CT20 ===
+Passou: o projeto subiu do zero seguindo so o README (banco, backend, Python e frontend), sem etapa nao documentada.
+O unico desvio foi o nome e a porta do container do banco, para nao tocar no mente-fria-db desta maquina.
+
+--- Observacoes (nao impedem o CT20) ---
+1) frontend/js/config.js tem o comentario "// TROCAR pela URL que o Render mostrar no painel" na linha da URL de
+   producao, que ja esta preenchida (https://mente-fria-backend.onrender.com). O comentario ficou antigo.
+2) O README nao diz em que pasta rodar os comandos docker cp do passo 4 (e na raiz do repositorio, por causa do
+   caminho bd/Script_DDL.sql).
+
+--- Limites (o que este teste NAO cobre) ---
+- Nao foi um colega numa maquina limpa, como pede o caso: foi a maquina do Diogo, que ja tinha JDK, Python, Node,
+  Docker e o cache do Maven (~\.m2). Os downloads do Maven e a instalacao das ferramentas nao foram testados do zero.
+- Nao foram rodados os testes do README (pytest, constraints, npm test, mvnw test): o CT20 e so subir o projeto.
+- O seed de demonstracao (bd/seed_demo.sql, opcional) e o login do Funcionario nao foram feitos.
+
+--- Limpeza ---
+Backend e servidor do frontend parados (portas 8080 e 5500 livres); docker rm -f -v mf-ct20-db; nenhum volume solto;
+.env temporario apagado. O mente-fria-db nao foi usado (continua parado).

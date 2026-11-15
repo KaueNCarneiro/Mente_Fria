@@ -3,7 +3,7 @@
 import {request} from '../api.js';
 import {money, node, button, notice, heading, table, stat} from '../ui.js';
 
-export const motivoDoZero = item => item.quantidade > 0 ? null : (Number(item.lucro_por_copo) <= 0 ? 'Sem lucro' : 'Falta ingrediente');
+export const motivoDoZero = item => item.quantidade > 0 ? null : (Number(item.lucro_por_copo) <= 0 ? 'Sem lucro' : 'O estoque não dá ou rende mais em outro copo');
 export const avisoGeral = rec => rec.some(i => i.quantidade > 0) ? null
   : (rec.every(i => Number(i.lucro_por_copo) <= 0) ? 'Nenhum produto dá lucro hoje com os custos atuais.' : 'Estoque insuficiente para produzir agora.');
 

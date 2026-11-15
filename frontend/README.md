@@ -2,7 +2,7 @@
 
 HTML, CSS e JavaScript (módulos ES), sem build e sem dependências de produção. Execute por HTTP: abrir o `index.html` com dois cliques (`file://`) não carrega os módulos.
 
-**Publicado em:** _(URL do GitHub Pages, preencher depois do primeiro deploy, por exemplo `https://kauencarneiro.github.io/Mente_Fria/`)_
+**Publicado em:** https://kauencarneiro.github.io/Mente_Fria/ (GitHub Pages, desde 11/11/2026). O backend publicado é `https://mente-fria-backend.onrender.com` (Render).
 
 ## Executar
 
@@ -89,11 +89,14 @@ Com o servidor do frontend na porta 5500 e o Google Chrome instalado. **Resultad
 
 **Ferramentas de retrato** (sem navegador; provam que uma refatoração não mudou nenhuma tela): estão em `docs/Sprint_3/referencia/frontend/ferramentas/`. Copie para `frontend/ferramentas/` (não vão para o Git), rode `npm install jsdom --no-save` e use `retratar_telas.mjs`, `comparar_retratos.mjs`, `testar_guarda.mjs` e `testar_apoio_telas.mjs`.
 
-## Situação (06/11/2026)
+## Situação (15/11/2026)
 
-- Telas 03, 10/16, 11/17, 12, 13 e 14 prontas e testadas **com a API simulada**.
-- **Pendente:** o aceite com o backend real (as Fases 3 a 6 do backend ainda não estavam na `main`), o *gate* da Fase 2 com as 16 evidências e o aceite na URL publicada. As evidências ficam em `docs/Sprint_4/evidencias/`.
-- Publicação: `.github/workflows/frontend-pages.yml` publica esta pasta a cada push na `main` que mexa no frontend. Pré-requisito, uma vez: *Settings → Pages → Source: GitHub Actions*. A origem a liberar no `CORS_ALLOWED_ORIGIN` do Render é só `https://kauencarneiro.github.io` (sem caminho e sem barra).
+- **Na `main` e publicadas:** as Telas 03, 10/16, 11/17, 12, 13 e 14 (desde 11/11) e a Tela 19 (desde 12/11). A suíte tem 43 verificações, com a API simulada.
+- **Com o backend real:** o fluxo completo nos dois perfis passou na URL publicada em 14/11 (CT68, `docs/Sprint_4/evidencias/2026-11-14_kaue_ct68.txt`), junto com o CORS (CT69), o serviço "dormindo" (CT70) e a reserva B1 (CT72).
+- **Conferência sem login em 15/11** (`2026-11-15_leonardo_conferencia-ambiente-publicado.txt`): o Pages responde, o `config.js` publicado aponta para o Render com 90 s, o backend acordou em 46 s e o CORS libera a origem do Pages.
+- **Achados do CT68 nas telas:** a palavra "null" nas telas de Produção e de Reposição (correção no PR #103) e o texto "Falta ingrediente" quando o motivo do zero é o lucro (PR #107). Os dois PRs foram revisados e aprovados em 15/11 (`2026-11-15_leonardo_revisao-prs-103-107_npm-test.txt`) e ainda não estavam na `main` nesta data.
+- **Pendente:** o aceite do Leonardo na URL publicada, com prints (tutorial, Parte 16). O *gate* da Fase 2 com as 16 evidências não foi feito: o backend real só entrou na `main` em 11/11, e o CT68 cobriu o fluxo.
+- **Publicação:** `.github/workflows/frontend-pages.yml` publica esta pasta a cada push na `main` que mexa no frontend. A origem liberada no `CORS_ALLOWED_ORIGIN` do Render é só `https://kauencarneiro.github.io` (sem caminho e sem barra).
 
 ## Problemas comuns
 

@@ -1,13 +1,15 @@
 # Relatório de Entrega — Sprint 3 — Mente Fria
 
-> **RASCUNHO de 28/10/2026** (decisão A39). Feito só com fatos verificáveis no repositório e nos documentos desta pasta. **Falta a revisão do Kauê (facilitação) e a aprovação do grupo.** A retrospectiva e as contribuições individuais são escritas pelos integrantes (§5).
+> **RASCUNHO de 28/10/2026, revisado em 15/11/2026** (decisão A39). Feito só com fatos verificáveis no repositório e nos documentos desta pasta. **Falta a revisão do Kauê (facilitação) e a aprovação do grupo.**
+>
+> **Revisão de 15/11:** o retrato da Sprint 3 continua o de 28/10 (base abaixo). Foram atualizados só os itens que mudaram depois: a entrega, a Sprint Review, a retrospectiva, as contribuições individuais (§5), as evidências (§4) e o desfecho dos riscos (§6). O que aconteceu com o código está no relatório da Sprint 4 (`docs/Sprint_4/sprint-4-relatorio-entrega.md`).
 
 > **Base desta revisão:** `main` em **28/10/2026**, commit [`c551b4e`](https://github.com/KaueNCarneiro/Mente_Fria/tree/c551b4e03c522567c2b9029d8bfad71cf139c6b9) (PR #39, que levou à `main` o PR #38, documentação da licença do Gurobi). A reorganização do calendário feita na noite de 28/10 (A39–A42) não entra nesta base.
 
-- **Período:** depois do corte da Sprint 2 (02/10/2026) até o fim da Sprint 3 no cronograma do professor (**as datas oficiais de início e fim precisam ser conferidas pelo grupo antes do envio**). Os trabalhos registrados no GitHub vão de 08/10 (primeiros documentos da Sprint 3) a 28/10.
-- **Sprint Review:** não realizada.
-- **Retrospectiva:** a fazer, junto com a da Sprint 4, na qui 05/11 (roteiro da Sprint 4, §6).
-- **Entrega:** junto com a da Sprint 4, na **sex 06/11/2026** (decisão A43).
+- **Período:** **02/10/2026 a 16/10/2026**, no cronograma do professor (datas informadas pelo Diogo em 15/11). Os trabalhos registrados no GitHub vão de 08/10 (primeiros documentos da Sprint 3) a 28/10: a parte depois de 16/10 já caiu no período da Sprint 4 (A39).
+- **Sprint Review:** não realizada. A Review conjunta, marcada para sex 06/11, também não foi feita (informado pelo Diogo em 15/11).
+- **Retrospectiva:** das Sprints 2, 3 e 4, **sem reunião**, como registro de análise (informado pelo Diogo em 15/11).
+- **Entrega:** junto com a da Sprint 4 (decisão A43). O plano era sex 06/11/2026; **o envio ao professor é em 15/11/2026** (informado pelo Diogo em 15/11).
 - **Contexto:** no cronograma do professor, a Sprint 3 já terminou e o período atual é a **Sprint 4**, com entrega em **06/11/2026**. Os documentos desta pasta foram escritos na Sprint 3 e chamam de "Sprint 3" o pacote de trabalho que é **executado na Sprint 4** (A39, em `docs/Sprint_4/sprint-4-decisoes-e-pendencias.md`). O Adendo nº 1, que por equívoco de redação dizia "Sprint 3", foi corrigido para "Sprint 4" (A43).
 
 **Resumo:**
@@ -76,12 +78,12 @@ O Backlog foi atualizado em 27/10, pelo adendo (A37), e em 28/10, pelo calendár
 | Evidência | O que está confirmado | Limite |
 |---|---|---|
 | Testes da referência (backend, Python, banco, frontend) | Executados durante a auditoria (26–28/10); números no §2 e em `docs/Sprint_3/sprint-3-roteiro.md`, §2 | Rodaram sobre a referência, **não** sobre o código real |
-| `docs/Sprint_3/evidencias/` | Pasta criada | **Sem arquivos de evidência** até 28/10 |
+| `docs/Sprint_3/evidencias/` | Pasta criada | **Sem arquivos de evidência** até 28/10. Em 04/11 entrou o registro do incidente A26 (o Docker Desktop não inicia nesta máquina; ocorrências de 26 e 30/10; PR #50) |
 
 ## 5. Retrospectiva e contribuição individual
 
-- **Retrospectiva da Sprint 3:** a fazer pelo grupo na qui 05/11, junto com a da Sprint 4 e a da Sprint 2, que nunca foi realizada (roteiro da Sprint 4, §6).
-- **Contribuição individual:** uma por integrante, no padrão de `docs/Sprint_2/sprint-2-contribuicao-*.md`, a escrever por cada um até qui 05/11.
+- **Retrospectiva da Sprint 3:** junto com a da Sprint 4 e a da Sprint 2 (na Sprint 2 houve uma ligação de retrospectiva em 02/10, com os quatro integrantes, sem ata), como registro de análise sem reunião (informado pelo Diogo em 15/11): `docs/Sprint_4/sprint-4-retrospectiva.md`.
+- **Contribuição individual:** **entregues pelos quatro em 15/11**: `sprint-3-contribuicao-diogo.md`, `-kaue.md`, `-leo.md` e `-lucas.md`, nesta pasta (PRs #108, #109, #115 e #118).
 
 ## 6. Riscos e impedimentos para a Sprint 4
 
@@ -89,3 +91,8 @@ O Backlog foi atualizado em 27/10, pelo adendo (A37), e em 28/10, pelo calendár
 - **Ambiente:** o Docker não foi conferido nas máquinas do Lucas, do Kauê e do Leonardo.
 - **Publicação:** o primeiro contato com o Render será no deploy definitivo, na seg 02/11 (A41).
 - **Do PR #24 (14/10) até 26/10, nada foi para o GitHub;** o roteiro v4.6, escrito até 14/10, só foi publicado em 27/10. O trabalho só local foi o maior atraso da sprint.
+
+**Desfecho na Sprint 4 (revisão de 15/11):**
+- **Integração:** o código não chegou à `main` até 06/11. A Fase 1 entrou em 05/11 (PR #52). As demais fases, os repositórios e as telas chegaram em 11/11, e a US26 em 12/11.
+- **Publicação:** o deploy foi em 11/11, na conta do Diogo (A47), e não em 02/11.
+- **Histórico do Git:** a perda do histórico anterior a 27/09, pedida pelo relatório da Sprint 2, foi registrada em `sprint-3-registro-historico-git.md` (11/11, PR #90).

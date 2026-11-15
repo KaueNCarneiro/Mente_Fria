@@ -1,0 +1,36 @@
+CT72 - otimizacao desligada no servidor (chave de reserva, plano B1) no ambiente publicado (tutorial do Kaue, Parte 8.6)
+Data: 2026-11-14 | Executado pelo Diogo (painel do Render e login) com o Claude conduzindo as telas, a pedido do Kaue
+Frontend: https://kauencarneiro.github.io/Mente_Fria/ | Backend: https://mente-fria-backend.onrender.com
+Registro em texto, lido das telas. Perfil: Administrador.
+
+--- Preparacao (Diogo, painel do Render) ---
+Servico mente-fria-backend -> Environment -> OTIMIZADOR_HABILITADO: true -> false. O servico reiniciou.
+20:00:18 | GET /api/saude -> {"banco":"ok","status":"ok"} (0,6 s)
+
+--- 20:02:46 | Tela 12, #/producao -> "Gerar recomendacao" ---
+Aviso na tela: "A recomendação está disponível só na demonstração local da equipe."
+Aparece como aviso informativo, nao como tela de erro. Nenhum numero de recomendacao.
+
+--- 20:03:02 | Tela 13, #/reposicao -> periodo 60 dias, orcamento R$ 100,00 ---
+Aviso na tela: "A recomendação está disponível só na demonstração local da equipe."
+
+--- 20:03:07 | Tela 03, #/dashboard ---
+O resto do dashboard continua funcionando: faturamento do mes R$ 384,00 (7 pedidos), mais vendidos, ingredientes mais utilizados, ranking.
+Bloco "Plano de producao": "O plano de produção está disponível só na demonstração local da equipe."
+
+--- 20:03:11 | Tela 14, #/marketing ---
+"As sugestões dependem da recomendação de produção, que neste endereço está disponível só na demonstração local da equipe." + link "Ir para Produção".
+
+--- 20:03:14 | o resto do sistema ---
+#/ingredientes: lista com 8 ingredientes, sem mensagem de erro.
+
+--- De volta para true (Diogo, painel do Render) ---
+OTIMIZADOR_HABILITADO: false -> true. O servico reiniciou.
+20:06:24 | GET /api/saude -> {"banco":"ok","status":"ok"}
+20:06:41 | #/producao -> "Gerar recomendacao": Tradicional 148 / Especial 0 / Premium 0; lucro R$ 982,72; receita R$ 1.909,20.
+(148 e nao 150 por causa dos 2 pedidos do CT68: acai valido 44,4 kg / 0,300 = 148. Conta: 148 x 6,64 = 982,72.)
+
+=== RESULTADO DO CT72 ===
+Passou: com a chave desligada, as Telas 03, 12, 13 e 14 mostram a mensagem como aviso e o resto do sistema funciona; com a chave
+religada, a recomendacao volta. Nao conferido aqui: o codigo HTTP 503 em si (so o texto que a tela mostra) e os casos de reposicao
+"campo invalido -> 400" e "sem pedidos -> 200" com a chave desligada; esses estao no OtimizadorDesligadoTest (3 testes).

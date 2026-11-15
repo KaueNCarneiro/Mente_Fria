@@ -1,0 +1,14 @@
+CT69 - CORS do GitHub Pages no ambiente publicado (tutorial do Kaue, Parte 8.6)
+Data: 2026-11-14, 19:14 | Executado na maquina do Diogo, pelo PowerShell, a pedido do Kaue
+Backend: https://mente-fria-backend.onrender.com | Origem do Pages: https://kauencarneiro.github.io
+(O CT69 ja tinha passado no Render em 11/11, no deploy: 2026-11-11_diogo_deploy-render.txt. Esta e uma segunda execucao.)
+
+GET /api/saude                                              -> {"banco":"ok","status":"ok"} (0,4 s; o servico estava acordado)
+OPTIONS /api/auth/login, Origin https://kauencarneiro.github.io, Access-Control-Request-Method POST
+                                                            -> 200 | Access-Control-Allow-Origin: https://kauencarneiro.github.io
+                                                               Access-Control-Allow-Methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+OPTIONS /api/auth/login, Origin https://outro-site.example  -> 403
+GET /api/teste/python (o eco so existe no perfil dev)       -> 401
+GET https://kauencarneiro.github.io/Mente_Fria/             -> 200
+
+Esperado pelo caso de teste: 200 com Access-Control-Allow-Origin para o Pages; 403 para outra origem. Passou.

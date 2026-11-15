@@ -1,0 +1,18 @@
+CT70 - primeira chamada depois de o servico "dormir", no ambiente publicado (tutorial do Kaue, Parte 8.6)
+Data: 2026-11-14 | Executado pelo Diogo (sessao dele) com o Claude conduzindo a tela, a pedido do Kaue
+Frontend: https://kauencarneiro.github.io/Mente_Fria/ | Backend: https://mente-fria-backend.onrender.com (plano gratuito do Render)
+
+20:06:44 | ultimo acesso ao backend (recomendacao de producao gerada na Tela 12)
+20:06 a 20:23 | 17 minutos sem nenhum acesso ao sistema (nem pelas telas, nem pela URL do backend)
+20:23:53 | com a sessao do Administrador ja aberta, a tela foi levada de #/producao para #/estoque (que busca os dados no backend)
+           a tela mostrou "Carregando..." (conferido aos 5 s e aos 35 s)
+           aos 51,4 s a tabela do estoque apareceu, com 8 ingredientes
+           conferido de novo aos 65 s e aos 95 s: tabela na tela, nenhuma mensagem de erro
+
+Resultado: a tela esperou o servico acordar (51,4 s, dentro dos 90 s do config.js) e funcionou. Nao apareceu
+"O servidor demorou para responder". Passou.
+
+Diferenca para o texto do caso: ele pede "abrir o Pages e fazer login" depois dos 15 minutos. Aqui a primeira chamada foi a
+busca do estoque, com a sessao ja aberta, e nao o login. O mecanismo testado e o mesmo (a primeira chamada ao backend adormecido,
+com o tempo limite de 90 s). O login em si, com o servico dormindo, nao foi testado.
+O tempo foi medido pela propria pagina (do clique ate a tabela aparecer). Nao ha print de tela.

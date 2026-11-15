@@ -1,0 +1,70 @@
+CT68 - fluxo do Termo no ambiente publicado (tutorial do Kaue, Parte 8.6)
+Data: 2026-11-14 | Executado pelo Diogo (login feito por ele) com o Claude conduzindo as telas, a pedido do Kaue
+Frontend: https://kauencarneiro.github.io/Mente_Fria/ (GitHub Pages) | Backend: https://mente-fria-backend.onrender.com (Render)
+Registro em texto: o conteudo de cada tela foi lido da pagina. Nomes de usuarios e e-mails foram omitidos de proposito.
+
+=== PERFIL ADMINISTRADOR ===
+
+--- 19:31 | #/estoque (antes) ---
+Acai (polpa) 45 kg valido | Banana 11 kg | Copo descartavel 500ml 267 un | Granola 11,12 kg (5,12 valido; 6 vencido)
+Granola (mg) 0 mg, "Abaixo do minimo" | Leite condensado 14,19 L | Leite em po 4,76 kg | Morango 1,98 kg, "Abaixo do minimo"
+
+--- 19:31:45 | #/producao -> "Gerar recomendacao" ---
+Lucro potencial R$ 996,00 | Receita estimada R$ 1.935,00
+Acai Tradicional 300ml 150 (lucro por copo R$ 6,64) | Acai Especial 500ml 0 (R$ 9,07, "Falta ingrediente") | Acai Premium 700ml 0 (R$ 10,63, "Falta ingrediente")
+Observacao: o caso de teste cita 151/1/0 "com o seed". O banco publicado ja tinha pedidos a mais que o seed (acai valido 45 kg, e nao 45,75):
+150 copos do Tradicional usam exatamente os 45 kg. Conta: 150 x 6,64 = 996,00; 150 x 12,90 = 1.935,00.
+
+--- 19:32 | #/reposicao -> periodo 60 dias, orcamento R$ 100,00 ---
+"O orcamento cobre tudo o que falta: R$ 11,10."
+Morango: consumo 0,72 kg | estoque valido 1,98 kg | minimo 2 kg | sugerida 0,74 kg | R$ 11,10. Os outros 6: "Nao precisa comprar".
+
+--- 19:32 | #/dashboard ---
+Faturamento do mes R$ 358,20 (5 pedidos) | 2 ingredientes abaixo do minimo | 1 com quantidade vencida
+Plano de producao: "Com o estoque de 14/11/2026, 19:31:45, a venda pode chegar a R$ 1.935,00 (lucro de R$ 996,00). Priorize: Acai Tradicional 300ml."
+Mais vendidos: Premium 7 (R$ 174,30) | Especial 7 (R$ 132,30) | Tradicional 4 (R$ 51,60). Ranking de vendas: 2 usuarios.
+
+--- 19:32 | #/marketing ---
+"Sugestoes com base no calculo de 14/11/2026, 19:31:45." 1 sugestao: Acai Tradicional 300ml, "Destaque o tamanho", lucro por copo R$ 6,64.
+
+--- 19:34 | #/estoque/movimentar -> ENTRADA ---
+Morango (kg), Entrada, 1,000, validade 30/11/2026, observacao "CT68 - teste no ambiente publicado (14/11)"
+Resposta: "Movimentacao registrada." | Estoque: Morango 1,98 -> 2,98 kg; situacao "Abaixo do minimo" -> "Ok"
+
+--- 19:35:48 | #/pedidos/novo -> PEDIDO ---
+1 x Acai Tradicional 300ml (R$ 12,90). Resposta: "Pedido registrado. Total: R$ 12,90." | Na lista: pedido #9 (9 pedidos no total)
+
+--- 19:36 | #/estoque (depois) - BAIXA AUTOMATICA ---
+Acai (polpa) 45 -> 44,7 kg (-0,300) | Leite condensado 14,19 -> 14,16 L (-0,030) | Copo 267 -> 266 un (-1). Demais iguais.
+Confere com a composicao do Tradicional (0,300 kg de acai, 0,030 L de leite condensado, 1 copo).
+
+=== PERFIL FUNCIONARIO ===
+
+--- 19:38 | menu ---
+Cabecalho "Perfil: Funcionario". Menu: Inicio, Ingredientes, Produtos, Estoque, Pedidos. (Sem Dashboard, Funcionarios, Porcao Padrao, Producao, Reposicao e Marketing.)
+
+--- 19:38 | #/estoque ---
+Lista igual a do Administrador (Acai 44,7 kg; Copo 266 un; Leite condensado 14,16 L; Morango 2,98 kg), com "+ Registrar movimentacao".
+
+--- 19:39 | rotas so do Administrador, digitadas direto no endereco ---
+#/producao, #/reposicao, #/dashboard, #/marketing, #/funcionarios e #/porcao-padrao:
+as seis voltam para #/inicio, com o aviso "Esta area e exclusiva do Administrador."
+(Aqui foi conferida a guarda de rotas da tela. O 403 do backend para o Funcionario e coberto pelos testes automatizados.)
+
+--- 19:40:17 | #/pedidos/novo -> PEDIDO do Funcionario ---
+1 x Acai Tradicional 300ml (R$ 12,90). Resposta: "Pedido registrado. Total: R$ 12,90." | Na lista: pedido #10 (10 pedidos no total)
+
+--- 19:40 | #/estoque (depois) - BAIXA AUTOMATICA ---
+Acai (polpa) 44,7 -> 44,4 kg | Leite condensado 14,16 -> 14,13 L | Copo 266 -> 265 un. Demais iguais.
+
+=== RESULTADO DO CT68 ===
+Passou nos dois perfis: login, entrada de estoque, recomendacao, pedido, baixa, reposicao, dashboard e marketing funcionam pela URL do Pages,
+com o backend e o Gurobi no Render (licenca do pip). Diferenca para o texto do caso: 150/0/0 em vez de 151/1/0, explicada acima (o estoque
+publicado ja nao e o do seed). O "cadastro" do fluxo nao foi refeito: o Administrador e o Funcionario ja existiam (criados no deploy de 11/11).
+Dados gravados por este teste no banco publicado: 1 entrada de estoque (1 kg de morango) e 2 pedidos (#9 e #10).
+
+=== ACHADOS (semana de bugs) ===
+1) Tela de Producao: aparece a palavra "null" entre "Calculado em..." e os valores, quando nao ha aviso geral.
+   Causa: frontend/js/screens/producao.js, drawResult: `aviso ? notice(aviso) : null` dentro de replaceChildren(...).
+2) Banco publicado: existe um segundo ingrediente "Granola" (unidade mg, estoque 0, "Abaixo do minimo"). Parece resto de teste.
+3) Texto: com quantidade 0, a observacao "Falta ingrediente" aparece mesmo quando o ingrediente existe e o motivo e o lucro (o acai rende mais no Tradicional).

@@ -1,0 +1,34 @@
+Selo do item "Clientes" no menu do Administrador: "S2" vira "Futuro"
+Data: 2026-11-15 | Maquina: a do Diogo | Branch: fix/menu-clientes-selo, a partir da sprint-4 15fd36e
+Teste: node tests/browser.cjs (o mesmo do npm test), com a API simulada, Chrome pelo Playwright 1.62.1,
+       e o frontend servido por um servidor estatico em Node na porta 5511 (FRONTEND_URL).
+
+Motivo: o item Clientes (US13) nao tem tela e esta fora do semestre (decisoes A2b e A40), mas o menu o mostrava
+com o selo "S2" e a dica "Disponivel na Sprint 2", o que fazia parecer uma entrega atrasada. Decisao do Diogo em
+15/11: trocar o selo. O item continua apagado e sem link, como o README do frontend ja dizia.
+Mudanca: frontend/js/screens/shell.js - item sem rota passa a mostrar o selo "Futuro" e a dica "Fora deste semestre".
+Verificacao nova em tests/browser.cjs: 'menu: Clientes apagado, sem link, com o selo "Futuro" e a dica "Fora deste
+semestre"' (um unico item apagado no menu, texto "ClientesFuturo", nenhum link "Clientes" e nenhum "S2").
+
+--- 1) ANTES da correcao, so com a verificacao nova no teste ---
+38 verificacoes OK antes dela; depois:
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
++ 'ClientesS2'
+- 'ClientesFuturo'
+    at ...frontend\tests\browser.cjs:94
+exit: 1
+
+--- 2) DEPOIS da correcao: 3 rodadas seguidas ---
+rodada 1 exit: 0 | 44 verificações passaram. Integração HTTP simulada.
+rodada 2 exit: 0 | 44 verificações passaram. Integração HTTP simulada.
+rodada 3 exit: 0 | 44 verificações passaram. Integração HTTP simulada.
+Na rodada 1: OK menu: Clientes apagado, sem link, com o selo "Futuro" e a dica "Fora deste semestre"
+
+--- 3) Conferencia visual ---
+No screenshot desktop da tela Funcionarios gerado pelo teste (tests/artifacts/funcionarios.png, fora do Git):
+o item "Clientes" aparece apagado, com o selo "Futuro" a direita, entre "Pedidos" e "Reposicao".
+No celular, o item continua escondido (regra do styles.css para .future, sem mudanca).
+
+=== RESULTADO ===
+44 verificacoes (43 + a nova), 3 de 3 rodadas. Nenhuma outra tela muda: o menu do Funcionario nao tem itens apagados.

@@ -8,6 +8,6 @@ import java.util.List;
 public record Recomendacao(LocalDateTime calculadoEm, BigDecimal receitaEstimada, BigDecimal margemEstimada,
                            List<ItemRecomendado> recomendacao) {
 
-    /** lucro_por_copo <= 0: a tela mostra "Sem lucro"; > 0 com quantidade 0: "Falta ingrediente" (D9). */
+    /** lucro_por_copo <= 0: a tela mostra "Sem lucro"; > 0 com quantidade 0: "O estoque não dá ou rende mais em outro copo" (D9). */
     public record ItemRecomendado(int produtoId, String nome, int quantidade, BigDecimal lucroPorCopo) {}
 }

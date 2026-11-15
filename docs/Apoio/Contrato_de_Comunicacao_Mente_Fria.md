@@ -502,7 +502,7 @@ O `status` (`ATIVO` ou `CANCELADO`) já existe no banco para a US27 (cancelar pe
 
 - Os valores do exemplo são os do estoque do `seed_demo.sql` (validados com o Gurobi real). Com o seed oficial (estoque 0), tudo vem 0: é o esperado.
 - O Java calcula `lucro_por_copo` e recalcula receita e margem com `BigDecimal`.
-- O frontend mostra "Sem lucro" quando `lucro_por_copo ≤ 0` e "Falta ingrediente" quando `lucro_por_copo > 0` e a quantidade é 0. A tela **não** usa termos técnicos.
+- O frontend mostra "Sem lucro" quando `lucro_por_copo ≤ 0` e "O estoque não dá ou rende mais em outro copo" quando `lucro_por_copo > 0` e a quantidade é 0 (até 15/11/2026 o texto era "Falta ingrediente"; ele foi trocado porque a quantidade 0 também acontece com o ingrediente em estoque, quando ele rende mais em outro produto, e a resposta não diz qual dos dois casos é). A tela **não** usa termos técnicos.
 - Erros: `status: "erro"` do Python → `422`; falha técnica ou timeout → `500`; Funcionário → `403`; otimização desligada no servidor → `503` (A31).
 - A última recomendação gerada fica guardada na memória do backend para o marketing (§2.9) e o dashboard (§2.8). Ela some se o backend reiniciar ou "dormir" (plano free).
 

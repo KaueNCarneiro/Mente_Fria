@@ -3,7 +3,7 @@
 import {request} from '../api.js';
 import {money, node, button, notice, heading, table, stat} from '../ui.js';
 
-export const motivoDoZero = item => item.quantidade > 0 ? null : (Number(item.lucro_por_copo) <= 0 ? 'Sem lucro' : 'Falta ingrediente');
+export const motivoDoZero = item => item.quantidade > 0 ? null : (Number(item.lucro_por_copo) <= 0 ? 'Sem lucro' : 'O estoque não dá ou rende mais em outro copo');
 export const avisoGeral = rec => rec.some(i => i.quantidade > 0) ? null
   : (rec.every(i => Number(i.lucro_por_copo) <= 0) ? 'Nenhum produto dá lucro hoje com os custos atuais.' : 'Estoque insuficiente para produzir agora.');
 
@@ -32,7 +32,8 @@ function drawResult(result, r) {
   const itens = r.recomendacao || [], aviso = avisoGeral(itens);
   result.replaceChildren(
     node('p', {class: 'muted'}, 'Calculado em ' + new Date(r.calculado_em).toLocaleString('pt-BR') + '. Esta é a quantidade que rende o maior lucro com o estoque que você tem hoje.'),
-    aviso ? notice(aviso) : null,
+    // Sem aviso, nada entra na lista: o replaceChildren escreveria a palavra "null" na tela.
+    ...(aviso ? [notice(aviso)] : []),
     node('div', {class: 'stats'}, stat('Lucro potencial', money(r.margem_estimada)), stat('Receita estimada', money(r.receita_estimada))),
     node('div', {class: 'section'}, node('h2', {}, 'Quanto produzir'),
       table(['Produto', 'Quantidade', 'Lucro por copo', 'Observação'],

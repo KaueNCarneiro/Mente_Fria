@@ -1,0 +1,38 @@
+Conferencia do frontend publicado, sem login - 15/11/2026
+Data: 2026-11-15 | Maquina: a do Leonardo | Ferramenta: curl (so GET e OPTIONS; nada foi gravado)
+
+Esta conferencia NAO e o aceite da Parte 16 do tutorial (telas nos dois perfis, com prints): ela nao
+entra no sistema. O fluxo completo nos dois perfis esta no CT68 (2026-11-14_kaue_ct68.txt).
+
+--- 1) GitHub Pages ---
+GET https://kauencarneiro.github.io/Mente_Fria/
+HTTP 200 (0,04 s)
+
+--- 2) config.js publicado ---
+GET https://kauencarneiro.github.io/Mente_Fria/js/config.js
+4:const PRODUCAO = 'https://mente-fria-backend.onrender.com';
+10:export const REQUEST_TIMEOUT_MS = NO_PAGES ? 90000 : 15000;
+A URL do backend e o tempo limite de 90 s sao os do repositorio.
+
+--- 3) Backend no Render, com o servico "dormindo" ---
+GET https://mente-fria-backend.onrender.com/api/saude
+HTTP 200 (46,45 s) {"banco":"ok","status":"ok"}
+A primeira chamada levou 46 s para o servico acordar: cabe nos 90 s do config.js e nao caberia nos 15 s locais.
+
+--- 4) CORS para a origem do Pages ---
+OPTIONS https://mente-fria-backend.onrender.com/api/auth/login
+  Origin: https://kauencarneiro.github.io
+  Access-Control-Request-Method: POST
+  Access-Control-Request-Headers: content-type
+HTTP/1.1 200 OK
+access-control-allow-headers: content-type
+access-control-allow-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+access-control-allow-origin: https://kauencarneiro.github.io
+access-control-max-age: 3600
+
+--- 5) O "null" da Tela 12 ainda esta publicado ---
+GET https://kauencarneiro.github.io/Mente_Fria/js/screens/producao.js
+A linha "aviso ? notice(aviso) : null" ainda aparece 1 vez: a correcao do PR #103 nao chegou a main.
+Conferir de novo depois do merge.
+
+Nao executado: login, telas com dados e qualquer operacao que grava (aceite da Parte 16).

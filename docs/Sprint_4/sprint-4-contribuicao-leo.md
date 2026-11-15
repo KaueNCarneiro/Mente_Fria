@@ -34,6 +34,7 @@ Os commits são de 06/11, com a suíte em 39 verificações e a API simulada. Os
 |---|---|---|
 | #103 — `fix/frontend-producao-null` | sixtxxn | Revisor pedido no PR (as telas são minhas); aprovado em 15/11. Conferi a correção do "null" nas telas de Produção e de Reposição: o `replaceChildren` escreve `null` como texto, e a lista passou a não receber o item quando não há aviso. Rodei o `npm test` na branch: 43 verificações, em 3 rodadas (evidência `2026-11-15_leonardo_revisao-prs-103-107_npm-test.txt`) |
 | #107 — `fix/producao-texto-quantidade-zero` | sixtxxn | Acordo pedido no PR (muda a regra D9 do contrato); aprovado em 15/11. Concordei com a troca do texto "Falta ingrediente" na Tela 12 e conferi se a tela, o teste, o contrato, o CT43 e o tutorial ficaram com o mesmo texto. Rodei o `npm test` na branch: 43 verificações, em 3 rodadas (mesma evidência) |
+| #113 — `fix/menu-clientes-selo` | sixtxxn | Revisor pedido no PR; aprovado em 15/11. Conferi a troca do selo "S2" por "Futuro" no item Clientes do menu (US13, fora do semestre): o item continua apagado e sem link, e o menu do Funcionário não muda. Rodei o `npm test` na branch: 44 verificações, em 3 rodadas (evidência `2026-11-15_leonardo_revisao-pr-113_npm-test.txt`) |
 
 Não há outra revisão minha registrada no GitHub nas Sprints 3 e 4.
 

@@ -39,9 +39,10 @@ function drawResult(result, r) {
   const itens = r.itens || [];
   result.replaceChildren(
     notice(resumoReposicao(r), r.orcamento_suficiente === false ? 'error' : ''),
-    itens.length ? node('div', {class: 'section'}, node('h2', {}, 'Sugestão de compra'),
+    // Sem itens, nada entra na lista: o replaceChildren escreveria a palavra "null" na tela.
+    ...(itens.length ? [node('div', {class: 'section'}, node('h2', {}, 'Sugestão de compra'),
       table(['Ingrediente', 'Consumo no período', 'Estoque válido', 'Mínimo', 'Quantidade sugerida', 'Custo estimado'],
         itens.map(x => [x.nome, qtd(x.consumo_periodo, x.unidade_medida), qtd(x.quantidade_estoque, x.unidade_medida), qtd(x.quantidade_minima, x.unidade_medida),
           Number(x.quantidade_sugerida) > 0 ? qtd(x.quantidade_sugerida, x.unidade_medida) : 'Não precisa comprar',
-          Number(x.quantidade_sugerida) > 0 ? money(x.custo_estimado) : '—']))) : null);
+          Number(x.quantidade_sugerida) > 0 ? money(x.custo_estimado) : '—'])))] : []));
 }

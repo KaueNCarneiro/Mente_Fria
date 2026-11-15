@@ -1,0 +1,48 @@
+==============================================================================
+EVIDENCIA - Backup semanal do banco do Render (A41, A47)
+==============================================================================
+Data: 15/11/2026, arquivo gravado as 17h04 (horario de Brasilia).
+Executado por: Diogo, da rede dele (restricao de IP do banco, 12/11), guiado pelo Claude.
+Mesmo procedimento de 14/11 (2026-11-14_diogo_backup-render.txt): conferir o IP da rede contra a regra
+de entrada do banco antes, depois pg_dump e restauracao num banco descartavel. Desta vez a consulta do
+ingrediente 1 (o acento) voltou, e entraram a contagem de ingredientes e a de unidades.
+A URL do banco (que contem a senha) NAO aparece neste arquivo. O .dump fica FORA do repositorio
+(pasta do usuario, ~/mente-fria-backup) e nunca vai para o Git.
+
+Por que agora: depois do backup de 14/11, o banco publicado mudou (pedidos #9 e #10 e a entrada de 1 kg
+de morango do CT68, e a exclusao da "Granola" em mg em 15/11). O backup de 14/11 nao tinha nada disso.
+
+------------------------------------------------------------------------------
+1) Backup
+------------------------------------------------------------------------------
+pg_dump -Fc --no-owner --no-privileges (postgres:16 num container descartavel, sslmode=require)
+Get-ChildItem da pasta de backups:
+  mente_fria_2026-11-11.dump   23469 bytes   11/11/2026 22:32
+  mente_fria_2026-11-14.dump   23574 bytes   14/11/2026 18:19
+  mente_fria_2026-11-15.dump   23689 bytes   15/11/2026 17:04   <- este
+
+------------------------------------------------------------------------------
+2) Restauracao testada (num PostgreSQL 16 descartavel, mf-restore; nao o mente-fria-db)
+------------------------------------------------------------------------------
+pg_restore -U postgres -d mente_fria --no-owner --no-privileges --exit-on-error /tmp/b.dump
+  pg_restore exit: 0
+SELECT count(*) FROM pedido;                         (banco restaurado) -> 10
+SELECT count(*) FROM pedido;                         (Render)           -> 10
+SELECT count(*) FROM ingrediente;                    (banco restaurado) -> 7
+SELECT nome FROM ingrediente WHERE id = 1;           (banco restaurado) -> Açaí (polpa)
+SELECT count(*) FROM unidade_medida_porcao_padrao;   (banco restaurado) -> 5
+docker rm -f -v mf-restore -> mf-restore (apagado; conferido pelo Claude: o container nao existe mais)
+
+Leitura:
+- O backup restaura sem erro e tem o mesmo numero de pedidos que o Render (10), consultado logo depois.
+- Pedidos: 10, os 8 de 14/11 mais os pedidos #9 e #10 do CT68 (2026-11-14_kaue_ct68.txt).
+- Ingredientes: 7, sem a "Granola" em mg apagada em 15/11.
+- O acento de "Açaí (polpa)" foi preservado (em 14/11 essa consulta nao foi feita).
+- Unidades de medida: 5, as mesmas de 14/11.
+
+------------------------------------------------------------------------------
+Pendente (A41, A47)
+------------------------------------------------------------------------------
+- Proximos backups: semanal (por volta de 22/11) e o de 29/11, conferindo o IP antes.
+- O banco gratuito vence em 11/12/2026, 21h59.
+==============================================================================

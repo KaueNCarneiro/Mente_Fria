@@ -1,0 +1,67 @@
+==============================================================================
+EVIDENCIA - Backup do fim da semana de bugs (A41, A47): banco do Render
+==============================================================================
+Data: 14/11/2026, entre 18h14 (tentativa recusada) e 18h20 (horario de Brasilia; horarios dos
+arquivos e do container temporario). A A41 previa 13/11 (fim da semana de bugs); o backup saiu
+um dia depois.
+Executado por: Diogo, da rede dele (restricao de IP do banco, 12/11), guiado pelo Claude.
+Mesmo procedimento do backup de 11/11 (2026-11-11_diogo_deploy-render.txt, secao 6), com uma
+diferenca: no lugar da consulta do ingrediente 1 (o acento de "Açaí (polpa)"), foi feita a
+contagem das unidades de medida. O acento nao foi conferido desta vez.
+A URL do banco (que contem a senha) NAO aparece neste arquivo. O .dump fica FORA do repositorio
+(pasta do usuario, ~/mente-fria-backup) e nunca vai para o Git.
+
+------------------------------------------------------------------------------
+1) Primeira tentativa: conexao recusada
+------------------------------------------------------------------------------
+pg_dump: error: connection to server at "<host do banco>" (...), port 5432 failed:
+  SSL connection has been closed unexpectedly
+-> O pg_dump deixou um arquivo vazio (mente_fria_2026-11-14.dump, 0 bytes), sobrescrito pela
+   tentativa seguinte, no mesmo dia e com o mesmo nome.
+Causa (confirmada pelo Diogo): o IP da rede dele tinha mudado desde 12/11 e saido da lista de
+IPs liberados. Correcao: o Diogo atualizou a regra em mente-fria-db > Info > Networking >
+PostgreSQL Inbound IP Rules para o IP novo da rede. Entre a tentativa que falhou e a que
+funcionou (secoes 2 e 3), so a regra de IP mudou.
+Interpretacao (nao testada a parte): com a restricao de IP ligada, uma conexao vinda de um IP
+fora da lista e encerrada assim, antes do login. Na pratica, isto tambem responde ao "nao foi
+testado" da secao 8 da evidencia de 11/11: uma conexao de um IP fora da lista foi recusada.
+Licao para os proximos backups (semanais e 29/11): conferir o IP antes, porque o IP de uma
+internet residencial pode mudar (por exemplo, quando o roteador reinicia). O passo a passo esta
+no "Se der errado" da Parte 8.7 do tutorial do Kaue.
+
+------------------------------------------------------------------------------
+2) Backup
+------------------------------------------------------------------------------
+pg_dump -Fc --no-owner --no-privileges (postgres:16 num container descartavel, sslmode=require)
+-> mente_fria_2026-11-14.dump, 23.574 bytes, 14/11 as 18h19 (o de 11/11 tinha 23.469 bytes).
+
+------------------------------------------------------------------------------
+3) Restauracao testada (num PostgreSQL 16 descartavel, mf-restore; nao o mente-fria-db)
+------------------------------------------------------------------------------
+docker cp ... mf-restore:/tmp/b.dump
+  Successfully copied 23.6kB (transferred 25.6kB) to mf-restore:/tmp/b.dump
+pg_restore -U postgres -d mente_fria --no-owner --no-privileges --exit-on-error /tmp/b.dump
+  pg_restore exit: 0
+SELECT count(*) FROM pedido;                         (banco restaurado) -> 8
+SELECT count(*) FROM pedido;                         (Render)           -> 8
+SELECT count(*) FROM unidade_medida_porcao_padrao;   (banco restaurado) -> 5
+docker rm -f -v mf-restore  (o banco temporario e apagado no fim; conferido pelo Claude: o
+                             container nao existe mais)
+
+Leitura:
+- O backup restaura sem erro e tem o mesmo numero de pedidos que o Render (8), consultado logo
+  depois do backup.
+- Pedidos: 8, dois a mais que os 6 de 11/11 e de 12/11 (secoes 6 e 8 da evidencia de 11/11).
+  Foram gravados no Render entre 12/11 e 14/11.
+- Unidades de medida: 5, o mesmo numero do DDL (kg, mg, l, ml, un) e da conferencia feita pelo
+  Diogo em 12/11, depois do Manual Deploy da US26.
+
+------------------------------------------------------------------------------
+Pendente (A41, A47)
+------------------------------------------------------------------------------
+- Backups semanais e o de 29/11 (Diogo), com a restauracao testada do mesmo jeito (Kaue ou
+  Diogo).
+- A restauracao num banco NOVO do Render (Parte 8.7, ultimo bloco) nunca foi testada; so serve
+  se o banco expirar ou for recriado.
+- O banco gratuito vence em 11/12/2026, 21h59.
+==============================================================================

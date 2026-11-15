@@ -1,0 +1,55 @@
+Conferencia na URL publicada das correcoes da semana de bugs (PRs #103 e #107, levados a main pelo #111)
+Data: 2026-11-15, por volta das 15h (horario de Brasilia)
+Frontend: https://kauencarneiro.github.io/Mente_Fria/ | Backend: https://mente-fria-backend.onrender.com
+Quem: o Diogo entrou como Administrador no navegador e enviou o print do Render; o Claude abriu e calculou as telas
+e fez as conferencias sem login (API publica do GitHub, arquivos do Pages e curl no backend).
+Sem senhas, tokens nem URL do banco. As duas telas so calculam: nada foi gravado no banco.
+
+--- 1) Merges ---
+#110 (docs/registro-15-11 -> sprint-4): mesclado as 14h58 (17:58:13 UTC)
+#111 (sprint-4 -> main): mesclado as 14h58 (17:58:34 UTC) -> topo da main: 2f79834
+O #111 levou a main: #103 (o "null"), #107 (o texto da quantidade 0), #109 (encerramento do Leonardo) e #110.
+
+--- 2) GitHub Pages ---
+Workflow "Frontend no GitHub Pages" do commit 2f79834: completed / success (1a tentativa).
+Arquivos publicados baixados do Pages e comparados com a main (2f79834):
+  js/screens/producao.js  -> HTTP 200, identico ao da main
+  js/screens/reposicao.js -> HTTP 200, identico ao da main
+No producao.js publicado: o texto "O estoque não dá ou rende mais em outro copo" esta presente; "Falta ingrediente"
+e o trecho que gerava o "null" (aviso ? notice(aviso) : null) nao existem mais. No reposicao.js, nenhum ": null)".
+
+--- 3) Render (backend) ---
+Print da lista de deploys do servico mente-fria-backend, enviado pelo Diogo:
+  commit 2f79834 - "Merge pull request #111 from KaueNCarneiro/sprint-4 Sprint 4: correcoes da semana de bugs (#103, #107), ence..."
+  Trigger: Auto-Deploy | Duration: 1m 11s | "Deployed 6m ago"
+-> Segundo merge na main publicado sozinho pelo deploy automatico (o primeiro foi o do #106).
+GET /api/saude -> HTTP 200, {"banco":"ok","status":"ok"}
+POST /api/producao/recomendacao sem token -> HTTP 401 (a rota continua protegida)
+No backend, o #107 mudou so um comentario de Recomendacao.java: o comportamento da API nao muda.
+
+--- 4) Tela de Producao (#/producao -> "Gerar recomendacao"), como Administrador ---
+"Calculado em 15/11/2026, 15:03:09. Esta é a quantidade que rende o maior lucro com o estoque que você tem hoje."
+Lucro potencial R$ 982,72 | Receita estimada R$ 1.909,20
+  Açaí Tradicional 300ml | 148 | R$ 6,64  | —
+  Açaí Especial 500ml    | 0   | R$ 9,07  | O estoque não dá ou rende mais em outro copo
+  Açaí Premium 700ml     | 0   | R$ 10,63 | O estoque não dá ou rende mais em outro copo
+Conferido no texto da tela: nenhum "null", nenhum "undefined", nenhum "Falta ingrediente".
+(Antes do #103, o "null" aparecia entre "Calculado em..." e os valores; achado 1 de 2026-11-14_kaue_ct68.txt.)
+
+--- 5) Tela de Reposicao (#/reposicao), como Administrador ---
+Periodo 60 dias, orcamento R$ 100,00 (os mesmos valores do CT68) -> "Gerar sugestão de compra"
+"O orçamento cobre tudo o que falta: R$ 0,00."
+  Açaí (polpa)           | consumo 15,6 kg | estoque valido 44,4 kg | minimo 10 kg  | Não precisa comprar
+  Leite condensado       | 0,87 L          | 14,13 L                | 5 L           | Não precisa comprar
+  Granola                | 0,88 kg         | 5,12 kg                | 2 kg          | Não precisa comprar
+  Banana                 | 0,5 kg          | 11 kg                  | 3 kg          | Não precisa comprar
+  Morango                | 0,72 kg         | 2,98 kg                | 2 kg          | Não precisa comprar
+  Leite em pó            | 0,24 kg         | 4,76 kg                | 1,5 kg        | Não precisa comprar
+  Copo descartável 500ml | 35 un           | 265 un                 | 50 un         | Não precisa comprar
+Conferido no texto da tela: nenhum "null", nenhum "undefined". Aparecem 7 ingredientes: a "Granola" em mg,
+apagada em 15/11 (achado 2), nao aparece mais.
+
+=== RESULTADO ===
+As correcoes do #103 e do #107 estao publicadas e funcionam na URL: sem "null" em Producao e em Reposicao, e o texto
+novo nas linhas com quantidade 0. O deploy automatico publicou o merge do #111 no Render (gatilho Auto-Deploy).
+Os tres achados da semana de bugs (fim de 2026-11-14_kaue_ct68.txt) ficam resolvidos e conferidos no ambiente publicado.

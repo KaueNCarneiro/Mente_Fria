@@ -38,7 +38,7 @@ O backend é escolhido em `js/config.js`, pelo endereço da página:
 | **Porção Padrão** (19, US26) | `#/porcao-padrao` | Admin | `GET`, `POST` e `PATCH /api/unidades-medida` (2.11) |
 | Teste de comunicação | `#/comunicacao` | Público | `/api/saude`, `/api/ingredientes` |
 
-Ficam fora do semestre (decisões A2b e A40): Clientes (US13), alertas completos (US15/US16), CSV do dashboard (US19) e cancelamento de pedido (US27). No menu, aparecem apagados. A Porção Padrão (US26) entrou pela A46 (Tela 19, feita pelo Diogo em 12/11).
+Ficam fora do semestre (decisões A2b e A40): Clientes (US13), alertas completos (US15/US16), CSV do dashboard (US19) e cancelamento de pedido (US27). Das quatro, só Clientes tem item no menu: ele aparece apagado, sem link, com o selo "Futuro" e a dica "Fora deste semestre" (até 15/11/2026 o selo era "S2", que parecia atraso). A Porção Padrão (US26) entrou pela A46 (Tela 19, feita pelo Diogo em 12/11).
 
 ## Regras que valem para todas as telas
 
@@ -81,7 +81,7 @@ npm install
 npm test
 ```
 
-Com o servidor do frontend na porta 5500 e o Google Chrome instalado. **Resultado esperado: `43 verificações passaram.`** (39 até 06/11/2026, 10 de 10 rodadas; 43 com a Tela 19, 10 de 10 rodadas em 12/11/2026). **Atenção:** nesta máquina do Diogo, com o `python -m http.server`, a suíte falhou de forma intermitente (a página não terminava de carregar), inclusive na `main` sem a Tela 19; com um servidor estático em Node, 10 de 10. Se acontecer na sua, repita a rodada ou troque o servidor (evidência `2026-11-12_diogo_us26-tela19_npm-test.txt`). As verificações usam a API simulada: o teste intercepta `http://localhost:8080/**` e falha com "Rota inesperada" se uma tela chamar uma rota que ele não conhece.
+Com o servidor do frontend na porta 5500 e o Google Chrome instalado. **Resultado esperado: `44 verificações passaram.`** (39 até 06/11/2026, 10 de 10 rodadas; 43 com a Tela 19, 10 de 10 rodadas em 12/11/2026; 44 com a verificação do selo de Clientes no menu, 3 de 3 rodadas em 15/11/2026). **Atenção:** nesta máquina do Diogo, com o `python -m http.server`, a suíte falhou de forma intermitente (a página não terminava de carregar), inclusive na `main` sem a Tela 19; com um servidor estático em Node, 10 de 10. Se acontecer na sua, repita a rodada ou troque o servidor (evidência `2026-11-12_diogo_us26-tela19_npm-test.txt`). As verificações usam a API simulada: o teste intercepta `http://localhost:8080/**` e falha com "Rota inesperada" se uma tela chamar uma rota que ele não conhece.
 
 - `PLAYWRIGHT_CHANNEL` escolhe outro navegador instalado; `FRONTEND_URL`, outro endereço.
 - As imagens de cada rodada vão para `tests/artifacts` (ignorada pelo Git).
@@ -91,10 +91,10 @@ Com o servidor do frontend na porta 5500 e o Google Chrome instalado. **Resultad
 
 ## Situação (15/11/2026)
 
-- **Na `main` e publicadas:** as Telas 03, 10/16, 11/17, 12, 13 e 14 (desde 11/11) e a Tela 19 (desde 12/11). A suíte tem 43 verificações, com a API simulada.
+- **Na `main` e publicadas:** as Telas 03, 10/16, 11/17, 12, 13 e 14 (desde 11/11) e a Tela 19 (desde 12/11). A suíte tem 44 verificações, com a API simulada.
 - **Com o backend real:** o fluxo completo nos dois perfis passou na URL publicada em 14/11 (CT68, `docs/Sprint_4/evidencias/2026-11-14_kaue_ct68.txt`), junto com o CORS (CT69), o serviço "dormindo" (CT70) e a reserva B1 (CT72).
 - **Conferência sem login em 15/11** (`2026-11-15_leonardo_conferencia-ambiente-publicado.txt`): o Pages responde, o `config.js` publicado aponta para o Render com 90 s, o backend acordou em 46 s e o CORS libera a origem do Pages.
-- **Achados do CT68 nas telas:** a palavra "null" nas telas de Produção e de Reposição (correção no PR #103) e o texto "Falta ingrediente" quando o motivo do zero é o lucro (PR #107). Os dois PRs foram revisados e aprovados em 15/11 (`2026-11-15_leonardo_revisao-prs-103-107_npm-test.txt`) e ainda não estavam na `main` nesta data.
+- **Achados do CT68 nas telas:** a palavra "null" nas telas de Produção e de Reposição (correção no PR #103) e o texto "Falta ingrediente" quando o motivo do zero é o lucro (PR #107). Os dois PRs foram revisados e aprovados em 15/11 (`2026-11-15_leonardo_revisao-prs-103-107_npm-test.txt`), entraram na `main` no mesmo dia (PR #111) e foram conferidos na URL publicada (`2026-11-15_diogo_semana-bugs_conferencia-url-publicada.txt`).
 - **Pendente:** o aceite do Leonardo na URL publicada, com prints (tutorial, Parte 16). O *gate* da Fase 2 com as 16 evidências não foi feito: o backend real só entrou na `main` em 11/11, e o CT68 cobriu o fluxo.
 - **Publicação:** `.github/workflows/frontend-pages.yml` publica esta pasta a cada push na `main` que mexa no frontend. A origem liberada no `CORS_ALLOWED_ORIGIN` do Render é só `https://kauencarneiro.github.io` (sem caminho e sem barra).
 

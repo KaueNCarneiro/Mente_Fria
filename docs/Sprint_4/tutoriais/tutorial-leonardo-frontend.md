@@ -1567,7 +1567,7 @@ const payloadPedido = (clienteId, itens) => ({cliente_id: clienteId ? Number(cli
 - **Por que zero**, conferido com Node:
 
   ```js
-  const motivoDoZero = item => item.quantidade > 0 ? null : (Number(item.lucro_por_copo) <= 0 ? 'Sem lucro' : 'Falta ingrediente');
+  const motivoDoZero = item => item.quantidade > 0 ? null : (Number(item.lucro_por_copo) <= 0 ? 'Sem lucro' : 'O estoque não dá ou rende mais em outro copo');
   const avisoGeral = rec => rec.some(i => i.quantidade > 0) ? null
     : (rec.every(i => Number(i.lucro_por_copo) <= 0) ? 'Nenhum produto dá lucro hoje com os custos atuais.' : 'Estoque insuficiente para produzir agora.');
   ```
@@ -1607,7 +1607,7 @@ const payloadPedido = (clienteId, itens) => ({cliente_id: clienteId ? Number(cli
 
 Sem isso, teste com a API simulada e, depois de seg 02/11, no Render.
 
-**Testes mínimos:** "Calculando"; tabela; "Falta ingrediente" × "Sem lucro"; **nenhum termo técnico** no texto da tela; o `503` vira aviso, sem tela de erro (CT72); o Funcionário não abre (`producao` está em `SO_ADMIN`).
+**Testes mínimos:** "Calculando"; tabela; "O estoque não dá ou rende mais em outro copo" × "Sem lucro"; **nenhum termo técnico** no texto da tela; o `503` vira aviso, sem tela de erro (CT72); o Funcionário não abre (`producao` está em `SO_ADMIN`).
 
 | Se der errado | O que fazer |
 |---|---|

@@ -144,7 +144,7 @@ Incorporados em 27/10/2026 a partir de `docs/Sprint_3/sprint-3-casos-de-teste-pr
 |---|---|---|---|---|---|---|
 | CT41 | O modelo maximiza o **lucro**, não a receita | Instância "maior receita ≠ maior lucro" | — | Plano `{1: 10, 2: 0}`, margem 90 | PY | **Sim** (`test_maior_receita_nao_e_maior_lucro`) |
 | CT42 | Recomendação com o estoque de demonstração | Estoque do `seed_demo.sql` | Admin | `POST /api/producao/recomendacao` → **151/1/0**, margem **1.011,71**, receita **1.966,80**; a granola vai ao Python com **5,160** | INT, E2E | **Sim** (dublê: `Fase4ProducaoTest`; Python real: `PythonRealTest`; container de deploy) |
-| CT43 | A Tela 12 não usa termos técnicos e explica o zero | Recomendação com algum produto em 0 | Admin | "Lucro potencial" e "Receita estimada"; "Sem lucro" × "Falta ingrediente"; nenhum termo técnico na página | E2E (Playwright) | Não (frontend) |
+| CT43 | A Tela 12 não usa termos técnicos e explica o zero | Recomendação com algum produto em 0 | Admin | "Lucro potencial" e "Receita estimada"; "Sem lucro" × "O estoque não dá ou rende mais em outro copo"; nenhum termo técnico na página | E2E (Playwright) | Não (frontend) |
 | CT44 | Erros do Python viram mensagens tratadas | Dublê com `status: "erro"`; depois falha técnica | Admin | `422` com a mensagem; falha → `500` "Não foi possível concluir a operação." sem detalhe | INT | **Sim** (`Fase4ProducaoTest`, `ProcessoPythonTest`) |
 | CT45 | Funcionário não gera recomendação | — | Funcionário | `403` em JSON | INT | **Sim** |
 

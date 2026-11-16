@@ -1,6 +1,6 @@
 # Relatório de Entrega — Sprint 4 — Mente Fria
 
-> **RASCUNHO de 15/11/2026.** Feito só com fatos verificáveis no repositório, no GitHub e nas evidências de `docs/Sprint_4/evidencias/`. **Falta a revisão do Kauê (facilitação) e a aprovação do grupo.** A retrospectiva é um documento à parte: `docs/Sprint_4/sprint-4-retrospectiva.md` (§6).
+> **Versão de 15/11/2026.** Feita só com fatos verificáveis no repositório, no GitHub e nas evidências de `docs/Sprint_4/evidencias/`. **Revisado e aprovado pelo Kauê (facilitação) em 15/11/2026** (informado pelo Diogo). A retrospectiva é um documento à parte: `docs/Sprint_4/sprint-4-retrospectiva.md` (§6).
 
 > **Base desta revisão:** `main` em **15/11/2026**, commit [`3acf6af`](https://github.com/KaueNCarneiro/Mente_Fria/tree/3acf6af) (PR #123). Horários em Brasília.
 
@@ -71,7 +71,7 @@ As datas da tabela são as da chegada à `main`.
 | Testes: funções de apoio 15/15 | **Sem evidência própria na Sprint 4** |
 | Testes: Playwright estável ou com a instabilidade registrada (A13) | **Feito:** A13 corrigida (PR #65). A instabilidade do `python -m http.server` está registrada no `frontend/README.md`: com um servidor em Node, 10 de 10 rodadas |
 | Um PR revisado por fase, na `main`; evidências em `docs/Sprint_4/evidencias/` | **Em parte:** as Fases 2, 3, 4A e 6 entraram sem PR (§1.1). Há 41 arquivos de evidência |
-| Relatórios das Sprints 3 e 4, retrospectiva e contribuições individuais | **Contribuições:** os quatro entregaram em 15/11 (PRs #108, #109, #115 e #118). **Relatórios e retrospectiva:** rascunhos em 15/11 (este relatório, a revisão do relatório da Sprint 3 e `docs/Sprint_4/sprint-4-retrospectiva.md`), esperando a revisão do Kauê |
+| Relatórios das Sprints 3 e 4, retrospectiva e contribuições individuais | **Contribuições:** os quatro entregaram em 15/11 (PRs #108, #109, #115 e #118). **Relatórios e retrospectiva:** feitos em 15/11 (este relatório, a revisão do relatório da Sprint 3 e `docs/Sprint_4/sprint-4-retrospectiva.md`) e aprovados pelo Kauê no mesmo dia |
 | US26 na `main` com os testes, ou fora do semestre | **Feito:** na `main` em 12/11, com os testes (A46) |
 
 ### 1.3 Calendário: planejado × real

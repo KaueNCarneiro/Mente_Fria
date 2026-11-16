@@ -1,6 +1,6 @@
 # Relatório de Entrega — Sprint 3 — Mente Fria
 
-> **RASCUNHO de 28/10/2026, revisado em 15/11/2026** (decisão A39). Feito só com fatos verificáveis no repositório e nos documentos desta pasta. **Falta a revisão do Kauê (facilitação) e a aprovação do grupo.**
+> **Rascunho de 28/10/2026, revisado em 15/11/2026** (decisão A39). Feito só com fatos verificáveis no repositório e nos documentos desta pasta. **Revisado e aprovado pelo Kauê (facilitação) em 15/11/2026** (informado pelo Diogo).
 >
 > **Revisão de 15/11:** o retrato da Sprint 3 continua o de 28/10 (base abaixo). Foram atualizados só os itens que mudaram depois: a entrega, a Sprint Review, a retrospectiva, as contribuições individuais (§5), as evidências (§4) e o desfecho dos riscos (§6). O que aconteceu com o código está no relatório da Sprint 4 (`docs/Sprint_4/sprint-4-relatorio-entrega.md`).
 

@@ -86,7 +86,7 @@ As propostas do §4 do registro da Sprint 2 não foram deliberadas. Esta tabela 
   - o `python -m http.server` deixou o `npm test` instável numa máquina (resolvido com um servidor em Node);
   - o IP liberado no banco mudou em 14/11 e o primeiro backup falhou.
 - **Testes que ficaram de fora:**
-  - o aceite do Leonardo na URL publicada, com prints, está pendente;
+  - o aceite do Leonardo na URL publicada, com prints, só saiu em 15/11, no fim do encerramento (`2026-11-15_leonardo_aceite-pages.txt`);
   - o CT12 e os casos de erro não foram executados no ambiente publicado;
   - o *gate* da Fase 2 não foi feito.
 
@@ -94,7 +94,7 @@ As propostas do §4 do registro da Sprint 2 não foram deliberadas. Esta tabela 
 
 | Proposta | Responsável sugerido |
 |---|---|
-| Fazer o aceite na URL publicada, com prints, ou registrar que o grupo considera o CT68 suficiente | Leonardo; decisão do grupo |
+| ~~Fazer o aceite na URL publicada, com prints~~ **Feito em 15/11** (PR #127) | Leonardo |
 | Backups com restauração testada: por volta de 22/11 e em 29/11, conferindo o IP antes | Diogo |
 | Evitar merges na `main` durante uma demonstração (o deploy automático reinicia o backend) e abrir a URL uns 2 minutos antes | Grupo |
 | Decidir antes de 11/12/2026, 21h59 (quando o banco gratuito vence) se o sistema continua no ar depois disso | Grupo |

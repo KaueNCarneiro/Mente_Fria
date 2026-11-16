@@ -120,7 +120,7 @@ Todas estão em `docs/Sprint_4/evidencias/`.
 
 **Limites:**
 - **Execução:** a maior parte dos testes do backend, do Python, do deploy e do ambiente publicado foi executada na máquina do Diogo, a pedido dos donos de cada parte, como dizem as próprias evidências.
-- **Aceite do Leonardo:** o aceite na URL publicada, com prints (tutorial dele, Parte 16), está pendente em 15/11.
+- **Aceite do Leonardo:** feito em 15/11, na URL publicada, nos dois perfis e com a Tela 19, com 17 prints (`2026-11-15_leonardo_aceite-pages.txt`, PR #127). Não cobriu cadastros, "Descartar" e saída de estoque.
 - **_Gate_ da Fase 2:** as 16 evidências não foram feitas; o CT68 cobriu o fluxo.
 
 ## 5. Decisões da Sprint 4
@@ -152,5 +152,5 @@ Registradas em `docs/Sprint_4/sprint-4-decisoes-e-pendencias.md`:
 | O banco só aceita conexões externas da rede do Diogo (restrição de IP, 12/11); se o IP mudar, o backup falha | Antes de cada backup, conferir o IP e atualizar a regra no Render |
 | O deploy automático reinicia o backend a cada merge na `main`, inclusive merges só de documentação | Evitar merges na `main` durante uma demonstração |
 | O serviço gratuito "dorme" depois de 15 minutos sem uso | Abrir a URL uns 2 minutos antes de demonstrar (o frontend espera até 90 s) |
-| O aceite com prints, o CT12 e os casos de erro não foram executados no ambiente publicado | Fazer o aceite (Leonardo), ou registrar que o grupo considera o CT68 suficiente |
+| O CT12, os cadastros e os casos de erro não foram executados no ambiente publicado (o aceite de 15/11 também não os cobriu) | Estão cobertos pelos testes automatizados; se houver tempo, rodar no ambiente publicado antes de 30/11 |
 | A licença do Gurobi | Nunca usar a WLS pessoal no Render: vale só a licença do `pip` (A38) |

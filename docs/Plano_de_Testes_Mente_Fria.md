@@ -4,7 +4,7 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-**Etapa:** E4 — Semana 4 (entrega 11/09/2026). **Atualizado em 27/10/2026** para a Sprint 3 (Adendo nº 1 ao Termo de Aceite aprovado): casos CT30–CT72, ajustes de CT23, CT24 e CT29, licença do Gurobi e ferramentas de teste. **28/10/2026:** CT68 e CT72 ajustados à autorização escrita da Gurobi para a licença do `pip` no Render (A38); os casos da Sprint 3 passam a ser executados na **Sprint 4** oficial (entrega em 06/11) e na semana de correção de bugs que vem depois (A39). **10/11/2026:** casos CT73–CT78 da US26 (condicional, A40), com o Contrato de Comunicação, §2.11 (aprovada pelo Kauê em 10/11).
+**Etapa:** E4 — Semana 4 (entrega 11/09/2026). **Atualizado em 27/10/2026** para a Sprint 3 (Adendo nº 1 ao Termo de Aceite aprovado): casos CT30–CT72, ajustes de CT23, CT24 e CT29, licença do Gurobi e ferramentas de teste. **28/10/2026:** CT68 e CT72 ajustados à autorização escrita da Gurobi para a licença do `pip` no Render (A38); os casos da Sprint 3 passam a ser executados na **Sprint 4** oficial (entrega em 06/11) e na semana de correção de bugs que vem depois (A39). **10/11/2026:** casos CT73–CT78 da US26, com o Contrato de Comunicação, §2.11 (aprovada pelo Kauê em 10/11); a US26 foi entregue em 12/11 (A46). **15/11/2026:** bateria final executada (14 e 15/11, no ambiente publicado); os 78 casos passaram. O resultado de cada caso está em `docs/relatorio-testes-final.md`.
 
 **Status:** este documento é a **estratégia** de testes e a lista de casos (seção 3), que cresce a cada sprint. As evidências de execução ficam nas pastas de cada sprint (`docs/Sprint_2/sprint-2-evidencias-teste.md`, `docs/Sprint_3/evidencias/`, `docs/Sprint_4/evidencias/`); o arquivo `E5-E8_evidencias_de_teste.md`, previsto antes, não foi criado.
 
@@ -28,7 +28,7 @@
 
 | Tipo de teste | O que cobre | Ferramenta | Quando roda |
 |---|---|---|---|
-| **Unitário** | Regra de negócio isolada, sem banco/rede: validações de campo antes de persistir (senha ≥ 8 caracteres, preço > 0, quantidade > 0…) e métodos de domínio (`Ingrediente.precisaReposicao()`, `Produto.calcularCustoProducao()`, `Produto.calcularQuantidadeOtimaProducao()`). Cobre principalmente **R3** e a metade "aplicação" de **R5**. | JUnit 5 + Mockito (backend Java); pytest (módulo Python/Gurobi — cenários de estoque/composição fixos, com resultado esperado calculado fora do próprio otimizador, para não validar o solver contra ele mesmo) | A cada build local (`mvn test` / `pytest`) e em todo push/PR no CI |
+| **Unitário** | Regra de negócio isolada, sem banco/rede: validações de campo antes de persistir (senha ≥ 8 caracteres, preço > 0, quantidade > 0…) e regras de domínio (por exemplo, a regra do açaí na composição do produto, em `RegraAcaiTest`). Cobre principalmente **R3** e a metade "aplicação" de **R5**. | JUnit 5 + Mockito (backend Java); pytest (módulo Python/Gurobi — cenários de estoque/composição fixos, com resultado esperado calculado fora do próprio otimizador, para não validar o solver contra ele mesmo) | A cada build local (`mvnw test` / `pytest`), antes de cada PR (não há CI de testes) |
 | **Integração** | Fluxo real entre camadas — Controller → Service → Repository → PostgreSQL; autenticação/autorização por perfil ponta a ponta na API; constraints do banco (`NOT NULL`, `CHECK`, `UNIQUE`, `FK` do DER/DDL); consultas agregadas do dashboard (`GROUP BY`/`JOIN`); chamada do backend ao módulo Python/Gurobi. Cobre **R1**, **R2**, **R4** e a metade "banco" de **R5**. | JUnit 5 + Spring Boot Test (`@SpringBootTest`, `MockMvc`) + **Testcontainers (PostgreSQL 16)** — atualizado de MySQL para PostgreSQL em 16/09/2026 (ver DER.md), todos com Docker disponível | Antes de cada merge, rodado localmente por quem abre o PR (`mvnw test`, com Docker). **Ainda não há CI configurado** (Sprint 3); se a equipe criar um, ele passa a rodar aqui |
 | **Manual/aceitação** | Fluxo principal ponta a ponta pela interface (Termo de Aceite, seção 2): cadastro de ingredientes/produtos → estoque → recomendação de produção/vendas e propaganda → registro de pedido → baixa automática; critérios de aceite de cada história (E2); e os itens do §3 que não são testáveis por código: **R6** (deploy) e **R7** (repositório/README) | Roteiro de teste manual por história, executado por um integrante diferente de quem implementou + navegador/API client (Postman ou Insomnia) para checagem pontual de endpoints | Ao final de cada sprint (Sprint Review) e obrigatoriamente antes de qualquer tag de entrega (E5–E8) |
 
@@ -41,7 +41,7 @@ Duas observações que não mudam a tabela acima, mas valem registrar:
 ## 2. Critério de bloqueio de merge
 
 **Bloqueia o merge — corrigir antes de aceitar o PR:**
-1. O build não compila/não roda (`mvn test` ou `pytest` falha antes mesmo de avaliar o resultado dos testes).
+1. O build não compila/não roda (`mvnw test` ou `pytest` falha antes mesmo de avaliar o resultado dos testes).
 2. Algum teste unitário ou de integração já existente passa a falhar (regressão).
 3. O PR introduz uma regra de negócio ligada a um requisito mínimo do §3 (autenticação, N:N, Programação Linear Inteira, validação, dashboard) sem nenhum teste automatizado cobrindo o caminho principal.
 4. O PR remove, enfraquece ou contorna uma constraint documentada no DER (`NOT NULL`, `CHECK`, `UNIQUE`, `FK`) sem combinar antes com a equipe.
@@ -108,17 +108,17 @@ Incluímos uma coluna extra, **Caso de uso (E3)**, além do modelo, para fechar 
 
 > **Decisão de implementação (CT29) — 25/09/2026:** o grupo decidiu que ingredientes vencidos não contam como estoque disponível na recomendação de produção (detalhes em `docs/Apoio/Arquitetura.md`, seção 2.1, e no Contrato de Comunicação, §1.1). O Java desconta o saldo vencido antes de montar o JSON enviado ao Python. **Sprint 3:** o estoque passou a ser por linha de entrada (D10), e o CT24 continua válido enquanto o custo do ingrediente disputado for menor que o preço.
 
-*US21–US25 são `Won't` no backlog e não geram caso de teste. US13, US19, US27 e as versões completas de US15 e US16 estão fora do semestre (Adendo nº 1; A40). A US26 só entraria se passasse no* gate *da seg 02/11 de manhã e estivesse na `main` até qua 04/11, às 18h (A40). Ela não passou no* gate *e o prazo venceu; o PO a manteve em aberto, ainda condicional (A46). Os casos dela são o CT73 ao CT78 (subseção "Sprint 4 — US26", abaixo).*
+*US21–US25 são `Won't` no backlog e não geram caso de teste. US13, US19, US27 e as versões completas de US15 e US16 estão fora do semestre (Adendo nº 1; A40). A US26 só entraria se passasse no* gate *da seg 02/11 de manhã e estivesse na `main` até qua 04/11, às 18h (A40). Ela não passou no* gate *e o prazo venceu; o PO a manteve em aberto (A46), e ela foi **entregue em 12/11**. Os casos dela são o CT73 ao CT78 (subseção "Sprint 4 — US26", abaixo).*
 
 ### Sprint 3 (planejamento) e Sprint 4 (execução) — estoque por linhas, pedido, recomendação por lucro, reposição, dashboard, marketing, publicação e segurança (CT30–CT72)
 
-Incorporados em 27/10/2026 a partir de `docs/Sprint_3/sprint-3-casos-de-teste-propostos.md` (Adendo nº 1 aprovado). Formato: objetivo · pré-condições · perfil · passos → resultado esperado; **Camada:** BD = SQL; INT = integração (MockMvc + Testcontainers); PY = pytest; E2E = navegador ou manual; DEP = ambiente publicado. A coluna **Validado** diz se o comportamento já foi executado no código de referência (`docs/Sprint_3/referencia/`), e por qual teste; **não** dispensa a execução sobre o código real nem no ambiente publicado. A execução no ambiente publicado, na semana de correção de bugs depois da entrega de 06/11 (até 13/11; A39, A43), segue a seção 3 do mesmo arquivo.
+Incorporados em 27/10/2026 a partir de `docs/Sprint_3/sprint-3-casos-de-teste-propostos.md` (Adendo nº 1 aprovado). Formato: objetivo · pré-condições · perfil · passos → resultado esperado; **Camada:** BD = SQL; INT = integração (MockMvc + Testcontainers); PY = pytest; E2E = navegador ou manual; DEP = ambiente publicado. A coluna **Validado** diz se o comportamento já foi executado no código de referência (`docs/Sprint_3/referencia/`), e por qual teste; **não** dispensa a execução sobre o código real nem no ambiente publicado. A execução no ambiente publicado, na semana de correção de bugs depois da entrega de 06/11 (até 13/11; A39, A43), segue a seção 3 do mesmo arquivo. **O resultado final de todos os casos, no código real e no ambiente publicado, está em `docs/relatorio-testes-final.md` (15/11).**
 
 **Formato:** objetivo · pré-condições · perfil · passos → resultado esperado. A "camada" diz onde automatizar: **BD** = SQL; **INT** = Testcontainers; **MVC** = MockMvc; **PY** = pytest; **E2E** = aceite manual ou Playwright; **DEP** = ambiente publicado.
 
 #### US9 — Estoque por linhas
 
-| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado em 26/10 |
+| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado |
 |---|---|---|---|---|---|---|
 | CT30 | Entrada cria uma linha | Banco novo; ingrediente 1 com saldo 0 | Admin ou Funcionário | `POST /api/estoque/movimentacoes` `ENTRADA` de 10 com validade futura → `201`; a linha tem `quantidade_restante = 10`; o saldo passa a 10 | INT, E2E | **Sim** (SQL e `Fase3EstoquePedidoTest.entradaSomaAoSaldoEApareceComoValida`) |
 | CT31 | A baixa consome a **menor validade** primeiro; linha sem validade por último | Linhas 3 (vence em +1 dia), 4 (vence em +5) e 10 (sem validade) | Admin | Saída convencional de 6 → restantes `0/1/10`; saída de 5 → `0/0/6` | INT | **Sim** (SQL S3 e `…s3BaixaAtravessaLinhas…`) |
@@ -132,7 +132,7 @@ Incorporados em 27/10/2026 a partir de `docs/Sprint_3/sprint-3-casos-de-teste-pr
 
 #### US12 — Pedido
 
-| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado em 26/10 |
+| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado |
 |---|---|---|---|---|---|---|
 | CT38 | O pedido grava o preço **do banco** e baixa os ingredientes pela composição | Estoque válido suficiente; produto 1 a R$ 12,90 | Funcionário | `POST /api/pedidos` com 2× produto 1 → `201`; `valor_total = 25,80`; `preco_unitario_registrado = 12,90`; **uma** `SAIDA` por ingrediente com `motivo = PEDIDO`; açaí −0,600; leite condensado −0,060; copo −2 | INT, E2E | **Sim**, com 4× (51,60; açaí atravessando duas linhas): `…pedidoBaixaPorLinhasComUmaSaidaPorIngrediente…` |
 | CT39 | A data do pedido fica no fuso de São Paulo (A9) | Relógio em 31/10 às 23:30 (São Paulo) | Admin | Criar pedido → `data_pedido` = `2026-10-31T23:30`; o dashboard de outubro o conta | INT | **Sim** (`DashboardTest.mesAtualSoComPedidosAtivos`) |
@@ -140,7 +140,7 @@ Incorporados em 27/10/2026 a partir de `docs/Sprint_3/sprint-3-casos-de-teste-pr
 
 #### US10 / US11 — Recomendação de produção
 
-| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado em 26/10 |
+| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado |
 |---|---|---|---|---|---|---|
 | CT41 | O modelo maximiza o **lucro**, não a receita | Instância "maior receita ≠ maior lucro" | — | Plano `{1: 10, 2: 0}`, margem 90 | PY | **Sim** (`test_maior_receita_nao_e_maior_lucro`) |
 | CT42 | Recomendação com o estoque de demonstração | Estoque do `seed_demo.sql` | Admin | `POST /api/producao/recomendacao` → **151/1/0**, margem **1.011,71**, receita **1.966,80**; a granola vai ao Python com **5,160** | INT, E2E | **Sim** (dublê: `Fase4ProducaoTest`; Python real: `PythonRealTest`; container de deploy) |
@@ -152,7 +152,7 @@ Incorporados em 27/10/2026 a partir de `docs/Sprint_3/sprint-3-casos-de-teste-pr
 
 Cenário de referência (conta à mão): estoque válido açaí 20, leite condensado 5, copo 100, granola 1, banana 1; pedidos 10× Tradicional em 10/10 e 5× Tradicional + 2× Especial em 28/10; hoje = 28/10.
 
-| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado em 26/10 |
+| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado |
 |---|---|---|---|---|---|---|
 | CT51 | Orçamento folgado compra toda a necessidade | Cenário de referência | Admin | `POST /api/reposicao/recomendacao` `{periodo_dias: 30, orcamento: 100}` → `200`; custo total **63,22**; Granola 1,16 kg (25,52) primeiro; açaí 0,80; banana 2,20; leite condensado 0,90; copo 0 | INT, PY, E2E | **Sim** (Python real: `PythonRealTest.reposicaoContaAMao`) |
 | CT52 | Orçamento que não cobre os mínimos | Idem | Admin | `orcamento: 30` → `orcamento_suficiente = false`; falta **10,71** (mínimos 40,71); a tabela mostra os mínimos | INT, PY, E2E | **Sim** (idem) |
@@ -166,7 +166,7 @@ Cenário de referência (conta à mão): estoque válido açaí 20, leite conden
 
 Cenário de referência (conta à mão): 15/09 Dono 2× Tradicional; 05/10 Func 3× Tradicional; 20/10 Dono 1× Tradicional + 1× Especial; 28/10 Func 2× Especial (**cancelado**); 31/10 23h30 Dono 1× Tradicional.
 
-| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado em 26/10 |
+| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado |
 |---|---|---|---|---|---|---|
 | CT58 | Números do mês só com pedidos ativos | Cenário de referência | Admin | `GET /api/dashboard` → faturamento **83,40** (3 pedidos); Tradicional 5 (64,50); Especial 1; ingredientes por custo: açaí 1,95 kg (36,08), copo 6 (2,10), leite condensado (1,80), granola (0,88), banana (0,28) | INT | **Sim** (`DashboardTest.mesAtualSoComPedidosAtivos`) |
 | CT59 | Ranking e filtros | Idem | Admin | Sem filtro: 1º Dono 44,70 (2 pedidos), 2º Func 38,70; `produto_id=2` → só Dono 18,90; `usuario_id` do Func → só Func; `valor_min=40` → Dono; `valor_max=40` → Func | INT | **Sim** (`…filtrosDoRanking`) |
@@ -177,7 +177,7 @@ Cenário de referência (conta à mão): 15/09 Dono 2× Tradicional; 05/10 Func 
 
 #### US18 — Marketing (novo na Sprint 3)
 
-| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado em 26/10 |
+| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado |
 |---|---|---|---|---|---|---|
 | CT64 | Sugestões a partir da última recomendação | Recomendação 151/1/0 gerada | Admin | `GET /api/marketing/sugestoes` → 2 sugestões (o Premium veio 0): Tradicional e Especial, selo "Produto priorizado", ideias **diferentes**, texto com o nome do produto, lucro por copo | INT | **Sim** (`MarketingTest`) |
 | CT65 | Sem cálculo, sem produto a produzir, permissão | — | Admin / Funcionário | Sem cálculo → mensagem "Gere a recomendação na tela Produção…"; plano todo 0 → mensagem própria; Funcionário → `403` | INT | **Sim** |
@@ -185,7 +185,7 @@ Cenário de referência (conta à mão): 15/09 Dono 2× Tradicional; 05/10 Func 
 
 #### US20 — Publicação (nova na Sprint 3)
 
-| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado em 26/10 |
+| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado |
 |---|---|---|---|---|---|---|
 | CT67 | A imagem sobe dentro dos limites do plano free | `docker build` da raiz; banco com o DDL | — | Container com 512 MB e 0,1 CPU → `GET /api/saude` `200` em até ~2 min; sem `OOMKilled`; `/api/teste/python` → `401` | DEP (local) | **Sim** (simulação: 83 s; pico 133 MiB) |
 | CT68 | Fluxo do Termo no ambiente publicado | Deploy no Render + Pages | Admin e Funcionário | Pela URL HTTPS do Pages: cadastro → login → entrada de estoque → recomendação → pedido → baixa; reposição; dashboard; marketing. **Com a licença do `pip` autorizada (A38, 28/10):** recomendação (151/1/0 com o seed), reposição, marketing e o plano no dashboard **funcionam na URL**. Só se a reserva B1 (A31) for ligada eles mostram o aviso do `503` (CT72) e passam para a demonstração local | DEP, E2E | Não (depende do deploy real); **o mesmo fluxo passou no container local**. **Sim no ambiente publicado** (14/11, nos dois perfis: recomendação 150/0/0, porque o estoque publicado já não era o do seed; entrada de estoque, 2 pedidos e baixa conferida; reposição 0,74 kg de morango; dashboard; marketing; `2026-11-14_kaue_ct68.txt`) |
@@ -195,7 +195,7 @@ Cenário de referência (conta à mão): 15/09 Dono 2× Tradicional; 05/10 Func 
 
 #### Segurança e erros (US3, US7, infraestrutura)
 
-| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado em 26/10 |
+| ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado |
 |---|---|---|---|---|---|---|
 | CT46 | `401` em JSON sem token, com token inválido, expirado e em rota inexistente | — | Anônimo | Cada caso → `401`, `Content-Type: application/json`, `mensagem` não vazia | MVC | **Sim** (`SegurancaEErrosTest`) |
 | CT47 | `400` em JSON para requisição malformada | — | Admin | JSON quebrado; `PUT /api/produtos/abc/preco`; parâmetro obrigatório ausente → `400` "Requisição inválida." | MVC | **Sim** (depois da correção A7) |
@@ -203,9 +203,9 @@ Cenário de referência (conta à mão): 15/09 Dono 2× Tradicional; 05/10 Func 
 | CT49 | CORS para o frontend, inclusive `PATCH` | — | — | `OPTIONS` de `http://127.0.0.1:5500` com `PATCH` → `200`; origem desconhecida → `403` | MVC | **Sim** |
 | CT50 | Modo eco da ponte Java ↔ Python, com acentos | Perfil `dev` | — | `GET /api/teste/python` → `{"status": "sucesso", "echo": "AÇAÍ (POLPA)"}`; **sem** o perfil `dev` → `401` | INT + MVC | **Sim** (`PythonRealTest.ecoComAcentosPeloPerfilDev`) |
 
-### Sprint 4 — US26: porção padrão por unidade de medida (condicional, A40; CT73–CT78)
+### Sprint 4 — US26: porção padrão por unidade de medida (entregue em 12/11, A46; CT73–CT78)
 
-Incluídos em 10/11/2026, com o Contrato de Comunicação, §2.11 (**aprovada pelo Kauê em 10/11**). A US26 é condicional: pela A40, sairia se não estivesse na `main` até 04/11, às 18h; o PO a manteve em aberto depois desse prazo, ainda sujeita a corte (**A46**: novo prazo-limite em 14/11/2026). Os critérios 1 e 2 (sugerir a porção ao escolher a unidade; sobrescrever no ingrediente) já estão na tela de ingredientes, testada com a API simulada; as rotas reais entraram com a Fase 2 (11/11). Estes casos cobrem o cadastro e a alteração das unidades (Tela 19) e o critério 3.
+Incluídos em 10/11/2026, com o Contrato de Comunicação, §2.11 (**aprovada pelo Kauê em 10/11**). A US26 é condicional: pela A40, sairia se não estivesse na `main` até 04/11, às 18h; o PO a manteve em aberto depois desse prazo, com novo prazo-limite em 14/11/2026 (**A46**); ela foi **entregue em 12/11** (backend nos PRs #88/#93, Tela 19 nos PRs #96/#97). Os critérios 1 e 2 (sugerir a porção ao escolher a unidade; sobrescrever no ingrediente) já estão na tela de ingredientes, testada com a API simulada; as rotas reais entraram com a Fase 2 (11/11). Estes casos cobrem o cadastro e a alteração das unidades (Tela 19) e o critério 3.
 
 | ID | Objetivo | Pré-condições | Perfil | Passos → resultado esperado | Camada | Validado |
 |---|---|---|---|---|---|---|
@@ -225,13 +225,13 @@ Incluídos em 10/11/2026, com o Contrato de Comunicação, §2.11 (**aprovada pe
 - **D-A (cadastro de Administrador) e D-B (Tela 07 sem o campo porção):** confirmadas em 20/09/2026. Lucas aprovou a opção 2 do D-A (cadastro aberto só até existir o primeiro Administrador; depois, `409` — CT01B); Leonardo aprovou incluir o campo *porção* na Tela 07, pré-preenchido pela unidade escolhida (ver `docs/Apoio/sql_repositorios.md`, seção 5).
 - **Testes de integração:** Testcontainers com PostgreSQL 16 real (atualizado de MySQL em 16/09/2026, ver DER.md) — Docker confirmado disponível para todo mundo.
 - **US5 (composição do produto):** a regra exige o ingrediente "Açaí" especificamente, não apenas "composição não vazia" (como localizar esse ingrediente: decidido em 19/09/2026 — o nome, sem acentos e sem diferenciar maiúsculas, contém "acai"; ver a decisão registrada na seção 3, junto ao CT15).
-- **Backlog — atores de US9, US12, US13, US15 e US16:** confirmado que os dois perfis (Administrador e Funcionário) têm acesso a essas 5 funcionalidades, conforme o `.docx` — que também é o que bate com `Diagramas_UML.md`. O `.pdf` do backlog está desatualizado nesses 5 pontos (mostra só 1 ator em cada um); vale atualizar essa exportação para não confundir quem abrir só o `.pdf`. CT27 e CT28 (seção 3) já cobrem essa confirmação para US9 e US12; US13, US15 e US16 recebem o mesmo tratamento quando forem detalhadas.
+- **Backlog — atores de US9, US12, US13, US15 e US16:** confirmado que os dois perfis (Administrador e Funcionário) têm acesso a essas 5 funcionalidades, conforme o `.docx` — que também é o que bate com `Diagramas_UML.md`. CT27 e CT28 (seção 3) já cobrem essa confirmação para US9 e US12; US13, US15 e US16 recebem o mesmo tratamento quando forem detalhadas.
 - **Modelo da recomendação de produção (08/10/2026):** o modelo matemático é de **Programação Linear Inteira pura** (variáveis de decisão inteiras, função objetivo e restrições lineares), resolvido com Gurobi 13.0.1 (Python 3.14). **Atualização de 27/10/2026:** o objetivo passou a ser o **lucro estimado** (Adendo nº 1) e a versão do Gurobi é a **13.0.3** (P2); a reposição com orçamento (US14) também usa o solver.
 
 ### 4.2 Em aberto (não bloqueiam este plano)
-- **US26/UC20 (porção padrão por unidade de medida):** **detalhada em 10/11/2026** nos CT73–CT78 (seção 3), ainda condicional (A40). Os três pontos que estavam em aberto ficam assim: (1) ingrediente com unidade não registrada → já provado pela FK `fk_ingrediente_unidade_medida` (T13 e T14, este com `KG` ≠ `kg`, que motivou a normalização da unidade); (2) alterar o padrão não recalcula os ingredientes → CT76; (3) um ingrediente pode gravar uma porção diferente do padrão da unidade (o Açaí em `kg`, com 0,150) → é o que o formulário de ingrediente e o `POST /api/ingredientes` da Fase 2 fazem (CT09); o seed já tem esse caso, conferido no CT76. *Texto anterior:* ainda sem caso de teste dedicado; entraria na atualização da sprint que implementasse a Tela 19.
-- **Licença Gurobi (atualizada em 27/10/2026):** os testes usam a **licença restrita do `pip`** (pesquisa, desenvolvimento e avaliação; até 2.000 variáveis e 2.000 restrições), que basta para todos os casos. Existe uma WLS acadêmica, **pessoal**, do Kauê (até 25/09/2027); ela não é usada por outros integrantes nem nos testes automatizados. No Render, o solver roda com a **licença do `pip`, autorizada por escrito pela Gurobi em 28/10** (A38), sem nenhuma variável `GRB_*`; a WLS **não** pode ser usada numa URL pública. O plano B1 fica como reserva (CT72). Gurobi **13.0.3**. *Texto anterior (08/10):* WLS acadêmica, Gurobi 13.0.1. O `gurobipy` instalado via pip também vem com uma licença gratuita "size-limited" (até 2000 variáveis/2000 restrições), suficiente para os testes unitários no volume de uma açaiteria. Se decidirem rodar o solver real também nos testes de integração/CI no futuro, a WLS se encaixa melhor por não depender de uma máquina específica — um node-locked trava por hardware, o que é problemático em runners de CI, que trocam de máquina a cada execução.
+- **US26/UC20 (porção padrão por unidade de medida):** **detalhada em 10/11/2026** nos CT73–CT78 (seção 3); a US26 foi entregue em 12/11 (A46). Os três pontos que estavam em aberto ficam assim: (1) ingrediente com unidade não registrada → já provado pela FK `fk_ingrediente_unidade_medida` (T13 e T14, este com `KG` ≠ `kg`, que motivou a normalização da unidade); (2) alterar o padrão não recalcula os ingredientes → CT76; (3) um ingrediente pode gravar uma porção diferente do padrão da unidade (o Açaí em `kg`, com 0,150) → é o que o formulário de ingrediente e o `POST /api/ingredientes` da Fase 2 fazem (CT09); o seed já tem esse caso, conferido no CT76. *Texto anterior:* ainda sem caso de teste dedicado; entraria na atualização da sprint que implementasse a Tela 19.
+- **Licença Gurobi (atualizada em 27/10/2026):** os testes usam a **licença restrita do `pip`** (pesquisa, desenvolvimento e avaliação; até 2.000 variáveis e 2.000 restrições), que basta para todos os casos. Existe uma WLS acadêmica, **pessoal**, do Kauê (até 25/09/2027); ela não é usada por outros integrantes nem nos testes automatizados. No Render, o solver roda com a **licença do `pip`, autorizada por escrito pela Gurobi em 28/10** (A38), sem nenhuma variável `GRB_*`; a WLS **não** pode ser usada numa URL pública. O plano B1 fica como reserva (CT72). Gurobi **13.0.3**. *Texto anterior (08/10):* WLS acadêmica, Gurobi 13.0.1. O `gurobipy` instalado via pip também vem com uma licença gratuita "size-limited" (até 2000 variáveis/2000 restrições), suficiente para os testes unitários no volume de uma açaiteria.
 
 > **Histórico — substituído em 27/10/2026 (não há Compute Server; os testes automatizados usam dublês do Python e, opcionalmente, o Python real com `MF_PYTHON`):** em 28/09/2026 (revisado em 02/10 e 08/10) o grupo tinha adotado o **Gurobi Compute Server** no desenvolvimento (`docs/Apoio/Arquitetura.md`, seção 3.3): cada desenvolvedor (Kauê e Lucas, por enquanto) roda o próprio servidor localmente, com a própria licença WLS acadêmica, o que evita o conflito do limite "1 job por vez, sem fila" entre pessoas diferentes testando ao mesmo tempo. Os testes **unitários** do `otimizador.py` (CT23, CT24) continuam podendo rodar sem Compute Server. Em **produção**, a licença será a do Lucas e o grupo decidiu pela **Alternativa C**: licença WLS usada diretamente no container do backend, sem Compute Server (a "Opção A" foi descartada — `docs/Apoio/Arquitetura.md`, seção 3.3). O que continua valendo: um **CI automatizado** (ex.: GitHub Actions) roda numa terceira máquina, sem licença Gurobi própria — qualquer teste de integração que chamasse o Gurobi de verdade precisaria de uma licença dedicada para o runner. Recomendação: nos testes automatizados, usar um **dublê** (mock) do `OtimizadorProducao` para não depender de licença Gurobi durante o CI, e deixar a chamada real para o teste manual/aceitação.
-- **Meta de cobertura de teste:** não fixada agora (seção 2). Revisitar a partir da E5, com base de código real para medir.
-- **Ferramenta de teste de frontend:** não decidida agora, propositalmente (seção 1).
+- **Meta de cobertura de teste:** não fixada (seção 2) e não adotada no semestre: a cobertura não foi medida (ver `docs/relatorio-testes-final.md`).
+- **Ferramenta de teste de frontend:** decidida: Playwright, com a API simulada (`frontend/tests/browser.cjs`, 44 verificações em 15/11).

@@ -55,7 +55,7 @@ Proprietário))
 
 > **Observação:** US8 (repositório Git com README) e US20 (deploy público por URL) são requisitos não-funcionais/de entrega do projeto (cobertos no Documento de Visão, seção 6, e no Termo de Aceite, seção 2), não funcionalidades acionadas por um ator dentro do sistema — por isso não aparecem como casos de uso. As histórias US21 a US25 estão marcadas como **Won't** no Backlog Priorizado (fora do escopo do semestre) e, portanto, também não têm caso de uso correspondente.
 >
-> **Observação (adicionada nesta revisão):** UC20 corresponde a **US26 — Definir porção padrão por unidade de medida**, história derivada da Tela 19 do protótipo navegável, **já incluída no `Backlog_Priorizado`** (item 26, prioridade Could, Sprint 3), o que completa a rastreabilidade Backlog ↔ Caso de Uso. Assim como as demais histórias de cadastro, UC20 inclui (`<<include>>`) UC7 porque a validação `porcao_padrao > 0` é uma regra transversal.
+> **Observação (adicionada nesta revisão):** UC20 corresponde a **US26 — Definir porção padrão por unidade de medida**, história derivada da Tela 19 do protótipo navegável, **já incluída no `Backlog_Priorizado`** (item 26, prioridade Could; entregue na Sprint 4, em 12/11, A46), o que completa a rastreabilidade Backlog ↔ Caso de Uso. Assim como as demais histórias de cadastro, UC20 inclui (`<<include>>`) UC7 porque a validação `porcao_padrao > 0` é uma regra transversal.
 
 ---
 
@@ -142,8 +142,8 @@ Proprietário))
         -dataValidade: date
         -quantidadeRestante: decimal
         -motivo: MotivoSaida
-        +estaProximoDoVencimento boolean
-        +estaVencida boolean
+        +estaProximoDoVencimento() boolean
+        +estaVencida() boolean
     }
     %% Sprint 3: cada ENTRADA é uma linha de estoque; quantidadeRestante diminui a cada baixa (só na ENTRADA).
     %% motivo só existe na SAIDA: PEDIDO, CONVENCIONAL ou DESCARTE_VENCIDO. Linha vencida nunca é vendida.
@@ -186,7 +186,7 @@ Proprietário))
 
 `ComposicaoProduto` e `ItemPedido` representam, no nível conceitual, as classes associativas que resolvem os relacionamentos N:N entre Produto/Ingrediente e Pedido/Produto citados no Documento de Visão (seção 6). No DER (nível físico, `docs/DER.md`) esses relacionamentos são implementados como tabelas associativas (`produto_ingrediente` e `pedido_produto`).
 
-As funcionalidades de recomendação de produção (UC10, UC11), recomendação de reposição (UC14) e sugestão de marketing (UC18) continuam no sistema, mas passaram a ser calculadas sob demanda — via `Produto.calcularQuantidadeOtimaProducao()`, `Produto.gerarSugestaoMarketing()` e `Ingrediente.calcularQuantidadeRecomendadaCompra(periodoDias)` — sem persistir o histórico de cálculo. Por isso `RecomendacaoProducao`, `ItemRecomendacaoProducao`, `RecomendacaoReposicao`, `ItemRecomendacaoReposicao` e `SugestaoMarketing` saíram do diagrama e não têm mais tabela correspondente no DER (`docs/DER.md`).
+As funcionalidades de recomendação de produção (UC10, UC11), recomendação de reposição (UC14) e sugestão de marketing (UC18) continuam no sistema, mas passaram a ser calculadas sob demanda — via `Produto.calcularQuantidadeOtimaProducao()`, `Produto.gerarSugestaoMarketing()` e `Ingrediente.calcularQuantidadeRecomendadaCompra(periodoDias, orcamento)` — sem persistir o histórico de cálculo. Por isso `RecomendacaoProducao`, `ItemRecomendacaoProducao`, `RecomendacaoReposicao`, `ItemRecomendacaoReposicao` e `SugestaoMarketing` saíram do diagrama e não têm mais tabela correspondente no DER (`docs/DER.md`).
 
 O atributo `dataValidade`, antes em `Ingrediente`, passou para `MovimentacaoEstoque`, pois cada `ENTRADA` de estoque pode ter uma validade diferente das entradas anteriores do mesmo ingrediente. **Desde a Sprint 3, cada `ENTRADA` é uma linha de estoque**, com `quantidadeRestante`; as baixas consomem as linhas válidas da validade mais próxima para a mais distante, e uma linha vencida nunca é vendida. Por isso `dataValidade` só é preenchida quando `tipo = ENTRADA`; em uma `SAIDA` ela permanece nula, já que a saída apenas consome estoque já existente. Essa regra é garantida no nível físico pela constraint `chk_movimentacao_data_validade` do DER (`docs/DER.md`). Consequentemente, `estaProximoDoVencimento` e os UC16/US16 (alerta de vencimento) devem consultar apenas movimentações do tipo `ENTRADA` com `dataValidade` preenchida.
 
@@ -216,5 +216,5 @@ O atributo `dataValidade`, antes em `Ingrediente`, passou para `MovimentacaoEsto
 | UC17 — Visualizar dashboard gerencial | US17 |
 | UC18 — Gerar sugestões de marketing | US18 |
 | UC19 — Exportar dashboard em CSV | US19 |
-| UC20 — Definir porção padrão por unidade de medida | US26 *(item 26 do `Backlog_Priorizado` — Could; fora da Sprint 3, Adendo nº 1; desde 28/10, condicional na Sprint 4, A40)* |
-| UC21 — Cancelar pedido *(ainda não desenhado no diagrama de casos de uso)* | US27 *(história nova do Adendo nº 1 — Could, fora do semestre, A40)* |
+| UC20 — Definir porção padrão por unidade de medida | US26 *(item 26 do `Backlog_Priorizado` — Could; fora da Sprint 3, Adendo nº 1; entregue na Sprint 4, em 12/11, A46)* |
+| UC21 — Cancelar pedido *(não desenhado no diagrama de casos de uso: fora do semestre)* | US27 *(história nova do Adendo nº 1 — Could, fora do semestre, A40)* |

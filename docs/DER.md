@@ -4,7 +4,7 @@
 
 **Trilha:** B (Origem do problema: Cliente Real)
 
-> **Nota de revisão (27/10/2026, Sprint 3):** o modelo ganhou o **estoque por linhas de entrada** (`movimentacao_estoque.quantidade_restante` e `motivo`) e o **status do pedido** (`pedido.status`, `data_cancelamento`, `usuario_cancelamento_id`, para a US27, fora do semestre, A40). O seed oficial passa a ter **estoque 0** (os ingredientes recebem estoque só por movimentação); os dados de demonstração ficam em `seed_demo.sql`. A otimização passa a maximizar o **lucro estimado** (Adendo nº 1 ao Termo de Aceite, aprovado em 27/10). Essas mudanças estão no `Script_DDL.sql` de referência (`docs/Sprint_3/referencia/bd/`, validado com 32 + 41 testes no PostgreSQL 16) e entram em `bd/Script_DDL.sql` pelo PR do banco da Sprint 3; até esse PR, o `bd/` da `main` ainda é o da Sprint 1.
+> **Nota de revisão (27/10/2026, Sprint 3):** o modelo ganhou o **estoque por linhas de entrada** (`movimentacao_estoque.quantidade_restante` e `motivo`) e o **status do pedido** (`pedido.status`, `data_cancelamento`, `usuario_cancelamento_id`, para a US27, fora do semestre, A40). O seed oficial passa a ter **estoque 0** (os ingredientes recebem estoque só por movimentação); os dados de demonstração ficam em `seed_demo.sql`. A otimização passa a maximizar o **lucro estimado** (Adendo nº 1 ao Termo de Aceite, aprovado em 27/10). Essas mudanças estão no `Script_DDL.sql` de referência (`docs/Sprint_3/referencia/bd/`, validado com 32 + 41 testes no PostgreSQL 16) e entraram em `bd/Script_DDL.sql` pelo PR do banco (#44, 29/10/2026).
 
 > **Nota de revisão (16/09/2026):** o banco de dados oficial do projeto passou de **MySQL** para **PostgreSQL**, motivado pela ferramenta de deploy escolhida (Render) — ver justificativa completa e as decisões de sintaxe (tipos, auto-incremento) na nota ao final deste documento. O Termo de Aceite e o `Script_DDL.sql` foram atualizados na mesma revisão.
 
@@ -19,7 +19,7 @@ erDiagram
         varchar nome
         varchar email UK
         varchar senha_hash
-        enum perfil
+        varchar perfil
         boolean ativo
     }
 
@@ -80,7 +80,7 @@ erDiagram
         int id PK
         int ingrediente_id FK
         int usuario_id FK
-        enum tipo
+        varchar tipo
         decimal quantidade
         timestamp data_movimentacao
         varchar observacao
@@ -212,13 +212,13 @@ Tabela associativa que resolve o relacionamento N:N entre `pedido` e `produto` (
 
 > **Nota (US26/UC20 — porção padrão por unidade, adicionada nesta revisão):** `unidade_medida_porcao_padrao.porcao_padrao` é apenas o valor **sugerido** para pré-preencher o formulário de cadastro de um novo ingrediente daquela unidade. O valor efetivo usado nos cálculos de negócio (`Ingrediente.calcularQuantidadeRecomendadaCompra`, composição de produto, etc.) é sempre `ingrediente.porcao_padrao`, que pode divergir livremente do padrão da unidade — por exemplo, o Açaí pode ter uma porção diferente dos demais ingredientes medidos em `kg`. Alterar o padrão de uma unidade **não** recalcula retroativamente ingredientes já cadastrados; o novo valor só é usado como sugestão em cadastros futuros.
 
-> **Nota (US26/UC20):** a FK `ingrediente.unidade_medida → unidade_medida_porcao_padrao.unidade_medida` torna obrigatório que a unidade já esteja cadastrada em `unidade_medida_porcao_padrao` antes de se cadastrar um ingrediente com essa unidade — na prática, a Tela 19 passa a ser um pré-requisito de fluxo da Tela 07 (Ingredientes: Novo/Editar). O `Script_DDL.sql` inclui um `INSERT` inicial (seed) com as cinco unidades da Tela 19 (`kg`, `mg`, `l`, `ml`, `un`) para não bloquear ambientes recém-criados a partir do schema atual — na Sprint 1 as unidades chegam ao banco somente por esse seed, pois a tela de gestão de unidades (US26) ficou fora das Sprints 1 a 3 (desde 28/10, condicional na Sprint 4, A40).
+> **Nota (US26/UC20):** a FK `ingrediente.unidade_medida → unidade_medida_porcao_padrao.unidade_medida` torna obrigatório que a unidade já esteja cadastrada em `unidade_medida_porcao_padrao` antes de se cadastrar um ingrediente com essa unidade — na prática, a Tela 19 passa a ser um pré-requisito de fluxo da Tela 07 (Ingredientes: Novo/Editar). O `Script_DDL.sql` inclui um `INSERT` inicial (seed) com as cinco unidades da Tela 19 (`kg`, `mg`, `l`, `ml`, `un`) para não bloquear ambientes recém-criados a partir do schema atual — na Sprint 1 as unidades chegam ao banco somente por esse seed, pois a tela de gestão de unidades (US26) ficou fora das Sprints 1 a 3 e foi entregue na Sprint 4, em 12/11 (A46).
 
 > **Nota de decisão técnica (16/09/2026) — migração de MySQL para PostgreSQL:** motivada pela escolha do Render como plataforma de deploy. O Render não oferece MySQL como banco gerenciado — só é possível rodá-lo via Docker (imagem oficial) com um disco persistente, o que exige um plano pago (o plano Free do Render não permite disco persistente nem "private services"). Já o PostgreSQL é um banco gerenciado nativo do Render, com um plano Free genuíno (a única limitação real: 1 GB de armazenamento e expiração a cada 30 dias, com 14 dias de carência para migrar para um plano pago antes da exclusão — a equipe pode recriar o banco Free periodicamente durante o semestre, ou migrar para o plano pago (a partir de US$ 6-7/mês) perto da entrega final, se preferir não depender disso). Essa mudança trouxe três adaptações de sintaxe, refletidas neste documento e no `Script_DDL.sql`:
 > 1. **Colunas de auto-incremento:** `AUTO_INCREMENT` (MySQL) não existe em PostgreSQL. Optamos por `GENERATED ALWAYS AS IDENTITY`, a forma padrão SQL (compatível com o padrão SQL:2003) recomendada atualmente pela documentação do PostgreSQL, em vez do pseudo-tipo legado `SERIAL`.
 > 2. **Colunas ENUM:** PostgreSQL não tem o `ENUM(...)` inline do MySQL — um tipo enumerado nativo exigiria `CREATE TYPE ... AS ENUM (...)` à parte, o que é mais rígido para alterar depois (exige `ALTER TYPE`, não pode ser feito dentro de uma transação em versões mais antigas). Optamos por `VARCHAR` + `CHECK (coluna IN (...))`, que tem o mesmo efeito de restringir os valores aceitos, mas é mais simples de alterar no futuro (basta um `ALTER TABLE ... DROP/ADD CONSTRAINT`). Afetou `usuario.perfil` e `movimentacao_estoque.tipo`.
 > 3. **Datas com hora:** `DATETIME` (MySQL) vira `TIMESTAMP` em PostgreSQL — mapeamento direto, sem mudança de comportamento (nenhum dos dois grava fuso horário). Afetou `pedido.data_pedido` e `movimentacao_estoque.data_movimentacao`.
 >
-> Nenhuma dessas três é uma mudança de modelo — apenas de sintaxe física — mas fica registrada aqui porque `AUTO_INCREMENT`/`ENUM` apareciam explicitamente na coluna "Restrições" deste dicionário. **Pendências para a equipe:** (a) ~~confirmar a versão do PostgreSQL~~ **resolvida na Sprint 3: PostgreSQL 16** em todo lugar (Docker local, Testcontainers e `render.yaml`); (b) cada integrante precisa trocar o PostgreSQL local (em vez do MySQL) no ambiente de desenvolvimento — ver seção de ambiente no README.
+> Nenhuma dessas três é uma mudança de modelo — apenas de sintaxe física — mas fica registrada aqui porque `AUTO_INCREMENT`/`ENUM` apareciam explicitamente na coluna "Restrições" deste dicionário. **Pendências para a equipe:** (a) ~~confirmar a versão do PostgreSQL~~ **resolvida na Sprint 3: PostgreSQL 16** em todo lugar (Docker local, Testcontainers e `render.yaml`); (b) ~~cada integrante precisa trocar o PostgreSQL local (em vez do MySQL)~~ **resolvida:** todos usam PostgreSQL 16 em Docker (README).
 >
-> **Atualização (27/10/2026):** o banco gratuito do Render **expira 30 dias depois de criado** (e não "a cada 30 dias"), com 14 dias para migrar a um plano pago. Ele será criado em **02/11/2026** (A41, 28/10; antes: 31/10) e valerá até 02/12/2026, depois de 30/11, data-limite do professor, com backup e restauração testados (A21, A32).
+> **Atualização (27/10/2026):** o banco gratuito do Render **expira 30 dias depois de criado** (e não "a cada 30 dias"), com 14 dias para migrar a um plano pago. Ele foi criado em **11/11/2026, às 21h59** (A47; o plano era 02/11, A41) e vence em **11/12/2026, às 21h59**, depois de 30/11, data-limite do professor, com backup e restauração testados (A21, A32).

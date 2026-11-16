@@ -3,6 +3,7 @@
 > **Não houve reunião de retrospectiva das Sprints 3 e 4.** Na Sprint 2 houve uma ligação de retrospectiva em 02/10, com os quatro integrantes, sem ata (§0). O grupo escolheu este registro, sem reunião, em 15/11/2026 (informado pelo Diogo). Ele é do mesmo tipo do registro da Sprint 2 (`docs/Sprint_2/sprint-2-retrospectiva.md`): reúne fatos, dificuldades e propostas para discussão. **Não é ata de reunião e não registra ações aprovadas.**
 
 - **Corte da análise:** 15/11/2026, horário de Brasília.
+- **Revisão:** **Revisado e aprovado pelo Kauê (facilitação) em 15/11/2026** (informado pelo Diogo).
 - **Data da retrospectiva:** não realizada.
 - **Participantes:** não se aplica.
 - **Base:**

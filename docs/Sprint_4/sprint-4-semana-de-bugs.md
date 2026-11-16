@@ -80,5 +80,5 @@ Evidências:
 - **Casos de erro:** no ambiente publicado, só a guarda de rotas do Funcionário foi executada.
 - **Valores do cenário de referência:** o CT42, o CT51, o CT58 e o CT64 não foram conferidos no banco publicado, porque ele já não tinha o estoque nem os pedidos do seed. Esses valores estão cobertos pelos testes automatizados com o banco de teste (seção 3).
 - **Divisão por perfil entre os quatro integrantes:** não aconteceu.
-- **Aceite do Leonardo na URL publicada, com prints** (tutorial dele, Parte 16): pendente em 15/11.
+- **Aceite do Leonardo na URL publicada, com prints** (tutorial dele, Parte 16): **feito em 15/11, depois desta tabela** (`2026-11-15_leonardo_aceite-pages.txt`, PR #127). Não cobriu cadastros, "Descartar" e saída de estoque.
 - **Atraso:** os testes no ambiente publicado ocorreram em 14 e 15/11, depois do fim previsto da semana (13/11), porque o deploy só aconteceu em 11/11.

@@ -1,8 +1,12 @@
 # Roteiro do Protótipo Navegável — Mente Fria
 
+**Equipe:** Leonardo Fagundes Oliveira (RA 2840482421009) — Diogo Pereira Miranda (RA 2840482423006) — Lucas Gabriel Valadares Bassi (RA 2840482423008) — Kauê Nogueira Carneiro (RA 2840482423039)
+
 **Link do protótipo:** [Mente Fria — Protótipo Navegável no Figma](https://www.figma.com/design/olZOzsaBz3qJlDlQ0ilANV?node-id=3-2)
 
 Para navegar, clique em **Apresentar ▶**. Na tela de Login, os botões de acesso rápido permitem explorar os perfis Gerente e Funcionário.
+
+> **Nota (15/11/2026):** o protótipo é de setembro (E4). No sistema entregue: o perfil “Gerente” chama-se **Administrador**; a Tela 07 também tem a **porção**, sugerida pela unidade (US26, Tela 19); a exportação em CSV (US19) e o cadastro de clientes (US13, Telas 18/18B e a busca de clientes nos pedidos) ficaram **fora do semestre** (Adendo nº 1, A40). O que foi entregue e testado está em `docs/relatorio-testes-final.md`.
 
 | Tela | Perfil | História relacionada (E2) | O que a tela mostra/permite |
 |---|---|---|---|

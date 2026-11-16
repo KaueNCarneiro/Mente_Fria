@@ -8,12 +8,13 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 - O banco gratuito do Render foi criado em 11/11/2026 e **vence em 11/12/2026, às 21h59** (depois da data-limite do professor, 30/11/2026).
 - **Deploy automático desde 15/11/2026:** cada merge na `main` publica o backend sozinho, inclusive merges só de documentação (o serviço reinicia). O frontend é publicado pelo GitHub Pages a partir da `main`.
 - O plano gratuito "dorme" depois de 15 minutos sem uso: a primeira chamada pode levar cerca de 1 minuto (o frontend publicado espera até 90 s).
+
 **Equipe:** Leonardo Fagundes Oliveira (RA 2840482421009) — Diogo Pereira Miranda (RA 2840482423006) — Lucas Gabriel Valadares Bassi (RA 2840482423008) — Kauê Nogueira Carneiro (RA 2840482423039) · Laboratório de Engenharia de Software · ADS Fatec Ribeirão Preto
 
 ## Stack
 - Frontend: JavaScript (ES modules), HTML e CSS, sem build — deploy no GitHub Pages
 - Backend: Java 25 + Spring Boot 4.0.8 (Spring JDBC, sem JPA), build com Maven 3.9 (via Maven Wrapper)
-- Otimização: Python 3.14 + Gurobi 13.0.3 — módulos de Programação Linear Inteira (recomendação de produção por lucro e, na Sprint 3, reposição com orçamento), chamados pelo backend como subprocesso (JSON via stdin/stdout)
+- Otimização: Python 3.14 + Gurobi 13.0.3 — módulos de Programação Linear Inteira (recomendação de produção por lucro e reposição com orçamento), chamados pelo backend como subprocesso (JSON via stdin/stdout)
 - Banco de dados: PostgreSQL 16 — deploy no Render
 
 ## Como rodar localmente
@@ -31,7 +32,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
    - Backend: baixadas automaticamente pelo Maven Wrapper no primeiro `./mvnw` (em `/backend`)
    - Otimização (em `/optimization`): `python -m venv venv`, ative o ambiente (`source venv/bin/activate`; no Windows, `venv\Scripts\activate`) e rode `pip install -r requirements.txt`
    - Frontend: sem dependências de produção (apenas, para testes: `npm install` em `/frontend`)
-3. Configure as variáveis de ambiente (copie `.env.example` para `.env` e preencha). **Nunca comite o `.env` real.**
+3. Configure as variáveis de ambiente (copie `backend/.env.example` para `backend/.env` e preencha). **Nunca comite o `.env` real.**
 
    Todas as variáveis abaixo são lidas pelo código (`backend/src/main/resources/application.properties`). O modelo comentado está em `backend/.env.example`.
 
@@ -55,7 +56,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
    > ⚠️ Salve o `.env` em **UTF-8 sem BOM** (no Bloco de Notas, confira "UTF-8" na barra de baixo, e não "UTF-8 com BOM"). Com BOM, o Spring lê errado a primeira linha e o backend não sobe (`Could not resolve placeholder`). Nos caminhos, use `/`.
 
    As credenciais da licença Gurobi WLS (`GRB_WLSACCESSID`, `GRB_WLSSECRET`, `GRB_LICENSEID`) são segredo tanto quanto `DB_PASSWORD`: **nunca** commitar o `.lic` nem os valores. A WLS é pessoal: só o titular a usa, no computador dele, e **nunca** no Render (a Gurobi vetou a WLS numa URL pública; no Render vale a licença do `pip`, autorizada por escrito em 28/10/2026). O backend lê o `.env` pelo caminho definido em `backend/src/main/resources/application.properties` (relativo à pasta de onde o Java é iniciado); se aparecer `Could not resolve placeholder 'DB_USER'`, defina as variáveis no terminal ou no IntelliJ.
-4. Crie o banco e rode o schema:
+4. Crie o banco e rode o schema (comandos a partir da raiz do repositório):
    ```bash
    docker run --name mente-fria-db -e POSTGRES_PASSWORD=SUA_SENHA_LOCAL -e POSTGRES_DB=mente_fria -p 5432:5432 -d postgres:16
    docker cp bd/Script_DDL.sql mente-fria-db:/tmp/Script_DDL.sql
@@ -71,7 +72,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
    docker exec mente-fria-db psql -U postgres -c "DROP DATABASE mente_fria;" -c "CREATE DATABASE mente_fria;"
    docker exec mente-fria-db psql -U postgres -d mente_fria -f /tmp/Script_DDL.sql
    ```
-   Dados de demonstração (opcional, para a Review): depois de criar o Administrador e um Funcionário pelas telas, rode uma vez `bd/seed_demo.sql` (estoque em linhas com validade, clientes e pedidos).
+   Dados de demonstração (opcional): depois de criar o Administrador e um Funcionário pelas telas, rode uma vez `bd/seed_demo.sql` (estoque em linhas com validade, clientes e pedidos).
 
    Mudou o schema? Edite `bd/Script_DDL.sql`, atualize `docs/DER.md` no mesmo PR e escreva no PR **"recriar o banco"**.
 6. Suba o projeto:
@@ -88,7 +89,7 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 /backend        — API Java + Spring Boot (Maven)
 /frontend       — HTML, CSS, JavaScript (ES modules) e testes de navegador (tests/)
 /optimization   — módulo Python + Gurobi (app/ e tests/)
-/bd             — Script_DDL.sql (schema + seed) e constraints_teste.sql (testes de constraints)
+/bd             — Script_DDL.sql (schema + seed), seed_demo.sql (dados de demonstração), constraints_teste.sql e constraints_sprint3_teste.sql (testes de constraints)
 /docs           — Documento de Visão, Backlog, UML, DER, Arquitetura, Contrato de Comunicação, Plano de Testes e relatórios das sprints
 ```
 
@@ -113,7 +114,7 @@ Como rodar:
 - Frontend (Playwright, com API simulada; servidor do frontend na porta 5500): em `/frontend`, `npm install` e `npm test`
 - Backend (101 testes, com PostgreSQL temporário do Testcontainers; o `mente-fria-db` não é usado): abra o Docker Desktop e, em `/backend`, rode `./mvnw test` (Windows: `.\mvnw test`). Para incluir os testes que chamam o Python de verdade, antes defina `MF_PYTHON` (PowerShell: `$env:MF_PYTHON = "..\optimization\venv\Scripts\python.exe"`); sem ela, esses testes são pulados
 
-Não há CI configurado.
+Não há CI de testes: as suítes rodam localmente antes de cada PR. O único workflow (`.github/workflows/frontend-pages.yml`) publica o frontend no GitHub Pages.
 
 ## Licença / Uso acadêmico
 Projeto desenvolvido para a disciplina de Laboratório de Engenharia de Software — ADS, Fatec Ribeirão Preto, 2026. O Gurobi é usado com a licença restrita do `pip` (desenvolvimento e avaliação) e com a WLS acadêmica pessoal do Kauê, ambas só para uso não comercial. No sistema publicado, o solver usa a licença restrita do `pip`, com autorização escrita da Gurobi (28/10/2026) para esta demonstração acadêmica. O sistema serve à demonstração acadêmica e não deve ser usado em operação comercial.

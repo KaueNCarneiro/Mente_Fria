@@ -1,6 +1,6 @@
 # Mente Fria
 
-Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: uma açaiteria), que centraliza o controle de estoque, produtos, ingredientes, pedidos e clientes. Seu diferencial é calcular, via Programação Linear Inteira, a quantidade ideal de produção de cada produto para maximizar o **lucro estimado** (preço de venda menos o custo dos ingredientes) com o estoque válido disponível, conforme o Adendo nº 1 ao Termo de Aceite (27/10/2026).
+Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: uma açaiteria), que centraliza o controle de estoque, produtos, ingredientes e pedidos. Seu diferencial é calcular, via Programação Linear Inteira, a quantidade ideal de produção de cada produto para maximizar o **lucro estimado** (preço de venda menos o custo dos ingredientes) com o estoque válido disponível, conforme o Adendo nº 1 ao Termo de Aceite (27/10/2026).
 
 **Sistema publicado (US20):**
 - Frontend (GitHub Pages): https://kauencarneiro.github.io/Mente_Fria/
@@ -83,6 +83,8 @@ Mente Fria é um sistema de apoio à gestão para pequenos comércios (piloto: u
 7. Acesse o frontend em `http://127.0.0.1:5500/index.html` (API em `http://localhost:8080`, configurada em `frontend/js/config.js`). Teste do backend: `GET http://localhost:8080/api/saude` → `{"status":"ok","banco":"ok"}`. As demais rotas exigem login (token JWT) e respondem `401` em JSON sem ele; o caminho é criar o Administrador na tela de cadastro e entrar.
 
 > **Situação (15/11/2026):** as histórias obrigatórias (US1–US7, US9–US12, US14, US17, US18 e US20) e a US26 estão na `main` e publicadas. A Sprint 4 terminou em 06/11 e a semana de correção de bugs, em 13/11. Calendário, decisões e pendências: `docs/Sprint_4/`; tutoriais de cada integrante: `docs/Sprint_4/tutoriais/`; evidências: `docs/Sprint_4/evidencias/`. O planejamento e o código de referência da Sprint 3 ficam em `docs/Sprint_3/` como registro. Documentação do projeto (DER, UML, Arquitetura, Contrato de Comunicação, Plano de Testes): pasta `docs/`.
+>
+> **Entrega final:** o índice dos artefatos do semestre (E1 a E9) e os desvios de escopo estão em [`docs/documentacao-final.md`](docs/documentacao-final.md). O uso do sistema por perfil está no [`docs/manual-do-usuario.md`](docs/manual-do-usuario.md), e o resultado dos testes, em [`docs/relatorio-testes-final.md`](docs/relatorio-testes-final.md).
 
 ## Estrutura do repositório
 ```

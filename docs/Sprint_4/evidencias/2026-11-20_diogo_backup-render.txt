@@ -1,0 +1,45 @@
+==============================================================================
+EVIDENCIA - Backup do banco do Render antes da gravacao do video (A41, A47)
+==============================================================================
+Data: 20/11/2026, arquivo gravado as 12h26 (horario de Brasilia).
+Executado por: Diogo, da rede dele (restricao de IP do banco, 12/11), guiado pelo Claude.
+Mesmo procedimento de 14 e 15/11 (tutorial do Kaue, Parte 8.7): conferir o IP da rede contra a regra
+de entrada do banco, pg_dump e restauracao num banco descartavel (mf-restore; nao o mente-fria-db).
+A URL do banco (que contem a senha) NAO aparece neste arquivo. O .dump fica FORA do repositorio
+(~/mente-fria-backup) e nunca vai para o Git.
+
+Por que agora:
+- o backup de 15/11 (17h04) nao tinha os dados gravados depois dele, no aceite do Leonardo
+  (15/11, 20h40-20h52): a entrada de 10 kg de Acai (polpa), "Lote 5", e um pedido de R$ 43,80;
+- a gravacao do video da Mostra Virtual grava dados no banco publicado (um descarte e um pedido).
+Este backup vale tambem como o backup semanal previsto para 22/11.
+
+------------------------------------------------------------------------------
+1) Backup
+------------------------------------------------------------------------------
+pg_dump -Fc --no-owner --no-privileges (postgres:16 num container descartavel, sslmode=require)
+  mente_fria_2026-11-20.dump   23786 bytes   20/11/2026 12:26
+  (o de 15/11 tinha 23689 bytes)
+
+------------------------------------------------------------------------------
+2) Restauracao testada (num PostgreSQL 16 descartavel, mf-restore)
+------------------------------------------------------------------------------
+pg_restore exit: 0
+SELECT count(*) FROM pedido;                (banco restaurado) -> 11
+SELECT count(*) FROM pedido;                (Render)           -> 11
+SELECT nome FROM ingrediente WHERE id = 1;  (banco restaurado) -> Açaí (polpa)
+SELECT count(*) FROM ingrediente;           (banco restaurado) -> 7
+
+Leitura:
+- O backup restaura sem erro (exit 0) e tem o mesmo numero de pedidos que o Render (11): os 10 de 15/11 mais o pedido
+  do aceite de 15/11.
+- O acento de "Açaí (polpa)" foi preservado.
+- Ingredientes: 7, os mesmos de 15/11.
+- Resultados informados pelo Diogo.
+
+------------------------------------------------------------------------------
+Pendente (A41, A47)
+------------------------------------------------------------------------------
+- Backup de 29/11, conferindo o IP antes.
+- O banco gratuito vence em 11/12/2026, 21h59; decisao do grupo pendente sobre o que fazer depois.
+==============================================================================
